@@ -47,5 +47,21 @@ class UserCreateSchema(Schema):
 
 
 class UserLoginSchema(Schema):
-    email = fields.Str(required=True)
-    password = fields.Str(required=True)
+    email = fields.Str(
+        required=True,
+        validate=[
+            validate.Regexp(
+                r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
+                error="The e-mail format is invalid.",
+            )
+        ],
+    )
+    password = fields.Str(
+        required=True,
+        validate=[
+            validate.Regexp(
+                r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$",
+                error="The password must be at least 8 characters long, including one uppercase letter, one lowercase letter, one number, and one special character.",
+            )
+        ],
+    )

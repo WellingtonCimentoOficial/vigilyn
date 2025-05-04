@@ -1,15 +1,19 @@
 from app.extensions import db
 from app.models.setting_models import Setting
+from app.exceptions.setting_exceptions import SettingsWasNotUpdated
 
 
 def update_setting(setting, **kwargs):
-    for key, value in kwargs.items():
-        setattr(setting, key, value)
+    try:
+        for key, value in kwargs.items():
+            setattr(setting, key, value)
 
-    setting.requires_restart = True
-    db.session.commit()
+        setting.requires_restart = True
+        db.session.commit()
 
-    return setting
+        return setting
+    except:
+        raise SettingsWasNotUpdated()
 
 
 def update_requires_restart(value):

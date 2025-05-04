@@ -24,8 +24,8 @@ class Config:
     BASE_DIR = BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
     JWT_SECRET_KEY = os.environ["JWT_SECRET_KEY"]
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=5)
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(minutes=10)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=30)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
     JWT_TOKEN_LOCATION = ["headers"]
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ["access", "refresh"]

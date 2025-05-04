@@ -3,36 +3,50 @@ from app.models.camera_models import Camera
 from app.utils.utils import kill_processes
 from config import Config
 from flask import current_app
+from app.exceptions.camera_exceptions import (
+    CameraAlreadyExistsException,
+    CameraWasNotCreatedException,
+    CameraWasNotUpdatedException,
+    CameraWasNotDeletedException,
+    CameraWasNotStoppedException,
+    CameraWasNotStartedException,
+)
 import threading
 import subprocess
 import os
 
 
 def stop_camera(camera):
-    if camera.has_process_running():
-        killed_processes = kill_processes([camera.pid])
+    try:
+        if camera.has_process_running():
+            killed_processes = kill_processes([camera.pid])
 
-        if killed_processes:
-            camera.pid = None
+            if killed_processes:
+                camera.pid = None
 
-            db.session.add(camera)
-            db.session.commit()
+                db.session.add(camera)
+                db.session.commit()
 
-            return True
-        return False
-    return True
+                return True
+            return False
+        return True
+    except:
+        raise CameraWasNotStoppedException()
 
 
 def stop_camera_async(camera_id):
-    app = current_app._get_current_object()
+    try:
+        app = current_app._get_current_object()
 
-    def _stop():
-        with app.app_context():
-            camera = Camera.query.get(camera_id)
-            stop_camera(camera)
+        def _stop():
+            with app.app_context():
+                camera = Camera.query.get(camera_id)
+                stop_camera(camera)
 
-    thread = threading.Thread(target=_stop, daemon=True)
-    thread.start()
+        thread = threading.Thread(target=_stop, daemon=True)
+        thread.start()
+    except:
+        raise CameraWasNotStoppedException()
 
 
 def restart_camera_async(camera_id):
@@ -69,42 +83,80 @@ def stop_all_cameras_async():
         stop_camera_async(camera.id)
 
 
-def create_camera(**kwargs):
-    camera = Camera(**kwargs)
+def create_camera(name, username, password, ip_address, port, path):
+    try:
+        exists = db.session.query(Camera.query.filter_by(name=name).exists()).scalar()
 
-    db.session.add(camera)
-    db.session.commit()
+        if exists:
+            raise CameraAlreadyExistsException()
 
-    return camera
+        camera = Camera(
+            name=name,
+            username=username,
+            password=password,
+            ip_address=ip_address,
+            port=port,
+            path=path,
+        )
+
+        db.session.add(camera)
+        db.session.commit()
+
+        return camera
+
+    except CameraAlreadyExistsException as error:
+        raise error
+    except:
+        raise CameraWasNotCreatedException()
 
 
 def update_camera(camera, **kwargs):
-    for key, value in kwargs.items():
-        setattr(camera, key, value)
+    try:
+        exists = db.session.query(
+            Camera.query.filter_by(name=kwargs["name"]).exists()
+        ).scalar()
 
-    camera.requires_restart = True
-    db.session.commit()
+        if exists:
+            raise CameraAlreadyExistsException()
 
-    return camera
+        for key, value in kwargs.items():
+            setattr(camera, key, value)
+
+        camera.requires_restart = True
+        db.session.commit()
+
+        return camera
+    except CameraAlreadyExistsException as error:
+        raise error
+    except:
+        raise CameraWasNotUpdatedException()
 
 
 def delete_camera(camera):
-    was_stopped = stop_camera()
-    if was_stopped:
-        db.session.delete(camera)
-        db.session.commit()
+    try:
+        was_stopped = stop_camera()
+        if was_stopped:
+            db.session.delete(camera)
+            db.session.commit()
+    except:
+        raise CameraWasNotDeletedException()
 
 
 def start_camera_async(camera):
-    venv_python = os.path.join(Config.BASE_DIR, "venv", "bin", "python3")
-    command = [venv_python, "-m", "app.workers.camera_worker", str(camera.id)]
+    try:
+        venv_python = os.path.join(Config.BASE_DIR, "venv", "bin", "python3")
+        command = [venv_python, "-m", "app.workers.camera_worker", str(camera.id)]
 
-    process = subprocess.Popen(
-        command,
-        start_new_session=True,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
+        process = subprocess.Popen(
+            command,
+            start_new_session=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
 
-    camera.pid = process.pid
-    db.session.commit()
+        camera.pid = process.pid
+        db.session.commit()
+
+        return camera
+    except:
+        raise CameraWasNotStartedException()

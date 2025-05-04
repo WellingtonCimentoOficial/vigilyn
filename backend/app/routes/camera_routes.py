@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 from app.models.camera_models import Camera
 from app.schemas.camera_schemas import CameraSchema, CameraCreateUpdateSchema
 from app.services.camera_services import (
@@ -16,6 +16,11 @@ from app.services.storage_services import (
     start_storage_checker_async,
 )
 from flask_jwt_extended import jwt_required
+from app.exceptions.camera_exceptions import (
+    CameraWasNotFoundException,
+    CameraProcessAlreadyRunningException,
+    CameraProcessAlreadyStoppedException,
+)
 
 camera_bp = Blueprint("cameras", __name__, url_prefix="/api/cameras/")
 
@@ -37,7 +42,7 @@ def get(pk):
     camera = Camera.query.get(pk)
 
     if not camera:
-        return jsonify({"error": "Camera was not found"}), 404
+        raise CameraWasNotFoundException()
 
     schema = CameraSchema()
     camera_schema = schema.dump(camera)
@@ -48,10 +53,8 @@ def get(pk):
 @camera_bp.route("", methods=["POST"])
 @jwt_required()
 def create():
-    request_data = request.get_json()
-
     schema = CameraCreateUpdateSchema()
-    data = schema.load(request_data)
+    data = schema.load(request.json)
 
     new_camera = create_camera(**data)
     new_camera_schema = CameraSchema()
@@ -66,12 +69,10 @@ def update(pk):
     camera = Camera.query.get(pk)
 
     if not camera:
-        return jsonify({"error": "Camera was not found"}), 404
-
-    request_data = request.get_json()
+        raise CameraWasNotFoundException()
 
     schema = CameraCreateUpdateSchema()
-    data = schema.load(request_data)
+    data = schema.load(request.json)
 
     camera_updated = update_camera(camera, **data)
     camera_updated_schema = CameraSchema()
@@ -86,11 +87,11 @@ def delete(pk):
     camera = Camera.query.get(pk)
 
     if not camera:
-        return jsonify({"error": "Camera was not found"}), 404
+        raise CameraWasNotFoundException()
 
     delete_camera(camera)
 
-    return jsonify({}), 204
+    return Response(status=204)
 
 
 @camera_bp.route("<int:pk>/start/", methods=["POST"])
@@ -99,10 +100,10 @@ def start(pk):
     camera = Camera.query.get(pk)
 
     if not camera:
-        return jsonify({"error": "Camera was not found"}), 404
+        raise CameraWasNotFoundException()
 
     if camera.has_process_running():
-        return jsonify({"error": "The process already running"}), 400
+        raise CameraProcessAlreadyRunningException()
 
     camera_with_pid = start_camera_async(camera)
     schema = CameraSchema()
@@ -120,14 +121,14 @@ def stop(pk):
     camera = Camera.query.get(pk)
 
     if not camera:
-        return jsonify({"error": "Camera was not found"}), 404
+        raise CameraWasNotFoundException()
 
     if not camera.has_process_running():
-        return jsonify({"error": "The process already stopped"}), 400
+        raise CameraProcessAlreadyStoppedException()
 
     stop_camera_async(camera.id)
 
-    return jsonify({}), 200
+    return Response(status=200)
 
 
 @camera_bp.route("<int:pk>/restart/", methods=["POST"])
@@ -136,8 +137,8 @@ def restart(pk):
     camera = Camera.query.get(pk)
 
     if not camera:
-        return jsonify({"error": "Camera was not found"}), 404
+        raise CameraWasNotFoundException()
 
     restart_camera_async(camera.id)
 
-    return jsonify({}), 200
+    return Response(status=200)

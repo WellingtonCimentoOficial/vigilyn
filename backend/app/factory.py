@@ -7,6 +7,7 @@ from .routes.setting_routes import setting_bp
 from .routes.system_routes import system_bp
 from .routes.auth_routes import auth_bp
 from .commands import setup_cli
+from app.handlers import register_error_handlers
 
 
 def create_app():
@@ -27,5 +28,7 @@ def create_app():
     jwt.init_app(app)
 
     app.cli.add_command(setup_cli)
+
+    register_error_handlers(app)
 
     return app

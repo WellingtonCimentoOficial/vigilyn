@@ -1,6 +1,10 @@
 from app.extensions import db, bcrypt
 from app.models.user_models import User
 from app.services.auth_services import generate_tokens
+from app.exceptions.user_exceptions import (
+    UsernameOrPasswordInvalidException,
+    UserWasNotCreatedException,
+)
 
 
 def create_user(**kwargs):
@@ -9,20 +13,21 @@ def create_user(**kwargs):
             User.query.filter_by(email=kwargs["email"]).exists()
         ).scalar()
 
-        if not exists:
-            hashed_password = bcrypt.generate_password_hash(kwargs["password"]).decode(
-                "utf-8"
-            )
-            kwargs["password"] = hashed_password
+        if exists:
+            raise UserWasNotCreatedException()
 
-            user = User(**kwargs)
-            db.session.add(user)
-            db.session.commit()
+        hashed_password = bcrypt.generate_password_hash(kwargs["password"]).decode(
+            "utf-8"
+        )
+        kwargs["password"] = hashed_password
 
-            return True, user
-        return False, None
+        user = User(**kwargs)
+        db.session.add(user)
+        db.session.commit()
+
+        return user
     except:
-        return False, None
+        raise UserWasNotCreatedException()
 
 
 def login_user(email, password):
@@ -30,4 +35,4 @@ def login_user(email, password):
     if user and user.check_password(password):
         tokens = generate_tokens(identity=user.id)
         return tokens
-    return None
+    raise UsernameOrPasswordInvalidException()
