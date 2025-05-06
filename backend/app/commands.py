@@ -1,6 +1,11 @@
 import click
 from flask.cli import with_appcontext
-from app.utils.settings import create_default_settings
+from app.utils.settings import (
+    create_default_settings,
+    create_permissions,
+    create_roles,
+    create_default_user,
+)
 from flask.cli import AppGroup
 from config import Config
 import subprocess
@@ -20,6 +25,27 @@ def init_settings():
         print("There is already a settings in the db")
 
 
+@click.command("init-permissions")
+@with_appcontext
+def init_permissions():
+    create_permissions()
+    print("Permissions created successfully!")
+
+
+@click.command("init-roles")
+@with_appcontext
+def init_roles():
+    create_roles()
+    print("Roles created successfully!")
+
+
+@click.command("init-default-user")
+@with_appcontext
+def init_default_user():
+    create_default_user()
+    print("The default user was created successfully!")
+
+
 @setup_cli.command("all")
 def setup_all():
     venv_python = os.path.join(Config.BASE_DIR, "venv", "bin", "python3")
@@ -37,5 +63,14 @@ def setup_all():
 
     click.echo("\n⚙️ Rodando: init-settings")
     subprocess.call([venv_python, "manage.py", "init-settings"])
+
+    click.echo("\n⚙️ Rodando: init-permissions")
+    subprocess.call([venv_python, "manage.py", "init-permissions"])
+
+    click.echo("\n⚙️ Rodando: init-roles")
+    subprocess.call([venv_python, "manage.py", "init-roles"])
+
+    click.echo("\n⚙️ Rodando: init-default-user")
+    subprocess.call([venv_python, "manage.py", "init-default-user"])
 
     click.echo("\n✅ Setup completo!")

@@ -5,7 +5,6 @@ class UserSchema(Schema):
     id = fields.Int()
     name = fields.Str()
     email = fields.Str()
-    password = fields.Str()
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
 
@@ -65,3 +64,41 @@ class UserLoginSchema(Schema):
             )
         ],
     )
+
+
+class UserUpdateSchema(Schema):
+    name = fields.Str(
+        required=False,
+        validate=[
+            validate.Length(min=5),
+            validate.Regexp("^[a-zA-Z]+$", error="The name must be only letters."),
+        ],
+    )
+    password = fields.Str(
+        required=False,
+        validate=[
+            validate.Regexp(
+                r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$",
+                error="The password must be at least 8 characters long, including one uppercase letter, one lowercase letter, one number, and one special character.",
+            )
+        ],
+    )
+    confirm_password = fields.Str(required=False)
+
+    @validates_schema
+    def validate_passwords(self, data, **kwargs):
+        if "password" in data and "confirm_password" not in data:
+            raise ValidationError(
+                {
+                    "confirm_password": [
+                        "The 'confirm_password' field is required when 'password' is provided."
+                    ]
+                }
+            )
+
+    @validates_schema
+    def validate_passwords_match(self, data, **kwargs):
+        if data.get("password") != data.get("confirm_password"):
+            raise ValidationError(
+                "The passwords do not match.", field_name="confirm_password"
+            )

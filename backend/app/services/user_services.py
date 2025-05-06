@@ -1,9 +1,9 @@
 from app.extensions import db, bcrypt
 from app.models.user_models import User
-from app.services.auth_services import generate_tokens
 from app.exceptions.user_exceptions import (
-    UsernameOrPasswordInvalidException,
     UserWasNotCreatedException,
+    UserWasNotUpdatedException,
+    UserWasNotDeletedException,
 )
 
 
@@ -30,9 +30,21 @@ def create_user(**kwargs):
         raise UserWasNotCreatedException()
 
 
-def login_user(email, password):
-    user = User.query.filter_by(email=email).first()
-    if user and user.check_password(password):
-        tokens = generate_tokens(identity=user.id)
-        return tokens
-    raise UsernameOrPasswordInvalidException()
+def update_user(user, **kwargs):
+    try:
+        for key, value in kwargs.items():
+            setattr(user, key, value)
+
+        db.session.commit()
+
+        return user
+    except:
+        raise UserWasNotUpdatedException()
+
+
+def delete_user(user):
+    try:
+        db.session.delete(user)
+        db.session.commit()
+    except:
+        raise UserWasNotDeletedException()

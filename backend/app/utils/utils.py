@@ -2,6 +2,7 @@ import os
 import time
 from .settings import get_settings
 import signal
+from flask import jsonify
 
 
 def create_tmp_dir():
@@ -33,3 +34,8 @@ def kill_processes(pids):
         killed_processes.append(pid)
 
     return killed_processes
+
+
+def generate_error_message(error, message, status_code):
+    data = {"error": error, "message": message}
+    return jsonify(data), status_code

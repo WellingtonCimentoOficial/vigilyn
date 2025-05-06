@@ -12,13 +12,13 @@ from app.services.storage_services import (
     stop_storage_checker_async,
     restart_storage_checker_async,
 )
-from flask_jwt_extended import jwt_required
+from app.decorators.auth_decorators import authentication_required
 
 system_bp = Blueprint("system", __name__, url_prefix="/api/system/")
 
 
 @system_bp.route("restart/", methods=["POST"])
-@jwt_required()
+@authentication_required()
 def restart():
     restart_all_cameras_async(only_active=True)
     restart_organize_records_async()
@@ -29,7 +29,7 @@ def restart():
 
 
 @system_bp.route("stop/", methods=["POST"])
-@jwt_required()
+@authentication_required()
 def stop():
     stop_all_cameras_async()
     stop_organize_records_async()

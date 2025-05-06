@@ -6,6 +6,8 @@ from .routes.storage_routes import storage_bp
 from .routes.setting_routes import setting_bp
 from .routes.system_routes import system_bp
 from .routes.auth_routes import auth_bp
+from .routes.user_routes import user_bp
+from .routes.role_routes import role_bp
 from .commands import setup_cli
 from app.handlers import register_error_handlers
 
@@ -19,6 +21,8 @@ def create_app():
     app.register_blueprint(setting_bp)
     app.register_blueprint(system_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(user_bp)
+    app.register_blueprint(role_bp)
 
     app.config.from_object("config.Config")
 

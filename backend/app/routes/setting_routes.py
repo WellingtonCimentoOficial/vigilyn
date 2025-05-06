@@ -2,13 +2,13 @@ from flask import Blueprint, jsonify, request
 from app.models.setting_models import Setting
 from app.schemas.setting_schemas import SettingSchema
 from app.services.setting_services import update_setting
-from flask_jwt_extended import jwt_required
+from app.decorators.auth_decorators import authentication_required
 
 setting_bp = Blueprint("setting", __name__, url_prefix="/api/settings/")
 
 
 @setting_bp.route("", methods=["GET"])
-@jwt_required()
+@authentication_required()
 def get():
     setting = Setting.query.first()
     schema = SettingSchema()
@@ -18,7 +18,7 @@ def get():
 
 
 @setting_bp.route("", methods=["PATCH"])
-@jwt_required()
+@authentication_required()
 def update():
     setting = Setting.query.first()
 

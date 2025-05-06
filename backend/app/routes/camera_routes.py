@@ -15,9 +15,8 @@ from app.services.record_services import (
 from app.services.storage_services import (
     start_storage_checker_async,
 )
-from flask_jwt_extended import jwt_required
+from app.decorators.auth_decorators import authentication_required
 from app.exceptions.camera_exceptions import (
-    CameraWasNotFoundException,
     CameraProcessAlreadyRunningException,
     CameraProcessAlreadyStoppedException,
 )
@@ -26,7 +25,7 @@ camera_bp = Blueprint("cameras", __name__, url_prefix="/api/cameras/")
 
 
 @camera_bp.route("", methods=["GET"])
-@jwt_required()
+@authentication_required()
 def get_all():
     all_cameras = Camera.query.all()
 
@@ -37,13 +36,9 @@ def get_all():
 
 
 @camera_bp.route("<int:pk>/", methods=["GET"])
-@jwt_required()
+@authentication_required()
 def get(pk):
-    camera = Camera.query.get(pk)
-
-    if not camera:
-        raise CameraWasNotFoundException()
-
+    camera = Camera.query.get_or_404(pk)
     schema = CameraSchema()
     camera_schema = schema.dump(camera)
 
@@ -51,7 +46,7 @@ def get(pk):
 
 
 @camera_bp.route("", methods=["POST"])
-@jwt_required()
+@authentication_required()
 def create():
     schema = CameraCreateUpdateSchema()
     data = schema.load(request.json)
@@ -64,13 +59,9 @@ def create():
 
 
 @camera_bp.route("<int:pk>/", methods=["PUT"])
-@jwt_required()
+@authentication_required()
 def update(pk):
-    camera = Camera.query.get(pk)
-
-    if not camera:
-        raise CameraWasNotFoundException()
-
+    camera = Camera.query.get_or_404(pk)
     schema = CameraCreateUpdateSchema()
     data = schema.load(request.json)
 
@@ -82,25 +73,18 @@ def update(pk):
 
 
 @camera_bp.route("<int:pk>/", methods=["DELETE"])
-@jwt_required()
+@authentication_required()
 def delete(pk):
-    camera = Camera.query.get(pk)
-
-    if not camera:
-        raise CameraWasNotFoundException()
-
+    camera = Camera.query.get_or_404(pk)
     delete_camera(camera)
 
     return Response(status=204)
 
 
 @camera_bp.route("<int:pk>/start/", methods=["POST"])
-@jwt_required()
+@authentication_required()
 def start(pk):
-    camera = Camera.query.get(pk)
-
-    if not camera:
-        raise CameraWasNotFoundException()
+    camera = Camera.query.get_or_404(pk)
 
     if camera.has_process_running():
         raise CameraProcessAlreadyRunningException()
@@ -116,12 +100,9 @@ def start(pk):
 
 
 @camera_bp.route("<int:pk>/stop/", methods=["POST"])
-@jwt_required()
+@authentication_required()
 def stop(pk):
-    camera = Camera.query.get(pk)
-
-    if not camera:
-        raise CameraWasNotFoundException()
+    camera = Camera.query.get_or_404(pk)
 
     if not camera.has_process_running():
         raise CameraProcessAlreadyStoppedException()
@@ -132,13 +113,9 @@ def stop(pk):
 
 
 @camera_bp.route("<int:pk>/restart/", methods=["POST"])
-@jwt_required()
+@authentication_required()
 def restart(pk):
-    camera = Camera.query.get(pk)
-
-    if not camera:
-        raise CameraWasNotFoundException()
-
+    camera = Camera.query.get_or_404(pk)
     restart_camera_async(camera.id)
 
     return Response(status=200)

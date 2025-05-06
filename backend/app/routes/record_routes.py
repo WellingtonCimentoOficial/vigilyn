@@ -4,13 +4,13 @@ from app.models.record_models import Record
 from app.schemas.record_schemas import RecordSchema, RecordIdsSchema
 from app.services.record_services import delete_records
 from sqlalchemy import and_
-from flask_jwt_extended import jwt_required
+from app.decorators.auth_decorators import authentication_required
 
 record_bp = Blueprint("records", __name__, url_prefix="/api/cameras/")
 
 
 @record_bp.route("<int:camera_pk>/records/", methods=["GET"])
-@jwt_required()
+@authentication_required()
 def get_all(camera_pk):
     camera = Camera.query.get(camera_pk)
 
@@ -25,7 +25,7 @@ def get_all(camera_pk):
 
 
 @record_bp.route("<int:camera_pk>/records/<int:record_pk>/", methods=["GET"])
-@jwt_required()
+@authentication_required()
 def get(camera_pk, record_pk):
     record = Record.query.filter_by(id=record_pk, camera_id=camera_pk).first()
 
@@ -39,7 +39,7 @@ def get(camera_pk, record_pk):
 
 
 @record_bp.route("<int:camera_pk>/records/<int:record_pk>/", methods=["DELETE"])
-@jwt_required()
+@authentication_required()
 def delete(camera_pk, record_pk):
     records = Record.query.filter_by(id=record_pk, camera_id=camera_pk).all()
 
@@ -52,7 +52,7 @@ def delete(camera_pk, record_pk):
 
 
 @record_bp.route("<int:camera_pk>/records/", methods=["DELETE"])
-@jwt_required()
+@authentication_required()
 def delete_all(camera_pk):
     ids = request.get_json()
 
