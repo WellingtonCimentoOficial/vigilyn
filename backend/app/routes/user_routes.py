@@ -1,7 +1,12 @@
 from flask import Blueprint, jsonify, request
 from app.decorators.auth_decorators import authentication_required
 from app.models.user_models import User
-from app.schemas.user_schemas import UserSchema, UserUpdateSchema, UserCreateSchema
+from app.schemas.user_schemas import (
+    UserSchema,
+    UserUpdateSchema,
+    UserCreateSchema,
+    UserAdminUpdateSchema,
+)
 from app.schemas.role_schemas import RoleSchema, RoleUpdateSchema
 from app.services.user_services import update_user, delete_user, create_user
 from app.services.role_services import update_roles
@@ -73,7 +78,7 @@ def get(pk):
 @permission_required("update_user")
 def update(pk):
     user = User.query.get_or_404(pk)
-    schema = UserUpdateSchema()
+    schema = UserAdminUpdateSchema()
     data = schema.load(request.json)
     data.pop("confirm_password", None)
 
