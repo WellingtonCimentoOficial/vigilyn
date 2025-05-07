@@ -11,9 +11,7 @@ def register_error_handlers(app):
         if isinstance(error, ValidationError):
             return generate_error_message("validation", error.messages, 400)
         elif isinstance(error, AppException):
-            return generate_error_message(
-                error.default_error, error.default_message, error.status_code
-            )
+            return generate_error_message(error.error, error.message, error.status_code)
         elif isinstance(error, MethodNotAllowed):
             return generate_error_message(
                 "method_not_allowed", "You are not allowed to use this method.", 405

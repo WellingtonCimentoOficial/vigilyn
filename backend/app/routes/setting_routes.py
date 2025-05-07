@@ -3,12 +3,14 @@ from app.models.setting_models import Setting
 from app.schemas.setting_schemas import SettingSchema
 from app.services.setting_services import update_setting
 from app.decorators.auth_decorators import authentication_required
+from app.decorators.permission_decorators import permission_required
 
 setting_bp = Blueprint("setting", __name__, url_prefix="/api/settings/")
 
 
 @setting_bp.route("", methods=["GET"])
 @authentication_required()
+@permission_required("view_settings")
 def get():
     setting = Setting.query.first()
     schema = SettingSchema()
@@ -19,6 +21,7 @@ def get():
 
 @setting_bp.route("", methods=["PATCH"])
 @authentication_required()
+@permission_required("update_settings")
 def update():
     setting = Setting.query.first()
 

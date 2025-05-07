@@ -3,12 +3,14 @@ from app.utils.storage import get_storage
 from app.schemas.storage_schemas import StorageSchema, StorageMonthlySchema
 from app.services.storage_services import get_monthly_storage
 from app.decorators.auth_decorators import authentication_required
+from app.decorators.permission_decorators import permission_required
 
 storage_bp = Blueprint("storahe", __name__, url_prefix="/api/storage/")
 
 
 @storage_bp.route("", methods=["GET"])
 @authentication_required()
+@permission_required("view_storage")
 def get():
     storage = get_storage()
     schema = StorageSchema()
@@ -19,6 +21,7 @@ def get():
 
 @storage_bp.route("monthly/", methods=["GET"])
 @authentication_required()
+@permission_required("view_storage")
 def get_monthly():
     monthly = get_monthly_storage()
     schema = StorageMonthlySchema(many=True)

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import DateTime, func, String
 from datetime import datetime
 from typing import List
+from app.models.permission_models import Permission
 
 
 class User(db.Model):
@@ -26,3 +27,13 @@ class User(db.Model):
     def check_password(self, password):
         is_correct = bcrypt.check_password_hash(self.password, password)
         return is_correct
+
+    def has_permission(self, permission_name):
+        for role in self.roles:
+            exists = any(
+                permission.name == permission_name for permission in role.permissions
+            )
+            if exists:
+                return True
+
+        return False

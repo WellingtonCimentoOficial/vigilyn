@@ -5,12 +5,14 @@ from app.schemas.record_schemas import RecordSchema, RecordIdsSchema
 from app.services.record_services import delete_records
 from sqlalchemy import and_
 from app.decorators.auth_decorators import authentication_required
+from app.decorators.permission_decorators import permission_required
 
 record_bp = Blueprint("records", __name__, url_prefix="/api/cameras/")
 
 
 @record_bp.route("<int:camera_pk>/records/", methods=["GET"])
 @authentication_required()
+@permission_required("view_record")
 def get_all(camera_pk):
     camera = Camera.query.get(camera_pk)
 
@@ -26,6 +28,7 @@ def get_all(camera_pk):
 
 @record_bp.route("<int:camera_pk>/records/<int:record_pk>/", methods=["GET"])
 @authentication_required()
+@permission_required("view_record")
 def get(camera_pk, record_pk):
     record = Record.query.filter_by(id=record_pk, camera_id=camera_pk).first()
 
@@ -40,6 +43,7 @@ def get(camera_pk, record_pk):
 
 @record_bp.route("<int:camera_pk>/records/<int:record_pk>/", methods=["DELETE"])
 @authentication_required()
+@permission_required("delete_record")
 def delete(camera_pk, record_pk):
     records = Record.query.filter_by(id=record_pk, camera_id=camera_pk).all()
 
@@ -53,6 +57,7 @@ def delete(camera_pk, record_pk):
 
 @record_bp.route("<int:camera_pk>/records/", methods=["DELETE"])
 @authentication_required()
+@permission_required("delete_record")
 def delete_all(camera_pk):
     ids = request.get_json()
 

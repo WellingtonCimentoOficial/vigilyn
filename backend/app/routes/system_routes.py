@@ -13,12 +13,14 @@ from app.services.storage_services import (
     restart_storage_checker_async,
 )
 from app.decorators.auth_decorators import authentication_required
+from app.decorators.permission_decorators import permission_required
 
 system_bp = Blueprint("system", __name__, url_prefix="/api/system/")
 
 
 @system_bp.route("restart/", methods=["POST"])
 @authentication_required()
+@permission_required("restart_system")
 def restart():
     restart_all_cameras_async(only_active=True)
     restart_organize_records_async()
@@ -30,6 +32,7 @@ def restart():
 
 @system_bp.route("stop/", methods=["POST"])
 @authentication_required()
+@permission_required("stop_system")
 def stop():
     stop_all_cameras_async()
     stop_organize_records_async()

@@ -16,6 +16,7 @@ from app.services.storage_services import (
     start_storage_checker_async,
 )
 from app.decorators.auth_decorators import authentication_required
+from app.decorators.permission_decorators import permission_required
 from app.exceptions.camera_exceptions import (
     CameraProcessAlreadyRunningException,
     CameraProcessAlreadyStoppedException,
@@ -26,6 +27,7 @@ camera_bp = Blueprint("cameras", __name__, url_prefix="/api/cameras/")
 
 @camera_bp.route("", methods=["GET"])
 @authentication_required()
+@permission_required("view_camera")
 def get_all():
     all_cameras = Camera.query.all()
 
@@ -37,6 +39,7 @@ def get_all():
 
 @camera_bp.route("<int:pk>/", methods=["GET"])
 @authentication_required()
+@permission_required("view_camera")
 def get(pk):
     camera = Camera.query.get_or_404(pk)
     schema = CameraSchema()
@@ -47,6 +50,7 @@ def get(pk):
 
 @camera_bp.route("", methods=["POST"])
 @authentication_required()
+@permission_required("create_camera")
 def create():
     schema = CameraCreateUpdateSchema()
     data = schema.load(request.json)
@@ -60,6 +64,7 @@ def create():
 
 @camera_bp.route("<int:pk>/", methods=["PUT"])
 @authentication_required()
+@permission_required("update_camera")
 def update(pk):
     camera = Camera.query.get_or_404(pk)
     schema = CameraCreateUpdateSchema()
@@ -74,6 +79,7 @@ def update(pk):
 
 @camera_bp.route("<int:pk>/", methods=["DELETE"])
 @authentication_required()
+@permission_required("delete_camera")
 def delete(pk):
     camera = Camera.query.get_or_404(pk)
     delete_camera(camera)
@@ -83,6 +89,7 @@ def delete(pk):
 
 @camera_bp.route("<int:pk>/start/", methods=["POST"])
 @authentication_required()
+@permission_required("start_camera")
 def start(pk):
     camera = Camera.query.get_or_404(pk)
 
@@ -101,6 +108,7 @@ def start(pk):
 
 @camera_bp.route("<int:pk>/stop/", methods=["POST"])
 @authentication_required()
+@permission_required("stop_camera")
 def stop(pk):
     camera = Camera.query.get_or_404(pk)
 
@@ -114,6 +122,7 @@ def stop(pk):
 
 @camera_bp.route("<int:pk>/restart/", methods=["POST"])
 @authentication_required()
+@permission_required("restart_camera")
 def restart(pk):
     camera = Camera.query.get_or_404(pk)
     restart_camera_async(camera.id)
