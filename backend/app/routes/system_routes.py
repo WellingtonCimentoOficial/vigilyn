@@ -27,7 +27,7 @@ def restart():
     restart_storage_checker_async()
     update_requires_restart(False)
 
-    return jsonify({}), 200
+    return jsonify({"message": "The system was restarted successfully!"}), 200
 
 
 @system_bp.route("stop/", methods=["POST"])
@@ -38,4 +38,4 @@ def stop():
     stop_organize_records_async()
     stop_storage_checker_async()
 
-    return jsonify({}), 200
+    return jsonify({"message": "The system was stopped successfully!"}), 200

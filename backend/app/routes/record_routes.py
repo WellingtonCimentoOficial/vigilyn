@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_file
 from app.models.camera_models import Camera
 from app.models.record_models import Record
 from app.schemas.record_schemas import RecordSchema, RecordIdsSchema
@@ -30,10 +30,7 @@ def get_all(camera_pk):
 @authentication_required()
 @permission_required("view_record")
 def get(camera_pk, record_pk):
-    record = Record.query.filter_by(id=record_pk, camera_id=camera_pk).first()
-
-    if not record:
-        return jsonify({"error": "Record was not found"}), 404
+    record = Record.query.filter_by(id=record_pk, camera_id=camera_pk).first_or_404()
 
     record_schema = RecordSchema()
     record_data = record_schema.dump(record)
@@ -41,18 +38,24 @@ def get(camera_pk, record_pk):
     return jsonify(record_data)
 
 
+@record_bp.route("<int:camera_pk>/records/<int:record_pk>/watch/", methods=["GET"])
+@authentication_required()
+@permission_required("view_record")
+def watch(camera_pk, record_pk):
+    record = Record.query.filter_by(id=record_pk, camera_id=camera_pk).first_or_404()
+
+    return send_file(record.path)
+
+
 @record_bp.route("<int:camera_pk>/records/<int:record_pk>/", methods=["DELETE"])
 @authentication_required()
 @permission_required("delete_record")
 def delete(camera_pk, record_pk):
-    records = Record.query.filter_by(id=record_pk, camera_id=camera_pk).all()
+    record = Record.query.filter_by(id=record_pk, camera_id=camera_pk).first_or_404()
 
-    if not records:
-        return jsonify({"error": "Record was not found"}), 404
+    delete_records([record])
 
-    delete_records(records)
-
-    return jsonify({}), 204
+    return jsonify({"message": "The record was deleted successfully!"}), 200
 
 
 @record_bp.route("<int:camera_pk>/records/", methods=["DELETE"])
@@ -75,4 +78,4 @@ def delete_all(camera_pk):
 
     delete_records(records)
 
-    return jsonify({}), 204
+    return jsonify({"message": "The records was deleted successfully!"}), 200

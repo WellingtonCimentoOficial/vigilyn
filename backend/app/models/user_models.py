@@ -3,7 +3,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import DateTime, func, String
 from datetime import datetime
 from typing import List
-from app.models.permission_models import Permission
 
 
 class User(db.Model):

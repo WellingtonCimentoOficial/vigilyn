@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, Response
+from flask import Blueprint, jsonify, request
 from app.models.camera_models import Camera
 from app.schemas.camera_schemas import CameraSchema, CameraCreateUpdateSchema
 from app.services.camera_services import (
@@ -84,7 +84,7 @@ def delete(pk):
     camera = Camera.query.get_or_404(pk)
     delete_camera(camera)
 
-    return Response(status=204)
+    return jsonify({"message": "The camera was deleted successfully!"}), 204
 
 
 @camera_bp.route("<int:pk>/start/", methods=["POST"])
@@ -117,7 +117,7 @@ def stop(pk):
 
     stop_camera_async(camera.id)
 
-    return Response(status=200)
+    return jsonify({"message": "The camera was stopped successfully!"}), 200
 
 
 @camera_bp.route("<int:pk>/restart/", methods=["POST"])
@@ -127,4 +127,4 @@ def restart(pk):
     camera = Camera.query.get_or_404(pk)
     restart_camera_async(camera.id)
 
-    return Response(status=200)
+    return jsonify({"message": "The camera was restarted successfully!"})

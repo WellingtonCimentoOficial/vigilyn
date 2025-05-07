@@ -112,11 +112,9 @@ def create_camera(name, username, password, ip_address, port, path):
 
 def update_camera(camera, **kwargs):
     try:
-        exists = db.session.query(
-            Camera.query.filter_by(name=kwargs["name"]).exists()
-        ).scalar()
+        camera_by_name = Camera.query.filter_by(name=kwargs["name"]).first()
 
-        if exists:
+        if camera_by_name.id != camera.id:
             raise CameraAlreadyExistsException()
 
         for key, value in kwargs.items():

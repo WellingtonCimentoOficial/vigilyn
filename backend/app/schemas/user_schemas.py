@@ -71,7 +71,7 @@ class UserUpdateSchema(Schema):
         required=False,
         validate=[
             validate.Length(min=5),
-            validate.Regexp("^[a-zA-Z]+$", error="The name must be only letters."),
+            validate.Regexp("^[a-zA-Z\s]+$", error="The name must be only letters."),
         ],
     )
     password = fields.Str(
