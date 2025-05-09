@@ -1,23 +1,8 @@
 import threading
 from .email import Email
 from .logger import Log
-from app.models.setting_models import Setting
-import shutil
 import time
-
-
-def get_storage():
-    save_directory_path = Setting.query.first().save_directory_path
-
-    storage = shutil.disk_usage(save_directory_path)
-    total = round(storage.total / (1024**3), 2)
-    used = round(storage.used / (1024**3), 2)
-    free = round(storage.free / (1024**3), 2)
-    percent_used = round((used / total) * 100, 2)
-
-    data = {"total": total, "used": used, "free": free, "percent_used": percent_used}
-
-    return data
+from app.services.system_services import get_storage
 
 
 def storage_checker():

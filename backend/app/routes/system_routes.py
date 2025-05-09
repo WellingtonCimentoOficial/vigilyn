@@ -14,8 +14,31 @@ from app.services.storage_services import (
 )
 from app.decorators.auth_decorators import authentication_required
 from app.decorators.permission_decorators import permission_required
+from app.schemas.system_schemas import SystemSchema, StorageMonthlySchema
+from app.services.storage_services import get_monthly_storage
+from app.services.system_services import get_system
 
 system_bp = Blueprint("system", __name__, url_prefix="/api/system/")
+
+
+@system_bp.route("", methods=["GET"])
+@authentication_required()
+def get():
+    system = get_system()
+    schema = SystemSchema()
+    data = schema.load(system)
+
+    return jsonify(data)
+
+
+@system_bp.route("storage/", methods=["GET"])
+@authentication_required()
+def get_monthly():
+    monthly = get_monthly_storage()
+    schema = StorageMonthlySchema(many=True)
+    data = schema.load(monthly)
+
+    return jsonify(data)
 
 
 @system_bp.route("restart/", methods=["POST"])

@@ -2,7 +2,6 @@ from flask import Flask
 from app.extensions import db, migrate, mail, jwt
 from .routes.camera_routes import camera_bp
 from .routes.record_routes import record_bp
-from .routes.storage_routes import storage_bp
 from .routes.setting_routes import setting_bp
 from .routes.system_routes import system_bp
 from .routes.auth_routes import auth_bp
@@ -17,7 +16,6 @@ def create_app():
 
     app.register_blueprint(camera_bp)
     app.register_blueprint(record_bp)
-    app.register_blueprint(storage_bp)
     app.register_blueprint(setting_bp)
     app.register_blueprint(system_bp)
     app.register_blueprint(auth_bp)
