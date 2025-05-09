@@ -8,10 +8,16 @@ from app.schemas.user_schemas import (
     UserAdminUpdateSchema,
 )
 from app.schemas.role_schemas import RoleSchema, RoleUpdateSchema
-from app.services.user_services import update_user, delete_user, create_user
+from app.services.user_services import (
+    update_user,
+    delete_user,
+    create_user,
+    filter_user,
+)
 from app.services.role_services import update_roles
 from app.decorators.permission_decorators import permission_required
 from flask_jwt_extended import get_jwt_identity
+from app.utils.utils import generate_pagination_response
 
 user_bp = Blueprint("user", __name__, url_prefix="/api/users/")
 
@@ -30,9 +36,22 @@ def create():
 @authentication_required()
 @permission_required("view_all_users")
 def get_all():
-    users = User.query.all()
-    schema = UserSchema()
-    data = schema.dump(users, many=True)
+    search_param = request.args.get("search", default="")
+    role_param = request.args.get("role", default="")
+    is_active_param = request.args.get("is_active", default="true")
+    page_param = request.args.get("page", default=1, type=int)
+    limit_param = request.args.get("limit", default=10, type=int)
+
+    users = filter_user(
+        search_param=search_param,
+        role_param=role_param,
+        is_active_param=is_active_param,
+        page=page_param,
+        limit=limit_param,
+    )
+    users_schema = UserSchema(many=True).dump(users)
+
+    data = generate_pagination_response(page_param, limit_param, users_schema)
     return jsonify(data), 200
 
 

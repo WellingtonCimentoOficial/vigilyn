@@ -23,3 +23,15 @@ class UserWasNotDeletedException(AppException):
     default_error = "user_was_not_deleted"
     default_message = "The user was not deleted."
     status_code = 400
+
+
+class UserInactiveException(AppException):
+    default_error = "user_inactive"
+    default_message = "The user is not active."
+    status_code = 403
+
+
+class UserIsActiveParamException(AppException):
+    default_error = "invalid_user_is_active_param"
+    default_message = "The value of the 'is_active' field is invalid"
+    status_code = 400

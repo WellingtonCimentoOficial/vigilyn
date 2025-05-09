@@ -2,7 +2,10 @@ from flask_jwt_extended import create_access_token, create_refresh_token, decode
 from app.models.token_models import TokenBlocklist, Token
 from app.extensions import db, jwt
 from app.models.user_models import User
-from app.exceptions.user_exceptions import UsernameOrPasswordInvalidException
+from app.exceptions.user_exceptions import (
+    UsernameOrPasswordInvalidException,
+    UserInactiveException,
+)
 
 
 def generate_tokens(identity):
@@ -39,6 +42,9 @@ def is_token_revoked(_jwt_header, jwt_data):
 def login(email, password):
     user = User.query.filter_by(email=email).first()
     if user and user.check_password(password):
+        if not user.is_active:
+            raise UserInactiveException()
+
         tokens = generate_tokens(identity=user.id)
         return tokens
     raise UsernameOrPasswordInvalidException()

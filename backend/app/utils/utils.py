@@ -39,3 +39,8 @@ def kill_processes(pids):
 def generate_error_message(error, message, status_code):
     data = {"error": error, "message": message}
     return jsonify(data), status_code
+
+
+def generate_pagination_response(page, limit, data):
+    payload = {"page": page, "limit": limit, "data": data}
+    return payload
