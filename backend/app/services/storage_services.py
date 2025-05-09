@@ -2,7 +2,6 @@ from app.models.storage_models import StorageChecker
 from app.models.record_models import Record
 from sqlalchemy import func
 from app.extensions import db
-from config import Config
 from app.utils.utils import kill_processes
 from flask import current_app
 import os
@@ -60,7 +59,9 @@ def start_storage_checker_async():
     if not storage_checker or (
         storage_checker and not storage_checker.has_process_running()
     ):
-        venv_python = os.path.join(Config.BASE_DIR, "venv", "bin", "python3")
+        venv_python = os.path.join(
+            current_app.config["BASE_DIR"], "venv", "bin", "python3"
+        )
         command = [venv_python, "-m", "app.workers.storage_checker_worker"]
 
         process = subprocess.Popen(

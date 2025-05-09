@@ -3,7 +3,7 @@ from app.utils.fmpeg import Fmpeg
 from app.utils.logger import Log
 from app.utils.email import Email
 from app.utils.settings import get_settings
-from config import Config
+from flask import current_app
 import time
 
 
@@ -21,9 +21,9 @@ def start_record(camera):
 
     while True:
         if process.poll() is not None:
-            if (
-                datetime.now() - last_email_sent
-            ).total_seconds() >= Config.MAIL_INTERVAL:
+            if (datetime.now() - last_email_sent).total_seconds() >= current_app.config[
+                "MAIL_INTERVAL"
+            ]:
                 email.send_async(
                     subject=f"{camera.name} is down!",
                     body=f"The connection to {camera.name} is down",

@@ -29,6 +29,7 @@ class UserSchema(Schema):
     id = fields.Int()
     name = fields.Str()
     email = fields.Str()
+    is_active = fields.Bool()
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
 
@@ -100,3 +101,4 @@ class UserAdminUpdateSchema(UserUpdateSchema):
         required=False,
         validate=email_validate,
     )
+    is_active = fields.Bool(required=False)

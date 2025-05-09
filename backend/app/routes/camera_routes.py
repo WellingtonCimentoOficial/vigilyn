@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from app.models.camera_models import Camera
 from app.schemas.camera_schemas import CameraSchema, CameraCreateUpdateSchema
 from app.services.camera_services import (
@@ -8,6 +8,7 @@ from app.services.camera_services import (
     start_camera_async,
     stop_camera_async,
     restart_camera_async,
+    filter_camera,
 )
 from app.services.record_services import (
     start_organize_records_async,
@@ -29,10 +30,16 @@ camera_bp = Blueprint("cameras", __name__, url_prefix="/api/cameras/")
 @authentication_required()
 @permission_required("view_camera")
 def get_all():
-    all_cameras = Camera.query.all()
+    search_param = request.args.get("search", default="")
+    page_param = request.args.get("page", default=1)
+    limit_param = request.args.get(
+        "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"]
+    )
 
-    schema = CameraSchema()
-    data = schema.dump(all_cameras, many=True)
+    cameras = filter_camera(
+        search_param=search_param, limit=limit_param, page=page_param
+    )
+    data = CameraSchema(many=True).dump(cameras)
 
     return jsonify(data)
 

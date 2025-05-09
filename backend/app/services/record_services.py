@@ -1,6 +1,5 @@
 from app.extensions import db
 from app.models.record_models import Record, OrganizeRecord
-from config import Config
 from app.utils.utils import kill_processes
 from flask import current_app
 import os
@@ -47,7 +46,9 @@ def start_organize_records_async():
     if not organize_record or (
         organize_record and not organize_record.has_process_running()
     ):
-        venv_python = os.path.join(Config.BASE_DIR, "venv", "bin", "python3")
+        venv_python = os.path.join(
+            current_app.config["BASE_DIR"], "venv", "bin", "python3"
+        )
         command = [venv_python, "-m", "app.workers.record_worker"]
 
         process = subprocess.Popen(

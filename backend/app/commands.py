@@ -7,7 +7,7 @@ from app.utils.settings import (
     create_default_user,
 )
 from flask.cli import AppGroup
-from config import Config
+from flask import current_app
 import subprocess
 import os
 
@@ -48,7 +48,7 @@ def init_default_user():
 
 @setup_cli.command("all")
 def setup_all():
-    venv_python = os.path.join(Config.BASE_DIR, "venv", "bin", "python3")
+    venv_python = os.path.join(current_app.config["BASE_DIR"], "venv", "bin", "python3")
 
     click.echo("\n🔧 Rodando: flask db init")
     subprocess.call([venv_python, "manage.py", "db", "init"])

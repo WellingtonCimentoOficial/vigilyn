@@ -29,3 +29,5 @@ class Config:
     JWT_TOKEN_LOCATION = ["headers"]
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ["access", "refresh"]
+
+    DEFAULT_PAGINATION_LIMIT = 10

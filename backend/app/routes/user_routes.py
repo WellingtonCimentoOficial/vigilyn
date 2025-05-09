@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from app.decorators.auth_decorators import authentication_required
 from app.models.user_models import User
 from app.schemas.user_schemas import (
@@ -40,7 +40,9 @@ def get_all():
     role_param = request.args.get("role", default="")
     is_active_param = request.args.get("is_active", default="true")
     page_param = request.args.get("page", default=1, type=int)
-    limit_param = request.args.get("limit", default=10, type=int)
+    limit_param = request.args.get(
+        "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"], type=int
+    )
 
     users = filter_user(
         search_param=search_param,

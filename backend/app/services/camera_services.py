@@ -1,7 +1,6 @@
 from app.extensions import db
 from app.models.camera_models import Camera
 from app.utils.utils import kill_processes
-from config import Config
 from flask import current_app
 from app.exceptions.camera_exceptions import (
     CameraAlreadyExistsException,
@@ -11,6 +10,8 @@ from app.exceptions.camera_exceptions import (
     CameraWasNotStoppedException,
     CameraWasNotStartedException,
 )
+from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
+from sqlalchemy import or_
 import threading
 import subprocess
 import os
@@ -142,7 +143,9 @@ def delete_camera(camera):
 
 def start_camera_async(camera):
     try:
-        venv_python = os.path.join(Config.BASE_DIR, "venv", "bin", "python3")
+        venv_python = os.path.join(
+            current_app.config["BASE_DIR"], "venv", "bin", "python3"
+        )
         command = [venv_python, "-m", "app.workers.camera_worker", str(camera.id)]
 
         process = subprocess.Popen(
@@ -158,3 +161,28 @@ def start_camera_async(camera):
         return camera
     except:
         raise CameraWasNotStartedException()
+
+
+def filter_camera(search_param, page, limit):
+    if not str(page).isdigit():
+        raise UrlPageParamException()
+
+    if not str(limit).isdigit():
+        raise UrlLimitParamException()
+
+    page = int(page)
+    limit = int(limit)
+    query = db.session.query(Camera)
+
+    if search_param:
+        query = query.filter(
+            or_(
+                Camera.name.ilike(f"%{search_param}%"),
+                Camera.ip_address.ilike(f"%{search_param}%"),
+                Camera.port.ilike(f"%{search_param}%"),
+                Camera.username.ilike(f"%{search_param}%"),
+                Camera.password.ilike(f"%{search_param}%"),
+            )
+        )
+
+    return query.offset((page - 1) * limit).limit(limit)
