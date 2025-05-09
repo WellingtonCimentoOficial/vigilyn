@@ -7,13 +7,20 @@ from .routes.system_routes import system_bp
 from .routes.auth_routes import auth_bp
 from .routes.user_routes import user_bp
 from .routes.role_routes import role_bp
+from .routes.base_routes import base_bp
 from .commands import setup_cli
 from app.handlers import register_error_handlers
+import os
 
 
 def create_app():
-    app = Flask(__name__)
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    template_folder = os.path.join(base_dir, "..", "..", "frontend", "build")
+    static_folder = os.path.join(template_folder, "static")
 
+    app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+
+    app.register_blueprint(base_bp)
     app.register_blueprint(camera_bp)
     app.register_blueprint(record_bp)
     app.register_blueprint(setting_bp)

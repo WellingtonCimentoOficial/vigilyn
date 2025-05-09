@@ -133,7 +133,7 @@ def update_camera(camera, **kwargs):
 
 def delete_camera(camera):
     try:
-        was_stopped = stop_camera()
+        was_stopped = stop_camera(camera)
         if was_stopped:
             db.session.delete(camera)
             db.session.commit()

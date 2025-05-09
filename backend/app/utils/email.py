@@ -3,6 +3,7 @@ from flask_mail import Message
 import threading
 import time
 from .logger import Log
+from config import Config
 from flask import current_app
 from .utils import get_settings
 
@@ -10,19 +11,19 @@ from .utils import get_settings
 class Email:
     def __init__(
         self,
-        smtp_host=current_app.config["MAIL_SERVER"],
-        smtp_port=current_app.config["MAIL_PORT"],
-        smtp_interval=current_app.config["MAIL_INTERVAL"],
-        smtp_email_from=current_app.config["MAIL_DEFAULT_SENDER"],
-        smtp_email_to=current_app.config["MAIL_DEFAULT_RECEIVER"],
+        smtp_host=Config.MAIL_SERVER,
+        smtp_port=Config.MAIL_PORT,
+        smtp_interval=Config.MAIL_INTERVAL,
+        smtp_email_from=Config.MAIL_DEFAULT_SENDER,
+        smtp_email_to=Config.MAIL_DEFAULT_RECEIVER,
     ):
         self.smtp_host = smtp_host
         self.smtp_port = smtp_port
         self.smtp_interval = smtp_interval
         self.smtp_email_from = smtp_email_from
         self.smtp_email_to = smtp_email_to
-        self.smtp_login_email = current_app.config["MAIL_USERNAME"]
-        self.smtp_login_password = current_app.config["MAIL_PASSWORD"]
+        self.smtp_login_email = Config.MAIL_USERNAME
+        self.smtp_login_password = Config.MAIL_PASSWORD
 
     def send(self, subject, body, category):
         msg = Message(

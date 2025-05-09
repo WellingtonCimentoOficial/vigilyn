@@ -38,10 +38,10 @@ def get(camera_pk, record_pk):
     return jsonify(record_data)
 
 
-@record_bp.route("<int:camera_pk>/records/<int:record_pk>/watch/", methods=["GET"])
+@record_bp.route("<int:camera_pk>/records/<int:record_pk>/video/", methods=["GET"])
 @authentication_required()
 @permission_required("view_record")
-def watch(camera_pk, record_pk):
+def play_video(camera_pk, record_pk):
     record = Record.query.filter_by(id=record_pk, camera_id=camera_pk).first_or_404()
 
     return send_file(record.path)

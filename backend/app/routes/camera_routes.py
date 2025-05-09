@@ -91,7 +91,7 @@ def delete(pk):
     camera = Camera.query.get_or_404(pk)
     delete_camera(camera)
 
-    return jsonify({"message": "The camera was deleted successfully!"}), 204
+    return jsonify({"message": "The camera was deleted successfully!"}), 200
 
 
 @camera_bp.route("<int:pk>/start/", methods=["POST"])
