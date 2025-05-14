@@ -77,4 +77,10 @@
     color: var(--black-color-light);
     font-weight: 300;
     font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.bold {
+    font-weight: 450;
 }

@@ -1,6 +1,21 @@
 import { useAxios } from "./useAxios"
-import { TokensType, UserExtendedType } from "../types/BackendTypes"
+import { CameraType, RecordType, StorageMonthlyType, SystemType, TokensType, UserExtendedType, UserType } from "../types/BackendTypes"
 import { useCallback } from "react"
+
+type GetCameraProps = {
+    search?: string
+    pid?: string
+    page?: number
+    limit?: number
+}
+
+type GetUsersProps = {
+    search?: string
+    role?: string
+    is_active?: string
+    page?: number
+    limit?: number
+}
 
 export const useBackendRequests = () => {
     const { axios, axiosPrivate } = useAxios()
@@ -38,5 +53,57 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
-    return {signIn, signOut, refreshTokens, getMe}
+    const getCameras = useCallback(async ({search, pid, page, limit} : GetCameraProps = {}) => {
+        const params = Object.fromEntries(
+            Object.entries({ search, pid, page, limit })
+            .filter(([_, value]) => value != null)
+        )
+
+        const response = await axiosPrivate.get("/cameras/", {
+            params
+        })
+        const data: CameraType[] = await response.data.data
+        return data
+    }, [axiosPrivate])
+
+    const getSystem = useCallback(async () => {
+        const response = await axiosPrivate.get("/system/")
+        const data: SystemType = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const getStorage = useCallback(async () => {
+        const response = await axiosPrivate.get("/system/storage/")
+        const data: StorageMonthlyType[] = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const getRecords = useCallback(async (cameraId: number) => {
+        const response = await axiosPrivate.get(`/cameras/${cameraId}/records/`)
+        const data: RecordType[] = response.data
+        return data
+    }, [axiosPrivate])
+
+    const getUsers = useCallback(async ({search, role, is_active, page, limit}: GetUsersProps = {}) => {
+        const params = Object.fromEntries(
+            Object.entries({ search, role, is_active, page, limit })
+            .filter(([_, value]) => value != null)
+        )
+        
+        const response = await axiosPrivate.get("/users/", {params})
+        const data: UserType[] = response.data.data
+        return data
+    }, [axiosPrivate])
+
+    return {
+        signIn, 
+        signOut, 
+        refreshTokens, 
+        getMe, 
+        getCameras, 
+        getSystem, 
+        getStorage, 
+        getRecords,
+        getUsers
+    }
 }

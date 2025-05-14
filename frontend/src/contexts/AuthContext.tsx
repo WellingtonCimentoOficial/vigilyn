@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 type AuthContextType = {
     tokens: TokensType
     isAuthenticated: boolean
+    isLoading: boolean
     setTokens: React.Dispatch<React.SetStateAction<TokensType>>
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
     createSession: (updatedTokens: TokensType) => void
@@ -15,6 +16,7 @@ type AuthContextType = {
 const initialData: AuthContextType = {
     tokens: {access_token: "", refresh_token: ""},
     isAuthenticated: false,
+    isLoading: true,
     setTokens: () => {},
     setIsAuthenticated: () => {},
     createSession: () => {},
@@ -81,7 +83,7 @@ export const AuthContextProvider = ({children} : Props) => {
     }, [isAuthenticated, isLoading, navigate])
     
     return (
-        <AuthContext.Provider value={{tokens, isAuthenticated, setTokens, setIsAuthenticated, createSession, clearSession}}>
+        <AuthContext.Provider value={{tokens, isAuthenticated, isLoading, setTokens, setIsAuthenticated, createSession, clearSession}}>
             {children}
         </AuthContext.Provider>
     )

@@ -15,8 +15,19 @@ const BarPlusChartComponent = ({data}: Props) => {
             <ul className={styles.list}>
                 {newData.map((item, index) => {
                     const style = item.value >= 90 ? styles.normal : item.value >= 50 ? styles.light : styles.lightest
+
+                    if(item.value === 0){
+                        return (
+                            <li key={index} className={styles.listLi}>
+                                <div className={`${styles.container1} ${styles.nodata}`} style={{height: `${100}%`}}>
+                                    <div className={styles.tooltip}>No data</div>
+                                </div>
+                                <span className={styles.title}>{item.title}</span>
+                            </li>
+                        )
+                    }
                     return (
-                        <li key={index} className={styles.listLi}>
+                        <li key={index*10} className={styles.listLi}>
                             <div className={`${styles.container1} ${style}`} style={{height: `${item.value}%`}}>
                                 <div className={styles.tooltip}>{item.value}%</div>
                             </div>

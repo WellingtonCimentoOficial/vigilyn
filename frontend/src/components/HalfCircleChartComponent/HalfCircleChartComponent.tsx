@@ -10,7 +10,8 @@ const HalfCircleChartComponent = ({data}: Props) => {
     const newData = data.sort((a, b) => b.value - a.value)
     const maxValue = Math.max(...data.map(item => item.value))
     const minValue = Math.min(...data.map(item => item.value))
-    const percentage = Math.floor(data.reduce((soma, item) => soma + item.value, 0) / data.length)
+    const calc = data.reduce((soma, item) => soma + item.value, 0) / data.length
+    const percentage = calc ? Math.floor(calc) : 0
     return (
         <div className={styles.wrapper}>
             <div className={styles.container1}>
@@ -49,7 +50,7 @@ const HalfCircleChartComponent = ({data}: Props) => {
             </div>
             <div className={styles.container2}>
                 <ul className={styles.container2List}>
-                    {newData.map((item, index) => {
+                    {newData.sort((a, b) => a.value - b.value).map((item, index) => {
                         const style = item.value === maxValue ? styles.normal : item.value === minValue ? styles.lightest : styles.light
                         return (
                             <li key={index} className={styles.container2ListLi}>

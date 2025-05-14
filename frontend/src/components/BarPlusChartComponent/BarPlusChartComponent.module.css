@@ -56,15 +56,18 @@
     background-color: var(--principal-color-lightest);
 }
 .lightest {
+    background-color: var(--second-color);
+}
+.nodata {
     /* background-color: var(--principal-color-lightest); */
     background-image: repeating-linear-gradient(
-    -22.5deg,                   /* ângulo da listra: 90° = vertical */
-    var(--second-color),  /* cor da listra */
-    var(--second-color) 2px,
-    transparent 2px,
-    transparent 4px
-  );
-  opacity: 50%;
+        -22.5deg,                   /* ângulo da listra: 90° = vertical */
+        var(--second-color),  /* cor da listra */
+        var(--second-color) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    opacity: 50%;
 }
 .normal:hover, .light:hover, .lightest:hover  {
     filter: contrast(93%);

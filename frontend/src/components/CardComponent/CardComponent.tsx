@@ -1,16 +1,16 @@
 import React from 'react'
 import styles from './CardComponent.module.css'
-import { PiEnvelopeSimple, PiArrowUpRight } from "react-icons/pi";
+import { PiArrowUpRight, PiArrowUp, PiArrowDown } from "react-icons/pi";
 import { NavLink } from 'react-router';
 
 
 type Props = {
     focus?: boolean
     title: string
-    description: string
+    value: number
 }
 
-const CardComponent = ({title, description, focus}: Props) => {
+const CardComponent = ({title, value, focus}: Props) => {
     return (
         <NavLink className={`${styles.wrapper} ${focus ? styles.focusBackground : ""}`} to="/">
             <div className={styles.header}>
@@ -20,13 +20,21 @@ const CardComponent = ({title, description, focus}: Props) => {
                 </div>
             </div>
             <div className={styles.body}>
-                <span className={`${styles.bodyText} ${focus ? styles.focusText : ""}`}>{description}</span>
+                <span className={`${styles.bodyText} ${focus ? styles.focusText : ""}`}>{value}</span>
             </div>
             <div className={styles.footer}>
                 <div className={styles.footerContainerIcon}>
-                    <PiEnvelopeSimple className={styles.footerIcon} />
+                    {value === 0 ? (
+                        <PiArrowDown className={`${styles.footerIcon} ${styles.down}`} />
+                    ):(
+                        <PiArrowUp className={`${styles.footerIcon} ${styles.up}`} />
+                    )}
                 </div>
-                <span className={styles.footerText}>Incresed from last month</span>
+                {value === 0 ? (
+                    <span className={`${styles.footerText} ${styles.down}`}>No data at the moment.</span>
+                ):(
+                    <span className={`${styles.footerText} ${styles.up}`}>Activity detected during this period.</span>
+                )}
             </div>
         </NavLink>
     )

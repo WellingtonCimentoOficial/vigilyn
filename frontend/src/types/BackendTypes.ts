@@ -26,3 +26,53 @@ export type TokensType = {
     access_token: string
     refresh_token: string
 }
+
+export type CameraType = {
+    id: number,
+    name: string,
+    ip_address: string
+    port: number
+    username: string
+    password: string
+    path: string
+    pid: number | null
+    requires_restart: boolean
+}
+
+export type CpuType = {
+    cores: number
+    threads: number
+    percent_used: number
+}
+
+export type RamType = {
+    free: number
+    used: number
+    total: number
+    percent_used: number
+}
+
+export type StorageType = {
+    free: number
+    used: number
+    total: number
+    percent_used: number
+}
+export type StorageMonthlyType = {
+    id: number
+    month: string
+    total: number
+}
+
+export type SystemType = {
+    cpu: CpuType
+    ram: RamType
+    storage: StorageType
+    time: string
+}
+
+export type RecordType = {
+    id: number
+    path: string
+    created_at: string
+}

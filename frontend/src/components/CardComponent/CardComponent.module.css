@@ -44,12 +44,11 @@
     justify-content: center;
 }
 .footerIcon {
-    width: 1.2rem;
-    height: 1.2rem;
-    fill: var(--second-color);
+    width: 1.15rem;
+    height: 1.15rem;
 }
 .footerText {
-    color: var(--second-color);
+    font-size: 0.95rem;
 }
 .focusBackground {
     /* background: linear-gradient(to bottom right, var(--principal-color), #ff5100); */
@@ -65,4 +64,12 @@
     color: white;
     fill: white;
     border-color: var(--black-color);
+}
+.down {
+    fill: var(--second-color);
+    color: var(--second-color);
+}
+.up {
+    fill: green;
+    color: green;
 }

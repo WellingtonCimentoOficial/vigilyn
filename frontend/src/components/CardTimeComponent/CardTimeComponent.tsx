@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styles from './CardTimeComponent.module.css'
 
-type Props = {}
+type Props = {
+    timeIso: string
+}
 
-const CardTimeComponent = (props: Props) => {
+const CardTimeComponent = ({timeIso}: Props) => {
     const [time, setTime] = useState("")
     const [day, setDay] = useState("")
 
-    const dateRef = useRef(new Date("2025-05-12T20:47:00Z"))
+    const dateRef = useRef(new Date(timeIso))
 
     const weekdays = useMemo(() => [
         'Sunday', 'Monday', 'Tuesday', 'Wednesday',

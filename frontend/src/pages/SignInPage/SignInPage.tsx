@@ -32,7 +32,6 @@ const SignInPage = (props: Props) => {
         setEmail(e.target.value)
         setEmailIsValid(regex.test(e.target.value))
         setWasSubmitted(false)
-        setPasswordIsValid(true)
     }
     
     const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +39,6 @@ const SignInPage = (props: Props) => {
         setPassword(e.target.value)
         setPasswordIsValid(regex.test(e.target.value))
         setWasSubmitted(false)
-        setEmailIsValid(true)
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -63,8 +61,9 @@ const SignInPage = (props: Props) => {
                     setEmailIsValid(false)
                     setPasswordIsValid(false)
                     setWasSubmitted(true)
+                    setToastMessage({title: "Incorrect credentials", description: "The username or password is incorrect.", success: false})
                 }else{
-                    setToastMessage({title: "An error occurred", description: "try refreshing the page and try again", success: false})
+                    setToastMessage({title: "An error occurred", description: "Try refreshing the page and try again.", success: false})
                 }
             }
         }else{
