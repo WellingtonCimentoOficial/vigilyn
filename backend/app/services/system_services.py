@@ -1,5 +1,6 @@
 import psutil
 from app.models.setting_models import Setting
+from datetime import datetime, timezone
 
 
 def get_ram():
@@ -42,7 +43,8 @@ def get_system():
     cpu = get_cpu()
     ram = get_ram()
     storage = get_storage()
+    time = datetime.now().replace(tzinfo=timezone.utc).isoformat()
 
-    data = {"cpu": cpu, "ram": ram, "storage": storage}
+    data = {"cpu": cpu, "ram": ram, "storage": storage, "time": time}
 
     return data

@@ -9,6 +9,7 @@ from app.exceptions.camera_exceptions import (
     CameraWasNotDeletedException,
     CameraWasNotStoppedException,
     CameraWasNotStartedException,
+    CameraPidParamException,
 )
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
 from sqlalchemy import or_
@@ -163,12 +164,15 @@ def start_camera_async(camera):
         raise CameraWasNotStartedException()
 
 
-def filter_camera(search_param, page, limit):
+def filter_camera(search_param, page, limit, pid_param):
     if not str(page).isdigit():
         raise UrlPageParamException()
 
     if not str(limit).isdigit():
         raise UrlLimitParamException()
+
+    if pid_param != None and pid_param != "false" and pid_param != "true":
+        raise CameraPidParamException()
 
     page = int(page)
     limit = int(limit)
@@ -182,7 +186,14 @@ def filter_camera(search_param, page, limit):
                 Camera.port.ilike(f"%{search_param}%"),
                 Camera.username.ilike(f"%{search_param}%"),
                 Camera.password.ilike(f"%{search_param}%"),
+                Camera.pid.ilike(f"%{search_param}%"),
             )
         )
+
+    if pid_param is not None:
+        if pid_param == "true":
+            query = query.filter(Camera.pid.isnot(None))
+        else:
+            query = query.filter(Camera.pid.is_(None))
 
     return query.offset((page - 1) * limit).limit(limit)

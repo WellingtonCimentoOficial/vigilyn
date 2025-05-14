@@ -22,6 +22,8 @@ from app.exceptions.camera_exceptions import (
     CameraProcessAlreadyRunningException,
     CameraProcessAlreadyStoppedException,
 )
+from app.utils.utils import generate_pagination_response
+
 
 camera_bp = Blueprint("cameras", __name__, url_prefix="/api/cameras/")
 
@@ -32,15 +34,20 @@ camera_bp = Blueprint("cameras", __name__, url_prefix="/api/cameras/")
 def get_all():
     search_param = request.args.get("search", default="")
     page_param = request.args.get("page", default=1)
+    pid_param = request.args.get("pid")
     limit_param = request.args.get(
         "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"]
     )
 
     cameras = filter_camera(
-        search_param=search_param, limit=limit_param, page=page_param
+        search_param=search_param,
+        pid_param=pid_param,
+        limit=limit_param,
+        page=page_param,
     )
-    data = CameraSchema(many=True).dump(cameras)
+    cameras_schema = CameraSchema(many=True).dump(cameras)
 
+    data = generate_pagination_response(page_param, limit_param, cameras_schema)
     return jsonify(data)
 
 

@@ -31,3 +31,4 @@ class SystemSchema(Schema):
     cpu = fields.Nested(CpuSchema)
     ram = fields.Nested(RamSchema)
     storage = fields.Nested(StorageSchema)
+    time = fields.Str()

@@ -47,3 +47,9 @@ class CameraProcessAlreadyStoppedException(AppException):
     default_error = "camera_process_already_stopped"
     default_message = "The camera process already stopped."
     status_code = 400
+
+
+class CameraPidParamException(AppException):
+    default_error = "invalid_camera_pid_param"
+    default_message = "The value of the 'pid' field is invalid"
+    status_code = 400
