@@ -6,6 +6,7 @@ from app.schemas.user_schemas import (
     UserUpdateSchema,
     UserCreateSchema,
     UserAdminUpdateSchema,
+    UserExtendedSchema,
 )
 from app.schemas.role_schemas import RoleSchema, RoleUpdateSchema
 from app.services.user_services import (
@@ -62,7 +63,7 @@ def get_all():
 def get_me():
     user_id = get_jwt_identity()
     user = User.query.get_or_404(user_id)
-    schema = UserSchema()
+    schema = UserExtendedSchema()
     data = schema.dump(user)
     return jsonify(data), 200
 

@@ -1,5 +1,5 @@
 from flask import Flask
-from app.extensions import db, migrate, mail, jwt
+from app.extensions import db, migrate, mail, jwt, cors
 from .routes.camera_routes import camera_bp
 from .routes.record_routes import record_bp
 from .routes.setting_routes import setting_bp
@@ -35,6 +35,7 @@ def create_app():
     migrate.init_app(app, db)
     mail.init_app(app)
     jwt.init_app(app)
+    cors.init_app(app, resources={r"/*": {"origins": "*"}})
 
     app.cli.add_command(setup_cli)
 

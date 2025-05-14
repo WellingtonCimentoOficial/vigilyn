@@ -1,4 +1,5 @@
 from marshmallow import Schema, fields, validate, validates_schema, ValidationError
+from .role_schemas import RoleSchema
 
 name_validate = [
     validate.Length(min=5),
@@ -102,3 +103,7 @@ class UserAdminUpdateSchema(UserUpdateSchema):
         validate=email_validate,
     )
     is_active = fields.Bool(required=False)
+
+
+class UserExtendedSchema(UserSchema):
+    roles = fields.Nested(RoleSchema, many=True)
