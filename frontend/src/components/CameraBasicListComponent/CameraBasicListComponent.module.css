@@ -1,0 +1,80 @@
+@keyframes swirl {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
+.title {
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+.button {
+    font-size: 0.75rem;
+}
+.body {
+
+}
+.list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.listLi {
+
+}
+.listLiA {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-decoration: none;
+}
+.listLiAImage {
+    width: 40px ;
+    height: 40px;
+    border-radius: 100%;
+    /* background-color: var(--principal-color); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.listLiAImage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      repeating-linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0,
+        rgba(255, 255, 255, 0.1) 10px,
+        transparent 10px,
+        transparent 20px
+      );
+    z-index: 1;
+    pointer-events: none;
+}
+.listLiAContent {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.listLiAContentTitle {
+    font-weight: 350;
+    font-size: 0.9rem;
+}
+.listLiAContentDescription {
+    color: var(--black-color-light);
+    font-weight: 300;
+    font-size: 0.85rem;
+}

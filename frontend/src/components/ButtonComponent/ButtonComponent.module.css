@@ -1,0 +1,41 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.9em 1.25em;
+    border-radius: 30px;
+    border: 1px solid var(--principal-color);
+    background-color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s;
+    user-select: none;
+}
+.wrapper:disabled {
+    opacity: 50%;
+    pointer-events: none;
+}
+.containerIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.icon {
+    width: 1.3em;
+    height: 1.3em;
+    fill: var(--principal-color);
+}
+.text {
+    color: var(--principal-color);
+    white-space: nowrap;
+}
+.filled {
+    background-color: var(--principal-color);
+}
+.filled:hover {
+    background-color: var(--principal-color-light);
+}
+.filledText {
+    color: white;
+    fill: white;
+}

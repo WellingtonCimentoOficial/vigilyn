@@ -1,0 +1,22 @@
+.wrapper {
+    display: flex;
+    gap: 10px;
+    padding: var(--padding);
+}
+.sideNav {
+    position: sticky;
+    left: 0;
+    top: 0;
+    height: 100vh;
+}
+.main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.header {
+}
+.body {
+
+}

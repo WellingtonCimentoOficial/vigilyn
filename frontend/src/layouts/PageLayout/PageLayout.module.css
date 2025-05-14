@@ -1,0 +1,30 @@
+.wrapper {
+    background-color: var(--principal-background-color);
+    border-radius: var(--principal-border-radius);
+    padding: var(--padding);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    justify-content: space-between;
+}
+.headerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.title {
+    font-size: 2.5rem;
+    font-weight: 400;
+}
+.description {
+    color: var(--black-color-light);
+    font-weight: 300;
+}
+.body {
+
+}

@@ -1,0 +1,140 @@
+.wrapper {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container {
+    width: 80%;
+    height: 80%;
+    display: flex;
+}
+.container1 {
+    height: 100%;
+    width: 50%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.logo {
+
+}
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    /* background-color: red; */
+    width: 90%;
+    margin: auto;
+}
+.bodyHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+.title {
+    font-size: 3rem;
+    font-weight: 500;
+}
+.bodyBody {
+    width: 100%;
+    /* background-color: green; */
+}
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.containerInput {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.inputWra {
+    position: relative;
+}
+.inputIconContainer {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.inputIcon {
+    width: 1.5em;
+    height: 1.5em;
+    fill: rgb(225, 225, 225);
+    cursor: pointer;
+}
+.label {
+    font-weight: 450;
+    font-size: 0.9rem;
+}
+.input {
+    border: 1px solid rgb(225, 225, 225);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    outline-color: transparent;
+    width: 100%;
+}
+.input:focus {
+    outline-color: var(--principal-color);
+}
+.inputError {
+    outline: 2px solid red;
+}
+.containerCheckBox {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.labelCheckBox {
+    cursor: pointer;
+}
+.inputCheckBox {
+    border: 5px solid rgb(225, 225, 225);
+    accent-color: var(--principal-color);
+    cursor: pointer;
+}
+.button {
+
+}
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+}
+.footerText {
+
+}
+.container2 {
+    background-color: var(--principal-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 50%;
+    border-radius: var(--principal-border-radius);
+}
+.logoSimbol {
+    width: 10rem;
+}
+.description {
+    color: var(--black-color-light);
+    font-weight: 300;
+}
+
+.description, .labelCheckBox {
+    color: var(--black-color-light);
+    font-weight: 300;
+}

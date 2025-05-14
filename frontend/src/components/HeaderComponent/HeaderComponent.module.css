@@ -1,0 +1,85 @@
+.header {
+    background-color: var(--principal-background-color);
+    width: 100%;
+    border-radius: var(--principal-border-radius);
+    padding: var(--padding);
+}
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    /* background-color: red; */
+}
+.container {
+    /* background-color: red; */
+}
+.form {
+
+}
+.inputContainer {
+    position: relative;
+    display: flex;
+}
+.input {
+    /* background-color: blue; */
+    padding: 15px 45px 15px 30px;
+    font-size: 0.9rem;
+    border-radius: 30px;
+    width: 450px;
+}
+.containerSearchIcon {
+    position: absolute;
+    right: 0;
+    /* background-color: red; */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: white; */
+    margin-right: 15px
+}
+.containerFunc {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* background-color: red; */
+}
+.containerIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    background-color: white;
+    height: 100%;
+    padding: 15px;
+}
+.icon {
+    font-size: var(--icon-size);
+}
+
+.containerAccount {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    text-decoration: none;
+}
+.containerAccountHeader {
+
+}
+.containerAccountHeaderIcon {
+    background-color: var(--principal-color);
+}
+.containerAccountBody {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.containerAccountBodyTitle {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+.containerAccountBodySubTitle {
+    font-size: 0.85rem;
+    color: var(--black-color-light);
+}

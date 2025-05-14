@@ -1,0 +1,58 @@
+@keyframes pulse {
+    0% {
+        transform: scale(1.6) rotate(25deg);
+    }
+    50% {
+        transform: scale(1.7) rotate(22deg);
+    }
+    100% {
+        transform: scale(1.6) rotate(25deg);
+    }
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+    background-color: var(--principal-color-dark);
+    overflow: hidden;
+    padding: var(--padding);
+    color: white;
+    border-radius: 1rem;
+    z-index: 0;
+}
+.wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-radial-gradient(
+        circle at 20% 50%,
+        var(--principal-color-lightest) 0px,
+        var(--principal-color-lightest) 30px,
+        var(--principal-color-light) 30px,
+        var(--principal-color-light) 60px,
+        var(--principal-color) 60px,
+        var(--principal-color) 90px,
+        var(--principal-color-dark) 90px,
+        var(--principal-color-dark) 120px
+    );
+    opacity: 0.3;
+    transform: scale(1.6) rotate(25deg);
+    z-index: -1;
+    animation: pulse 12s ease-in-out infinite;
+}
+
+.headerText {
+    font-size: 0.9rem;
+    color: white;
+}
+.bodyText {
+    font-size: 2.2rem;
+    margin: auto;
+    color: white;
+}
+.footerText {
+    font-size: 0.8rem;
+    margin: auto;
+    color: white;
+}

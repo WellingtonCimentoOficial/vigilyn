@@ -1,0 +1,13 @@
+.header {
+    display: flex;
+    gap: 0.9375rem;
+    font-size: 1rem;
+}
+.logoLetter {
+    width: 9.375em;
+    fill: var(--black-color);
+}
+.logoSimbol {
+    width: 2.1875em;
+    fill: var(--principal-color);
+}
