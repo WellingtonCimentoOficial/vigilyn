@@ -1,5 +1,5 @@
 import { useAxios } from "./useAxios"
-import { CameraType, RecordType, StorageMonthlyType, SystemType, TokensType, UserExtendedType, UserType } from "../types/BackendTypes"
+import { CameraType, RecordType, RoleType, StorageMonthlyType, SystemType, TokensType, UserExtendedType, UserType, UserUpdateType } from "../types/BackendTypes"
 import { useCallback } from "react"
 
 type GetCameraProps = {
@@ -95,6 +95,18 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
+    const getRoles = useCallback(async (userId: number) => {
+        const response = await axiosPrivate.get(`/users/${userId}/roles/`)
+        const data: RoleType[] = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const updateMe = useCallback(async (userUpdateData: UserUpdateType) => {
+        const response = await axiosPrivate.patch("/users/me/", {...userUpdateData})
+        const data: UserType = await response.data
+        return data
+    }, [axiosPrivate])
+
     return {
         signIn, 
         signOut, 
@@ -104,6 +116,8 @@ export const useBackendRequests = () => {
         getSystem, 
         getStorage, 
         getRecords,
-        getUsers
+        getUsers,
+        getRoles,
+        updateMe
     }
 }

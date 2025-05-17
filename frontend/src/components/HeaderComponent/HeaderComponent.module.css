@@ -27,6 +27,12 @@
     font-size: 0.9rem;
     border-radius: 30px;
     width: 450px;
+    outline: none;
+    border: 2px solid transparent;
+    transition: 0.2s;
+}
+.input:focus {
+    border-color: var(--principal-color);
 }
 .containerSearchIcon {
     position: absolute;
@@ -53,6 +59,7 @@
     background-color: white;
     height: 100%;
     padding: 15px;
+    cursor: pointer;
 }
 .icon {
     font-size: var(--icon-size);

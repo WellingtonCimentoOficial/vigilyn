@@ -9,11 +9,6 @@
     align-items: center;
     gap: 10px;
 }
-.container {
-    background-color: white;
-    border-radius: var(--principal-border-radius);
-    padding: var(--padding);
-}
 .sectionLayout {
     display: flex;
     gap: 10px;
@@ -37,39 +32,12 @@
     /* background-color: red; */
     height: 100%;
 }
-.asideHeader {
-
-}
-.asideHeaderTitle {
-    font-size: 1.166rem;
-}
 .sectionWrapper {
     display: flex;
     flex-direction: column;
     gap: 10px;
     flex-grow: 1;
 }
-.section2 {
-
-}
-.section2Container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    flex-grow: 1;
-}
-.section2Header {
-}
-.section2HeaderTitle {
-    font-size: 1.2rem;
-    font-weight: 400;
-}
 .section2Body {
     height: 150px;
-}
-.section3 {
-
-}
-.section3Container {
-    flex-grow: 1;
 }

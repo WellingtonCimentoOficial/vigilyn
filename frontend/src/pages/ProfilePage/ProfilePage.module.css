@@ -1,0 +1,82 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.container {
+    padding: 20px 40px;
+    background-color: white;
+    border-radius: var(--principal-border-radius);
+}
+.header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.headerContainerIcon {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background-color: var(--principal-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.icon {
+    width: 3em;
+    height: 3em;
+}
+.headerContainerBody {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.headerContainerBodyTitle {
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+.headerContainerBodyText {
+    color: var(--black-color-light);
+    font-weight: 300;
+}
+.section {
+    
+}
+.sectionHeader {
+    border-bottom: 2px solid rgb(245, 245, 245);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
+.sectionTitle {
+    font-size: 1.2rem;
+}
+.sectionBody {
+    display: flex;
+    gap: 200px;
+}
+.sectionBodyColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+.sectionBodyItem {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.sectionBodyItemTitle {
+    color: var(--black-color-light);
+    font-weight: 350;
+    font-size: 0.9rem;
+}
+.sectionBodyItemText {
+
+}
+.button {
+    font-size: 0.9rem;
+}
+.sectionBody, .sectionHeader {
+    padding: 20px 0px;
+}

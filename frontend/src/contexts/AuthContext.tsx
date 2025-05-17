@@ -2,6 +2,7 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { useBackendRequests } from "../hooks/useBackRequests";
 import { TokensType } from "../types/BackendTypes";
 import { useNavigate } from "react-router";
+import LoaderLogoComponent from "../components/LoaderLogoComponent/LoaderLogoComponent";
 
 type AuthContextType = {
     tokens: TokensType
@@ -84,7 +85,7 @@ export const AuthContextProvider = ({children} : Props) => {
     
     return (
         <AuthContext.Provider value={{tokens, isAuthenticated, isLoading, setTokens, setIsAuthenticated, createSession, clearSession}}>
-            {children}
+            { isLoading ? <LoaderLogoComponent /> : children}
         </AuthContext.Provider>
     )
 }

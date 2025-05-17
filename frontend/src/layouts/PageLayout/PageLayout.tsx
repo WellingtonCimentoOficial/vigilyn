@@ -4,7 +4,7 @@ import styles from './PageLayout.module.css'
 type Props = {
     title: string
     description: string
-    children: React.ReactElement
+    children: React.ReactNode
     aside?: React.ReactElement
     content?: React.ReactElement
 }

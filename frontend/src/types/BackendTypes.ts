@@ -18,6 +18,12 @@ export type UserType = {
     updated_at: string
 }
 
+export type UserUpdateType = {
+    name: string
+    password?: string
+    confirm_password?: string
+}
+
 export type UserExtendedType = UserType & {
     roles: RoleType[]
 }
@@ -75,4 +81,8 @@ export type RecordType = {
     id: number
     path: string
     created_at: string
+}
+export type ValidationErrorType = {
+    error: string
+    message: Record<string, string[]>
 }

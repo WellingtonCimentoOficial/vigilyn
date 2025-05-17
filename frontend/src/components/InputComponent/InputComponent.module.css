@@ -1,0 +1,55 @@
+@keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-5px); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+.inputWra {
+    position: relative;
+}
+.inputWraDisabled {
+    opacity: 50%;
+    pointer-events: none;
+}
+.inputIconContainer {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.inputIcon {
+    width: 1.5em;
+    height: 1.5em;
+    fill: rgb(225, 225, 225);
+    cursor: pointer;
+}
+.label {
+    font-weight: 450;
+    font-size: 0.9rem;
+}
+.input {
+    border: 1px solid rgb(225, 225, 225);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    outline-color: transparent;
+    width: 100%;
+}
+.input:focus {
+    outline-color: var(--principal-color);
+}
+.inputError {
+    outline: 2px solid red;
+    animation: shake 0.4s ease-in-out;
+}

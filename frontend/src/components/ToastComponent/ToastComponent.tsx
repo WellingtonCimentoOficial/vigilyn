@@ -4,11 +4,15 @@ import { ToastType } from '../../types/FrontendTypes'
 import { PiXBold, PiXCircle, PiCheckCircle } from "react-icons/pi";
 import { ToastContext } from '../../contexts/ToastContext';
 
-const ToastComponent = ({title, description, success}: ToastType) => {
+type Props = ToastType & {
+    show: boolean
+}
+
+const ToastComponent = ({title, description, success, show}: Props) => {
     const {setToastMessage} = useContext(ToastContext)
 
     return (
-        <div className={styles.wrapper}>
+        <div className={`${styles.wrapper} ${show ? styles.wrapperShow : ""}`}>
             <div className={`${styles.containerIcon} ${success ? styles.successContainer : styles.errorContainer}`}>
                 {success ? (
                     <PiCheckCircle className={`${styles.icon} ${styles.success}`} />

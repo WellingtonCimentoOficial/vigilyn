@@ -24,14 +24,19 @@ export const ToastContextProvider = ({children}: Props) => {
 
     useEffect(() => {
         if(toastMessage){
-            const timeout = setTimeout(() => setToastMessage(null), 5000)
+            const timeout = setTimeout(() => setToastMessage(null), 10000)
             return () => clearTimeout(timeout)
         }
     }, [toastMessage])
 
     return (
         <ToastContext.Provider value={{toastMessage, setToastMessage}}>
-            {toastMessage && <ToastComponent title={toastMessage.title} description={toastMessage.description} success={toastMessage.success} />}
+            <ToastComponent 
+                title={toastMessage?.title ?? ""} 
+                description={toastMessage?.description ?? ""} 
+                success={toastMessage?.success ?? false}
+                show={toastMessage ? true : false}
+            />
             {children}
         </ToastContext.Provider>
     )

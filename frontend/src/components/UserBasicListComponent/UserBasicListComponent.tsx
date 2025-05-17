@@ -1,56 +1,77 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styles from './UserBasicListComponent.module.css'
 import ButtonComponent from '../ButtonComponent/ButtonComponent'
 import { PiPlus } from "react-icons/pi";
 import { NavLink } from 'react-router';
-import { UserType } from '../../types/BackendTypes';
+import { UserExtendedType, UserType } from '../../types/BackendTypes';
+import { useBackendRequests } from '../../hooks/useBackRequests';
+import { ToastContext } from '../../contexts/ToastContext';
+import SectionComponent from '../SectionComponent/SectionComponent';
 
 type Props = {
-    title: string
     data: UserType[]
 }
 
-const UserBasicListComponent = ({title, data}: Props) => {
+const UserBasicListComponent = ({data}: Props) => {
+    const [users, setUsers] = useState<UserExtendedType[]>([])
+
+    const { getRoles } = useBackendRequests()
+
+    const { setToastMessage } = useContext(ToastContext)
+
+    useEffect(() => {
+        (async () => {
+            setUsers([])
+            for(let i=0;i < data.length;i++){
+                try {
+                    const user = data[i]
+                    const roles = await getRoles(user.id)
+                    setUsers(currentValue => [...currentValue, {...user, roles: roles}])
+                } catch (error) {
+                    setToastMessage({
+                        "title": "Failed to load roles", 
+                        "description": "We couldn't fetch the user roles. Please try again later.", 
+                        success: false
+                    })
+                }
+            }
+        })()
+    }, [data, getRoles, setToastMessage])
+
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.header}>
-                <h5 className={styles.title}>{title}</h5>
-                <ButtonComponent className={styles.button} text='New' icon={<PiPlus />} />
-            </div>
-            <div className={styles.body}>
-                <ul className={styles.list}>
-                    {data.map(item => {
-                        const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`
-                        return (
-                            <li key={item.id} className={styles.listLi}>
-                                <NavLink className={styles.listLiA} to="">
-                                    <div className={styles.listLiAImage} style={{backgroundColor: randomColor}}>{item.name[0].toUpperCase()}</div>
-                                    <div className={styles.listLiAContent}>
-                                        <span className={styles.listLiAContentTitle}>{item.name}</span>
-                                        <span className={styles.listLiAContentDescription}>
-                                            Assigned Roles(s)
-                                            <span className={styles.bold}>EDITAR</span>
+        <SectionComponent 
+            title='Users'
+            content={
+                <ButtonComponent className={styles.button} text='Add User' icon={<PiPlus />} />
+            }
+        >
+            <ul className={styles.list}>
+                {users.map(user => {
+                    const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`
+                    return (
+                        <li key={user.id} className={styles.listLi}>
+                            <NavLink className={styles.listLiA} to="">
+                                <div className={styles.listLiAImage} style={{backgroundColor: randomColor}}>{user.name[0].toUpperCase()}</div>
+                                <div className={styles.listLiAContent}>
+                                    <span className={styles.listLiAContentTitle}>{user.name}</span>
+                                    <span className={styles.listLiAContentDescription}>
+                                        Assigned Roles(s)
+                                        <span className={styles.bold}>
+                                            {user.roles.map(role => role.name).join(", ")}
                                         </span>
-                                    </div>
-                                    {/* {
-                                        (() => {
-                                            const style = item.is_active ? styles.high : styles.low
-                                            return (
-                                                <div className={`${styles.listLiAContent} ${styles.levelContainer}`}>
-                                                    <span className={`${styles.listLiAContentDescription} ${styles.level} ${style}`}>
-                                                        {item.is_active ? "Active" : "Inactive"}
-                                                    </span>
-                                                </div>
-                                            )
-                                        })()
-                                    } */}
-                                </NavLink>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </div>
-        </div>
+                                    </span>
+                                </div>
+                                <div className={`${styles.listLiAContent} ${styles.levelContainer}`}>
+                                    <span className={`${styles.listLiAContentDescription} ${styles.level} ${user.is_active ? styles.high : styles.low}`}>
+                                        {user.is_active ? "Active" : "Inactive"}
+                                    </span>
+                                </div>
+                            </NavLink>
+                        </li>
+                    )
+                })}
+            </ul>
+        </SectionComponent>
     )
 }
 

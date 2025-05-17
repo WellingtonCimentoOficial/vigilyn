@@ -30,7 +30,7 @@ const HeaderComponent = (props: Props) => {
                     <div className={styles.containerIcon}>
                         <PiBell className={styles.icon} />
                     </div>
-                    <NavLink className={styles.containerAccount} to="/">
+                    <NavLink className={styles.containerAccount} to="/dashboard/profile/">
                         <div className={styles.containerAccountHeader}>
                             <div className={`${styles.containerIcon} ${styles.containerAccountHeaderIcon}`}>
                                 <PiUser className={styles.icon} />

@@ -1,0 +1,59 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.containerHeaderIcon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--principal-color);
+    border-radius: 100%;
+}
+.headerIcon {
+    width: 2rem;
+    height: 2rem;
+}
+.containerHeaderBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.title {
+
+}
+.description {
+    font-weight: 300;
+    font-size: 0.9rem;
+}
+.body {
+}
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.formContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+.button {
+    font-size: 0.9rem;
+}

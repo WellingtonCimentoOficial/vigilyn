@@ -7,7 +7,8 @@ import { useNavigate } from 'react-router'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useBackendRequests } from '../../hooks/useBackRequests'
 import { ToastContext } from '../../contexts/ToastContext'
-import { PiEye, PiEyeSlash } from "react-icons/pi";
+import InputComponent from '../../components/InputComponent/InputComponent'
+import { emailRegex, passwordRegex } from '../../utils/regex'
 
 type Props = {}
 
@@ -28,16 +29,14 @@ const SignInPage = (props: Props) => {
     const navigate = useNavigate()
     
     const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
         setEmail(e.target.value)
-        setEmailIsValid(regex.test(e.target.value))
+        setEmailIsValid(emailRegex.test(e.target.value))
         setWasSubmitted(false)
     }
     
     const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
         setPassword(e.target.value)
-        setPasswordIsValid(regex.test(e.target.value))
+        setPasswordIsValid(passwordRegex.test(e.target.value))
         setWasSubmitted(false)
     }
 
@@ -92,39 +91,29 @@ const SignInPage = (props: Props) => {
                         </div>
                         <div className={styles.bodyBody}>
                             <form className={styles.form} onSubmit={handleSubmit}>
-                                <div className={styles.containerInput}>
-                                    <label htmlFor="email" className={styles.label}>Email</label>
-                                    <input 
-                                        type="text" 
-                                        name="email" 
-                                        id="email" 
-                                        className={`${styles.input} ${!emailIsValid && wasSubmitted ? styles.inputError : ""}`} 
-                                        placeholder='email@email.com' 
-                                        onChange={handleEmail}
-                                        value={email}
-                                    />
-                                </div>
-                                <div className={styles.containerInput}>
-                                    <label htmlFor="password" className={styles.label}>Password</label>
-                                    <div className={styles.inputWra}>
-                                        <input 
-                                            type={showPassword ? "text" : "password"} 
-                                            name="password" 
-                                            id="password" 
-                                            className={`${styles.input} ${!passwordIsValid && wasSubmitted ? styles.inputError : ""}`} 
-                                            placeholder='********' 
-                                            onChange={handlePassword}
-                                            value={password}
-                                        />
-                                        <div className={styles.inputIconContainer}>
-                                            {showPassword ? (
-                                                <PiEyeSlash className={styles.inputIcon} onClick={() => setShowPassword(value => !value)} />
-                                            ):(
-                                                <PiEye className={styles.inputIcon} onClick={() => setShowPassword(value => !value)} />
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
+                                <InputComponent
+                                    type="text" 
+                                    name="email" 
+                                    id="email" 
+                                    error={!emailIsValid && wasSubmitted}
+                                    placeholder='email@email.com' 
+                                    onChange={handleEmail}
+                                    value={email}
+                                    label='Email'
+                                    disabled={isLoading}
+                                />
+                                <InputComponent
+                                    type={showPassword ? "text" : "password"} 
+                                    name="password" 
+                                    id="password" 
+                                    error={!passwordIsValid && wasSubmitted }
+                                    onChange={handlePassword}
+                                    value={password}
+                                    label='Password'
+                                    showPassword={showPassword}
+                                    setShowPassword={setShowPassword}
+                                    disabled={isLoading}
+                                />
                                 <div className={styles.containerCheckBox}>
                                     <input 
                                         className={styles.inputCheckBox} 

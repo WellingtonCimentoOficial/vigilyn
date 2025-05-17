@@ -13,6 +13,7 @@ import CardTimeComponent from '../../components/CardTimeComponent/CardTimeCompon
 import { CameraType, RecordType, UserType } from '../../types/BackendTypes'
 import { useBackendRequests } from '../../hooks/useBackRequests'
 import { ToastContext } from '../../contexts/ToastContext'
+import SectionComponent from '../../components/SectionComponent/SectionComponent'
 import { getMonthName } from '../../utils/utils'
 
 
@@ -35,7 +36,7 @@ const DashboardPage = (props: Props) => {
     useEffect(() => {
         (async () => {
             try {
-                const data = await getCameras()
+                const data = await getCameras({limit: 5})
                 setCameras(data)
                 setCamerasWithPid(data.filter(camera => camera.pid != null))
                 setCamerasWithoutPid(data.filter(camera => camera.pid === null))
@@ -149,34 +150,24 @@ const DashboardPage = (props: Props) => {
                 </div>
                 <div className={styles.sectionContainer}>
                     <div className={styles.aside}>
-                        <div className={styles.container}>
-                            <CameraBasicListComponent title='Cameras' data={cameras.slice(0, 5)} />
-                        </div>
+                        <CameraBasicListComponent data={cameras.slice(0, 5)} />
                         {timeIso && <CardTimeComponent timeIso={timeIso} />}
                     </div>
                     <div className={styles.sectionWrapper}>
-                        <div className={`${styles.sectionLayout} ${styles.section2}`}>
-                            <div className={`${styles.container} ${styles.section2Container}`}>
-                                <div className={styles.section2Header}>
-                                    <h5 className={styles.section2HeaderTitle}>Storage Analytics</h5>
-                                </div>
+                        <div className={styles.sectionLayout}>
+                            <SectionComponent title='Storage Analytics'>
                                 <div className={styles.section2Body}>
                                     <BarPlusChartComponent data={storage} />
                                 </div>
-                            </div>
-                            <div className={`${styles.container} ${styles.section2Container}`}>
-                                <div className={styles.section2Header}>
-                                    <h5 className={styles.section2HeaderTitle}>Resource use</h5>
-                                </div>
+                            </SectionComponent>
+                            <SectionComponent title='Resource use'>
                                 <div className={styles.section2Body}>
                                     <HalfCircleChartComponent data={system} />
                                 </div>
-                            </div>
+                            </SectionComponent>
                         </div>
-                        <div className={`${styles.sectionLayout} ${styles.section3}`}>
-                            <div className={`${styles.container} ${styles.section3Container}`}>
-                                <UserBasicListComponent title='Users' data={users} />
-                            </div>
+                        <div className={styles.sectionLayout}>
+                            <UserBasicListComponent data={users} />
                         </div>
                     </div>
                 </div>

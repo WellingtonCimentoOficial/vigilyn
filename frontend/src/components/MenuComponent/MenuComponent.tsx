@@ -32,27 +32,27 @@ const MenuComponent = (props: Props) => {
             items: [
                 {
                     name: "Dashboard",
-                    href: "/dashboard",
+                    href: "/dashboard/",
                     icon: <PiHouse />
                 },
                 {
                     name: "Cameras",
-                    href: "/cameras",
+                    href: "/dashboard/cameras/",
                     icon: <PiCamera />
                 },
                 {
                     name: "Records",
-                    href: "/records",
+                    href: "/dashboard/records/",
                     icon: <PiRecord />
                 },
                 {
                     name: "Users",
-                    href: "/users",
+                    href: "/dashboard/users/",
                     icon: <PiUser />
                 },
                 {
-                    name: "Permissions",
-                    href: "/permissions",
+                    name: "Roles",
+                    href: "/dashboard/roles/",
                     icon: <PiLock />
                 },
             ]
@@ -62,7 +62,7 @@ const MenuComponent = (props: Props) => {
             items: [
                 {
                     name: "Settings",
-                    href: "/settings",
+                    href: "/dashboard/settings/",
                     icon: <PiGear />
                 },
                 {
@@ -99,7 +99,11 @@ const MenuComponent = (props: Props) => {
                                 <ul className={styles.listItem}>
                                     {section.items.map((item, itemIndex) => (
                                         <li key={itemIndex} className={styles.liItem}>
-                                            <NavLink to={item.href} className={({isActive}) => isActive ? `${styles.aItem} ${styles.active}` : styles.aItem}>
+                                            <NavLink 
+                                                to={item.href} 
+                                                end={item.href === "/dashboard/"}
+                                                className={({isActive}) => isActive ? `${styles.aItem} ${styles.active}` : styles.aItem}
+                                            >
                                                 {({ isActive }) => (
                                                     <>
                                                         {React.cloneElement(item.icon, {

@@ -1,0 +1,31 @@
+@keyframes verticalSpin {
+    0% {
+      transform: rotateY(0deg);
+    }
+    49% {
+      transform: rotateY(180deg);
+    }
+    50% {
+      transform: rotateY(180deg);
+    }
+    99% {
+      transform: rotateY(360deg);
+    }
+    100% {
+      transform: rotateY(360deg);
+    }
+}
+  
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logo {
+    fill: var(--principal-color);
+    width: 4rem;
+    animation: verticalSpin 2s ease-in-out infinite;
+    transform-style: preserve-3d;
+}
