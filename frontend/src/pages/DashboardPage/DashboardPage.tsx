@@ -1,20 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styles from './DashboardPage.module.css'
 import PageLayout from '../../layouts/PageLayout/PageLayout'
-import CardComponent from '../../components/CardComponent/CardComponent'
-import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
+import ButtonComponent from '../../components/Buttons/ButtonComponent/ButtonComponent'
 import { PiPlus } from "react-icons/pi";
-import BarPlusChartComponent from '../../components/BarPlusChartComponent/BarPlusChartComponent'
 import { ChartType } from '../../types/FrontendTypes'
-import HalfCircleChartComponent from '../../components/HalfCircleChartComponent/HalfCircleChartComponent'
-import UserBasicListComponent from '../../components/UserBasicListComponent/UserBasicListComponent'
-import CameraBasicListComponent from '../../components/CameraBasicListComponent/CameraBasicListComponent'
-import CardTimeComponent from '../../components/CardTimeComponent/CardTimeComponent'
 import { CameraType, RecordType, UserType } from '../../types/BackendTypes'
 import { useBackendRequests } from '../../hooks/useBackRequests'
 import { ToastContext } from '../../contexts/ToastContext'
-import SectionComponent from '../../components/SectionComponent/SectionComponent'
+import SectionComponent from '../../components/Sections/SectionComponent/SectionComponent'
 import { getMonthName } from '../../utils/utils'
+import HalfCircleChartComponent from '../../components/Charts/HalfCircleChartComponent/HalfCircleChartComponent'
+import BarPlusChartComponent from '../../components/Charts/BarPlusChartComponent/BarPlusChartComponent'
+import CardTimeComponent from '../../components/Cards/CardTimeComponent/CardTimeComponent'
+import CardComponent from '../../components/Cards/CardComponent/CardComponent';
+import CameraBasicListComponent from '../../components/Lists/CameraBasicListComponent/CameraBasicListComponent';
+import UserBasicListComponent from '../../components/Lists/UserBasicListComponent/UserBasicListComponent';
 
 
 type Props = {}

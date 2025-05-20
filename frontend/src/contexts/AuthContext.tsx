@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { useBackendRequests } from "../hooks/useBackRequests";
 import { TokensType } from "../types/BackendTypes";
 import { useNavigate } from "react-router";
-import LoaderLogoComponent from "../components/LoaderLogoComponent/LoaderLogoComponent";
+import LoaderLogoComponent from "../components/Loaders/LoaderLogoComponent/LoaderLogoComponent";
 
 type AuthContextType = {
     tokens: TokensType

@@ -1,0 +1,135 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.containerHeader {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.containerFilters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.checkboxFilter {
+    pointer-events: none;
+}
+.container {
+    padding: 20px;
+    background-color: white;
+    border-radius: var(--principal-border-radius);
+    /* display: none; */
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    /* border-spacing: 10px; */
+}
+.thead {
+    /* background-color: red; */
+}
+.th {
+}
+.tr {
+}
+.tbody {
+}
+.th, .td {
+    text-align: left;
+    padding: 10px 0px;
+}
+.th {
+    font-weight: 450;
+}
+.td {
+    color: var(--black-color-light);
+    /* font-weight: 300; */
+    /* background-color: blue; */
+}
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profileContainerIcon {
+    background-color: var(--principal-color);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.status {
+    font-weight: 400;
+    padding: 5px;
+}
+.error {
+    background-color: rgba(255, 0, 0, 0.500);
+    color: red;
+}
+.success {
+    background-color: rgba(0, 255, 0, 0.500);
+    color: green;
+}
+.textCenter {
+    text-align: center;
+}
+.containerOptions {
+    position: relative;
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.containerOptionsIcon {
+    width: 1.8rem;
+    height: 1.8rem;
+    /* background-color: green; */
+    fill: var(--black-color-light);
+}
+.subContainerOptions {
+    position: absolute;
+    background-color: white;
+    top: 1.5rem;
+    right: 1.5rem;
+    border-radius: var(--principal-border-radius);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
+    transform: scaleY(0);
+    transform-origin: top;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.subContainerOptionsShow {
+    transform: scaleY(100%);
+    opacity: 1;
+}
+.option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    transition: 0.2s;
+    background-color: white;
+    user-select: none;
+}
+.option:first-child {
+    border-radius: var(--principal-border-radius) var(--principal-border-radius) 0px 0px;
+}
+.option:last-child {
+    border-radius: 0px 0px var(--principal-border-radius) var(--principal-border-radius);
+}
+.option:hover {
+    background-color: rgb(240, 240, 240);
+}
+.optionIcon {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: var(--black-color-light);
+}
+.optionText {
+    color: var(--black-color-light);
+}

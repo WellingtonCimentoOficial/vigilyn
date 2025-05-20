@@ -2,11 +2,11 @@ import React, { useContext, useState } from 'react'
 import styles from "./ProfilePage.module.css"
 import PageLayout from '../../layouts/PageLayout/PageLayout'
 import { PiUser } from "react-icons/pi";
-import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
+import ButtonComponent from '../../components/Buttons/ButtonComponent/ButtonComponent';
 import { PiNotePencil } from "react-icons/pi";
 import { formatDateTime } from '../../utils/utils';
 import { UserContext } from '../../contexts/UserContext';
-import ModalUserComponent from '../../components/ModalUserComponent/ModalUserComponent';
+import ModalUserComponent from '../../components/Modals/ModalUserComponent/ModalUserComponent';
 
 type Props = {}
 

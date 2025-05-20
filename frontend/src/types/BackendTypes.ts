@@ -86,3 +86,7 @@ export type ValidationErrorType = {
     error: string
     message: Record<string, string[]>
 }
+
+export type SuccessMessageType = {
+    message: string
+}

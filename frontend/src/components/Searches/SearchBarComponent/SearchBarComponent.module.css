@@ -1,0 +1,33 @@
+.wrapper {
+    position: relative;
+    width: max-content;
+}
+.input {
+    width: 300px;
+    padding: 13px 40px 13px 20px;
+    border-radius: var(--principal-border-radius);
+    color: var(--black-color-light);
+    font-size: 0.9rem;
+    outline: none;
+    border: 2px solid transparent;
+    transition: border 0.3s ease;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+.input:focus {
+    border-color: var(--principal-color);
+}
+.iconContainer {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: var(--black-color-light);
+    cursor: pointer;
+}

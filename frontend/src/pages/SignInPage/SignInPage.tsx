@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styles from './SignInPage.module.css'
-import LogoFullComponent from '../../components/LogoFullComponent/LogoFullComponent'
-import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
-import LogoSimbolComponent from '../../components/LogoSimbolComponent/LogoSimbolComponent'
+import ButtonComponent from '../../components/Buttons/ButtonComponent/ButtonComponent'
+import LogoSimbolComponent from '../../components/Logos/LogoSimbolComponent/LogoSimbolComponent'
 import { useNavigate } from 'react-router'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useBackendRequests } from '../../hooks/useBackRequests'
 import { ToastContext } from '../../contexts/ToastContext'
-import InputComponent from '../../components/InputComponent/InputComponent'
+import InputComponent from '../../components/Inputs/InputComponent/InputComponent'
 import { emailRegex, passwordRegex } from '../../utils/regex'
+import CheckBoxComponent from '../../components/CheckBoxComponent/CheckBoxComponent'
+import LogoFullComponent from '../../components/Logos/LogoFullComponent/LogoFullComponent'
 
 type Props = {}
 
@@ -114,17 +115,7 @@ const SignInPage = (props: Props) => {
                                     setShowPassword={setShowPassword}
                                     disabled={isLoading}
                                 />
-                                <div className={styles.containerCheckBox}>
-                                    <input 
-                                        className={styles.inputCheckBox} 
-                                        type="checkbox" 
-                                        name="remember" 
-                                        id="remember" 
-                                        checked={remember}
-                                        onChange={(e) => setRemember(e.target.checked)}
-                                    />
-                                    <label className={styles.labelCheckBox} htmlFor="remember">Remember Me</label>
-                                </div>
+                                <CheckBoxComponent checked={remember} callback={(checked) => setRemember(checked)} label='Remember Me' />
                                 <ButtonComponent 
                                     text='Log In' 
                                     filled 

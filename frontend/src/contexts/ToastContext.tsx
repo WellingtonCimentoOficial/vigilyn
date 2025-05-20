@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
-import ToastComponent from "../components/ToastComponent/ToastComponent";
 import { ToastType } from "../types/FrontendTypes";
+import ToastComponent from "../components/Toasts/ToastComponent/ToastComponent";
 
 
 type ToastContextType = {
@@ -24,14 +24,14 @@ export const ToastContextProvider = ({children}: Props) => {
 
     useEffect(() => {
         if(toastMessage){
-            const timeout = setTimeout(() => setToastMessage(null), 10000)
+            const timeout = setTimeout(() => setToastMessage(null), 7000)
             return () => clearTimeout(timeout)
         }
     }, [toastMessage])
 
     return (
         <ToastContext.Provider value={{toastMessage, setToastMessage}}>
-            <ToastComponent 
+            <ToastComponent
                 title={toastMessage?.title ?? ""} 
                 description={toastMessage?.description ?? ""} 
                 success={toastMessage?.success ?? false}

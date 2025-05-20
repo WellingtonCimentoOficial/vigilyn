@@ -1,5 +1,5 @@
 import { useAxios } from "./useAxios"
-import { CameraType, RecordType, RoleType, StorageMonthlyType, SystemType, TokensType, UserExtendedType, UserType, UserUpdateType } from "../types/BackendTypes"
+import { CameraType, RecordType, RoleType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserExtendedType, UserType, UserUpdateType } from "../types/BackendTypes"
 import { useCallback } from "react"
 
 type GetCameraProps = {
@@ -53,6 +53,12 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
+    const updateMe = useCallback(async (userUpdateData: UserUpdateType) => {
+        const response = await axiosPrivate.patch("/users/me/", {...userUpdateData})
+        const data: UserType = await response.data
+        return data
+    }, [axiosPrivate])
+
     const getCameras = useCallback(async ({search, pid, page, limit} : GetCameraProps = {}) => {
         const params = Object.fromEntries(
             Object.entries({ search, pid, page, limit })
@@ -63,6 +69,12 @@ export const useBackendRequests = () => {
             params
         })
         const data: CameraType[] = await response.data.data
+        return data
+    }, [axiosPrivate])
+
+    const deleteCamera = useCallback(async (cameraId: number) => {
+        const response = await axiosPrivate.delete(`/cameras/${cameraId}/`)
+        const data: SuccessMessageType = await response.data
         return data
     }, [axiosPrivate])
 
@@ -101,18 +113,14 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
-    const updateMe = useCallback(async (userUpdateData: UserUpdateType) => {
-        const response = await axiosPrivate.patch("/users/me/", {...userUpdateData})
-        const data: UserType = await response.data
-        return data
-    }, [axiosPrivate])
 
     return {
         signIn, 
         signOut, 
         refreshTokens, 
         getMe, 
-        getCameras, 
+        getCameras,
+        deleteCamera,
         getSystem, 
         getStorage, 
         getRecords,

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Outlet } from 'react-router'
 import styles from './MainLayout.module.css'
-import MenuComponent from '../../components/MenuComponent/MenuComponent'
-import HeaderComponent from '../../components/HeaderComponent/HeaderComponent'
+import MenuComponent from '../../components/Menus/MenuComponent/MenuComponent'
+import HeaderComponent from '../../components/Headers/HeaderComponent/HeaderComponent'
 
 type Props = {}
 
