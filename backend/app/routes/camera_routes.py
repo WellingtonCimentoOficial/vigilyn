@@ -23,7 +23,7 @@ from app.exceptions.camera_exceptions import (
     CameraProcessAlreadyStoppedException,
 )
 from app.utils.utils import generate_pagination_response
-
+import math
 
 camera_bp = Blueprint("cameras", __name__, url_prefix="/api/cameras/")
 
@@ -36,18 +36,25 @@ def get_all():
     page_param = request.args.get("page", default=1)
     pid_param = request.args.get("pid")
     limit_param = request.args.get(
-        "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"]
+        "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"],
+        type=int
     )
 
-    cameras = filter_camera(
+    cameras, total = filter_camera(
         search_param=search_param,
         pid_param=pid_param,
         limit=limit_param,
         page=page_param,
     )
     cameras_schema = CameraSchema(many=True).dump(cameras)
-
-    data = generate_pagination_response(page_param, limit_param, cameras_schema)
+    
+    data = generate_pagination_response(
+        current_page=page_param, 
+        total_count=total,
+        limit=limit_param, 
+        data=cameras_schema
+    )
+    
     return jsonify(data)
 
 
@@ -68,7 +75,7 @@ def get(pk):
 def create():
     schema = CameraCreateUpdateSchema()
     data = schema.load(request.json)
-
+    
     new_camera = create_camera(**data)
     new_camera_schema = CameraSchema()
     new_camera_data = new_camera_schema.dump(new_camera)
@@ -76,14 +83,14 @@ def create():
     return jsonify(new_camera_data), 201
 
 
-@camera_bp.route("<int:pk>/", methods=["PUT"])
+@camera_bp.route("<int:pk>/", methods=["PATCH"])
 @authentication_required()
 @permission_required("update_camera")
 def update(pk):
     camera = Camera.query.get_or_404(pk)
     schema = CameraCreateUpdateSchema()
     data = schema.load(request.json)
-
+    
     camera_updated = update_camera(camera, **data)
     camera_updated_schema = CameraSchema()
     camera_updated_data = camera_updated_schema.dump(camera_updated)

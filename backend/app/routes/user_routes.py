@@ -19,6 +19,7 @@ from app.services.role_services import update_roles
 from app.decorators.permission_decorators import permission_required
 from flask_jwt_extended import get_jwt_identity
 from app.utils.utils import generate_pagination_response
+import math
 
 user_bp = Blueprint("user", __name__, url_prefix="/api/users/")
 
@@ -42,10 +43,11 @@ def get_all():
     is_active_param = request.args.get("is_active", default="true")
     page_param = request.args.get("page", default=1, type=int)
     limit_param = request.args.get(
-        "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"], type=int
+        "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"], 
+        type=int
     )
 
-    users = filter_user(
+    users, total = filter_user(
         search_param=search_param,
         role_param=role_param,
         is_active_param=is_active_param,
@@ -54,7 +56,12 @@ def get_all():
     )
     users_schema = UserSchema(many=True).dump(users)
 
-    data = generate_pagination_response(page_param, limit_param, users_schema)
+    data = generate_pagination_response(
+        current_page=page_param, 
+        total_count=total,
+        limit=limit_param, 
+        data=users_schema
+    )
     return jsonify(data), 200
 
 

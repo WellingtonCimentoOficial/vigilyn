@@ -12,7 +12,7 @@ from app.exceptions.camera_exceptions import (
     CameraPidParamException,
 )
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
-from sqlalchemy import or_
+from sqlalchemy import or_, desc
 import threading
 import subprocess
 import os
@@ -85,7 +85,7 @@ def stop_all_cameras_async():
         stop_camera_async(camera.id)
 
 
-def create_camera(name, username, password, ip_address, port, path):
+def create_camera(name, ip_address, port, **kwargs):
     try:
         exists = db.session.query(Camera.query.filter_by(name=name).exists()).scalar()
 
@@ -94,12 +94,12 @@ def create_camera(name, username, password, ip_address, port, path):
 
         camera = Camera(
             name=name,
-            username=username,
-            password=password,
             ip_address=ip_address,
             port=port,
-            path=path,
         )
+        
+        for key, value in kwargs.items():
+            setattr(camera, key, value)
 
         db.session.add(camera)
         db.session.commit()
@@ -115,8 +115,8 @@ def create_camera(name, username, password, ip_address, port, path):
 def update_camera(camera, **kwargs):
     try:
         camera_by_name = Camera.query.filter_by(name=kwargs["name"]).first()
-
-        if camera_by_name.id != camera.id:
+        
+        if camera_by_name and camera_by_name.id != camera.id:
             raise CameraAlreadyExistsException()
 
         for key, value in kwargs.items():
@@ -157,6 +157,7 @@ def start_camera_async(camera):
         )
 
         camera.pid = process.pid
+        camera.requires_restart = False
         db.session.commit()
 
         return camera
@@ -195,5 +196,7 @@ def filter_camera(search_param, page, limit, pid_param):
             query = query.filter(Camera.pid.isnot(None))
         else:
             query = query.filter(Camera.pid.is_(None))
+    
+    query = query.order_by(desc(Camera.id))
 
-    return query.offset((page - 1) * limit).limit(limit)
+    return query.offset((page - 1) * limit).limit(limit), query.count()

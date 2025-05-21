@@ -40,6 +40,14 @@ class CameraCreateUpdateSchema(Schema):
         if not (1 <= value <= 65535):
             raise ValidationError("Port must be a number between 1 and 65535.")
 
-    username = fields.Str(required=True)
-    password = fields.Str(required=True)
-    path = fields.Str(required=True)
+    username = fields.Str(required=False)
+    password = fields.Str(required=False)
+    path = fields.Str(
+        required=False,
+        validate=[
+            validate.Regexp(
+                r"^\/(?:[a-zA-Z0-9_-]+\/?)*$",
+                error="Path must be a relative path starting with /."
+            )
+        ]
+    )

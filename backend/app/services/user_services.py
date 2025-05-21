@@ -7,7 +7,7 @@ from app.exceptions.user_exceptions import (
     UserIsActiveParamException,
 )
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
-from sqlalchemy import or_
+from sqlalchemy import or_, desc
 from app.models.role_models import Role
 from sqlalchemy.orm import joinedload
 
@@ -90,5 +90,6 @@ def filter_user(search_param, role_param, is_active_param, page, limit):
         )
 
     query = query.filter(User.is_active == is_active_param)
+    query = query.order_by(desc(User.id))
 
-    return query.offset((page - 1) * limit).limit(limit)
+    return query.offset((page - 1) * limit).limit(limit), query.count()

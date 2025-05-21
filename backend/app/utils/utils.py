@@ -16,7 +16,14 @@ def is_idle(file_path: str, idle_seconds: float):
 
 
 def generate_rtsp_url(camera):
-    url = f"rtsp://{camera.username}:{camera.password}@{camera.ip_address}:{camera.port}{camera.path}"
+    base = "rtsp://"
+    credentials = (
+        f"{camera.username}:{camera.password}" if
+        camera.username and camera.password else
+        camera.username or camera.password or ""
+    )
+    server = f"{camera.ip_address}:{camera.port}"
+    url = f"rtsp://{base}{credentials}@{server}{camera.path}"
 
     return url
 
@@ -41,6 +48,11 @@ def generate_error_message(error, message, status_code):
     return jsonify(data), status_code
 
 
-def generate_pagination_response(page, limit, data):
-    payload = {"page": page, "limit": limit, "data": data}
+def generate_pagination_response(current_page, total_count, limit, data):
+    payload = {
+        "current_page": current_page, 
+        "total_count": total_count,
+        "limit": limit, 
+        "data": data
+    }
     return payload
