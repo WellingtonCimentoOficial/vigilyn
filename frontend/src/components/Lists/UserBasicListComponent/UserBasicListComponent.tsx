@@ -42,7 +42,12 @@ const UserBasicListComponent = ({data}: Props) => {
         <SectionComponent 
             title='Users'
             content={
-                <ButtonComponent className={styles.button} text='Add User' icon={<PiPlus />} />
+                <ButtonComponent 
+                    className={styles.button} 
+                    text='Add User' 
+                    icon={<PiPlus />}
+                    path='/dashboard/users/'
+                />
             }
         >
             <ul className={styles.list}>

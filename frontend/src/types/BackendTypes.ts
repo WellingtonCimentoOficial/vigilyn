@@ -45,6 +45,15 @@ export type CameraType = {
     requires_restart: boolean
 }
 
+export type CameraCreateUpdateType = {
+    name: string,
+    ip_address: string
+    port: number
+    username?: string
+    password?: string
+    path?: string
+}
+
 export type CpuType = {
     cores: number
     threads: number
@@ -82,11 +91,25 @@ export type RecordType = {
     path: string
     created_at: string
 }
-export type ValidationErrorType = {
+export type ErrorType = {
     error: string
+    message: string
+}
+export type ErrorValidationType = ErrorType & {
     message: Record<string, string[]>
 }
 
 export type SuccessMessageType = {
     message: string
+}
+export type PaginationType = {
+    current_page: number
+    total_count: number
+    limit: number
+}
+export type CameraPaginationType = PaginationType & {
+    data: CameraType[]
+}
+export type UserPaginationType = PaginationType & {
+    data: UserType[]
 }

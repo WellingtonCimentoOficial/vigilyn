@@ -15,7 +15,12 @@ const CameraBasicListComponent = ({data}: Props) => {
         <SectionComponent 
             title='Cameras'
             content={
-                <ButtonComponent className={styles.button} text='New' icon={<PiPlus />} />
+                <ButtonComponent 
+                    className={styles.button} 
+                    text='New' 
+                    icon={<PiPlus />} 
+                    path='/dashboard/cameras/'
+                />
             }
         >
             <ul className={styles.list}>

@@ -1,0 +1,63 @@
+.containerOptions {
+    position: relative;
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.containerOptionsIcon {
+    width: 1.8rem;
+    height: 1.8rem;
+    /* background-color: green; */
+    fill: var(--black-color-light);
+    cursor: pointer;
+}
+.subContainerOptions {
+    position: absolute;
+    background-color: white;
+    top: 1.5rem;
+    right: 1.5rem;
+    border-radius: var(--principal-border-radius);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
+    transform: scaleY(0);
+    transform-origin: top;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1;
+}
+.subContainerOptionsShow {
+    transform: scaleY(100%);
+    opacity: 1;
+}
+.option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    transition: 0.2s;
+    background-color: white;
+    user-select: none;
+    cursor: pointer;
+}
+.option:first-child {
+    border-radius: var(--principal-border-radius) var(--principal-border-radius) 0px 0px;
+}
+.option:last-child {
+    border-radius: 0px 0px var(--principal-border-radius) var(--principal-border-radius);
+}
+.option:hover {
+    background-color: rgb(240, 240, 240);
+}
+.optionDisabled {
+    opacity: 50%;
+    pointer-events: none;
+    cursor: auto;
+}
+.optionIcon {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: var(--black-color-light);
+}
+.optionText {
+    color: var(--black-color-light);
+}

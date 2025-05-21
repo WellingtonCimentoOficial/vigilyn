@@ -9,7 +9,7 @@ type Props = {
 
 const BarPlusChartComponent = ({data}: Props) => {
     const maxValue = Math.max(...data.map(item => item.value))
-    const newData = data.map(item => ({...item, value: (item.value / maxValue) * 100}))
+    const newData = data.map(item => ({...item, value: (item.value / maxValue) * 100 || 0}))
     return (
         <div className={styles.wrapper}>
             <ul className={styles.list}>

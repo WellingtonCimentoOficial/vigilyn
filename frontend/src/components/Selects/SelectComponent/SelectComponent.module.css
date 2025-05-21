@@ -1,0 +1,38 @@
+.wrapper {
+    position: relative;
+    font-size: 1rem;
+    user-select: none;
+}
+.header {
+    border: 1px solid rgb(225, 225, 225);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
+.icon {
+    width: 1.1em;
+    height: 1.1em;
+    fill: var(--black-color-light);
+}
+.title {
+    color: var(--black-color-light);
+}
+.listOptions {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    list-style: none;
+    background-color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
+    width: 100%;
+}
+.option {
+    white-space: nowrap;
+    text-align: center;
+    color: var(--black-color-light);
+}
+.header, .option {
+    padding: 5px 10px;
+    cursor: pointer;
+}

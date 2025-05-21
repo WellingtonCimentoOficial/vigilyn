@@ -8,7 +8,7 @@ import { useBackendRequests } from '../../hooks/useBackRequests'
 import { ToastContext } from '../../contexts/ToastContext'
 import InputComponent from '../../components/Inputs/InputComponent/InputComponent'
 import { emailRegex, passwordRegex } from '../../utils/regex'
-import CheckBoxComponent from '../../components/CheckBoxComponent/CheckBoxComponent'
+import CheckBoxComponent from '../../components/Checkboxes/CheckBoxComponent/CheckBoxComponent'
 import LogoFullComponent from '../../components/Logos/LogoFullComponent/LogoFullComponent'
 
 type Props = {}

@@ -1,5 +1,5 @@
 .wrapper {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
@@ -8,25 +8,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-.wrapperShow {
-    opacity: 1;
-    pointer-events: auto;
 }
 .container {
     background-color: white;
     border-radius: var(--principal-border-radius);
-    pointer-events: auto;
-    transform: translateY(-20px);
-    opacity: 0;
-    transition: all 0.3s ease;
-}
-.containerShow {
-    transform: translateY(0);
-    opacity: 1;
 }
 .header {
     display: flex;

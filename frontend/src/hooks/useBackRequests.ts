@@ -1,5 +1,5 @@
 import { useAxios } from "./useAxios"
-import { CameraType, RecordType, RoleType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserExtendedType, UserType, UserUpdateType } from "../types/BackendTypes"
+import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordType, RoleType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserExtendedType, UserPaginationType, UserType, UserUpdateType } from "../types/BackendTypes"
 import { useCallback } from "react"
 
 type GetCameraProps = {
@@ -68,13 +68,49 @@ export const useBackendRequests = () => {
         const response = await axiosPrivate.get("/cameras/", {
             params
         })
-        const data: CameraType[] = await response.data.data
+        const data: CameraPaginationType = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const getCamera = useCallback(async (cameraId: number) => {
+        const response = await axiosPrivate.get(`/cameras/${cameraId}/`)
+        const data: CameraType = response.data
         return data
     }, [axiosPrivate])
 
     const deleteCamera = useCallback(async (cameraId: number) => {
         const response = await axiosPrivate.delete(`/cameras/${cameraId}/`)
         const data: SuccessMessageType = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const startCamera = useCallback(async (cameraId: number) => {
+        const response = await axiosPrivate.post(`/cameras/${cameraId}/start/`)
+        const data: CameraType = response.data
+        return data
+    }, [axiosPrivate])
+
+    const stopCamera = useCallback(async (cameraId: number) => {
+        const response = await axiosPrivate.post(`/cameras/${cameraId}/stop/`)
+        const data: SuccessMessageType = response.data
+        return data
+    }, [axiosPrivate])
+
+    const restartCamera = useCallback(async (cameraId: number) => {
+        const response = await axiosPrivate.post(`/cameras/${cameraId}/restart/`)
+        const data: SuccessMessageType = response.data
+        return data
+    }, [axiosPrivate])
+
+    const updateCamera = useCallback(async (cameraId: number, cameraData: CameraCreateUpdateType) => {
+        const response = await axiosPrivate.patch(`/cameras/${cameraId}/`, {...cameraData})
+        const data: CameraType = response.data
+        return data
+    }, [axiosPrivate])
+
+    const createCamera = useCallback(async (cameraData: CameraCreateUpdateType) => {
+        const response = await axiosPrivate.post("/cameras/", {...cameraData})
+        const data: CameraType = response.data
         return data
     }, [axiosPrivate])
 
@@ -103,7 +139,7 @@ export const useBackendRequests = () => {
         )
         
         const response = await axiosPrivate.get("/users/", {params})
-        const data: UserType[] = response.data.data
+        const data: UserPaginationType = response.data
         return data
     }, [axiosPrivate])
 
@@ -120,7 +156,13 @@ export const useBackendRequests = () => {
         refreshTokens, 
         getMe, 
         getCameras,
+        getCamera,
         deleteCamera,
+        startCamera,
+        stopCamera,
+        restartCamera,
+        updateCamera,
+        createCamera,
         getSystem, 
         getStorage, 
         getRecords,

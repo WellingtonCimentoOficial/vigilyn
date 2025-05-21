@@ -8,3 +8,15 @@ export type ToastType = {
     description: string
     success: boolean
 }
+
+export type SelectDataType = {
+    id: number
+    title: string
+    value: string
+}
+
+export type SelectType = {
+    value: string
+    data: SelectDataType[]
+    callback: (data: SelectDataType) => void
+}

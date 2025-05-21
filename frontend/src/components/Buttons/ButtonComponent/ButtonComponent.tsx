@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './ButtonComponent.module.css'
+import { useNavigate } from 'react-router'
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     text: string
@@ -8,11 +9,18 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     className?: string
     disabled?: boolean
     isLoading?: boolean
+    path?: string
 }
 
-const ButtonComponent = ({icon, text, filled, className, disabled, isLoading, ...rest}: Props) => {
+const ButtonComponent = ({icon, text, filled, className, disabled, isLoading, path, ...rest}: Props) => {
+    const navigate = useNavigate()
     return (
-        <button className={`${styles.wrapper} ${filled ? styles.filled : ""} ${className}`} disabled={disabled} {...rest}>
+        <button 
+            className={`${styles.wrapper} ${filled ? styles.filled : ""} ${className}`} 
+            disabled={disabled} 
+            onClick={() => path && navigate(path)}
+            {...rest}
+        >
             {!isLoading ? (
                 <>
                     {icon &&

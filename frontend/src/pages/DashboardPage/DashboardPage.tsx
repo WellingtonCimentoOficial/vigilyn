@@ -37,9 +37,9 @@ const DashboardPage = (props: Props) => {
         (async () => {
             try {
                 const data = await getCameras({limit: 5})
-                setCameras(data)
-                setCamerasWithPid(data.filter(camera => camera.pid != null))
-                setCamerasWithoutPid(data.filter(camera => camera.pid === null))
+                setCameras(data.data)
+                setCamerasWithPid(data.data.filter(camera => camera.pid != null))
+                setCamerasWithoutPid(data.data.filter(camera => camera.pid === null))
             } catch (error) {
                 setToastMessage({
                     "title": "Failed to load cameras", 
@@ -113,7 +113,7 @@ const DashboardPage = (props: Props) => {
         (async () => {
             try {
                 const data = await getUsers({limit: 4})
-                setUsers(data)
+                setUsers(data.data)
             } catch (error) {
                 setToastMessage({
                     "title": "Failed to load users", 
@@ -134,6 +134,7 @@ const DashboardPage = (props: Props) => {
                         icon={<PiPlus />} 
                         text="Create camera" 
                         filled 
+                        path='/dashboard/cameras/'
                     />
                     <ButtonComponent 
                         text="Import data" 

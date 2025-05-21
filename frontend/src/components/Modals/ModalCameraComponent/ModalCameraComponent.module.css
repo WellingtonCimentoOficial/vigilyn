@@ -1,0 +1,22 @@
+.wrapper {
+
+}
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.inputContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
+.button {
+    font-size: 0.9rem
+}

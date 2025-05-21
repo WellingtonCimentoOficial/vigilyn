@@ -1,0 +1,53 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10%;
+    justify-content: space-between;
+    font-size: 1rem;
+}
+.text {
+    color: var(--black-color-light);
+}
+.paginator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.pagesList {    
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.pagesListLi {
+    color: var(--black-color-light);
+    width: 2em;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    cursor: pointer;
+    user-select: none;
+}
+.current {
+    background-color: var(--principal-color);
+    color: white;
+}
+.paginatorController {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+}
+.controllerIcon {
+    width: 1.5em;
+    height: 1.5em;
+    fill: var(--black-color-light);
+}
+.items {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

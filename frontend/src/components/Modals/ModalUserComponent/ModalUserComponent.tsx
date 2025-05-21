@@ -8,7 +8,7 @@ import { nameRegex, passwordRegex } from '../../../utils/regex';
 import { useBackendRequests } from '../../../hooks/useBackRequests';
 import { UserContext } from '../../../contexts/UserContext';
 import { ToastContext } from '../../../contexts/ToastContext';
-import { ValidationErrorType } from '../../../types/BackendTypes';
+import { ErrorValidationType } from '../../../types/BackendTypes';
 
 
 type Props = {
@@ -63,8 +63,8 @@ const ModalUserComponent = ({showModal, setShowModal}: Props) => {
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        setIsLoading(true)
         e.preventDefault()
+        setIsLoading(true)
         if(nameIsValid && passwordIsValid && confirmPasswordIsValid && !isLoading){
             try {
                 const dataToUpdate = {
@@ -87,7 +87,7 @@ const ModalUserComponent = ({showModal, setShowModal}: Props) => {
                 setShowModal(false)
             } catch (error: any) {
                 if(error.response?.status === 400){
-                    const data: ValidationErrorType = error.response?.data
+                    const data: ErrorValidationType = error.response?.data
                     if("name" in data.message){
                         setNameIsValid(false)
                         setToastMessage({
@@ -95,16 +95,14 @@ const ModalUserComponent = ({showModal, setShowModal}: Props) => {
                             "description": "The name field is invalid", 
                             success: false
                         })
-                    }
-                    if("password" in data.message){
+                    }else if("password" in data.message){
                         setPasswordIsValid(false)
                         setToastMessage({
                             "title": "Password invalid", 
                             "description": "The password field is invalid", 
                             success: false
                         })
-                    }
-                    if("confirm_password" in data.message){
+                    }else if("confirm_password" in data.message){
                         setConfirmPasswordIsValid(false)
                         setToastMessage({
                             "title": "Confirm password invalid", 
