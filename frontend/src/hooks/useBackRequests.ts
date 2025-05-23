@@ -6,6 +6,7 @@ type GetCameraProps = {
     search?: string
     pid?: boolean
     requires_restart?: boolean
+    is_recording?: boolean
     page?: number
     limit?: number
 }
@@ -60,9 +61,9 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
-    const getCameras = useCallback(async ({search, pid, requires_restart, page, limit} : GetCameraProps = {}) => {
+    const getCameras = useCallback(async ({search, pid, requires_restart, is_recording, page, limit} : GetCameraProps = {}) => {
         const params = Object.fromEntries(
-            Object.entries({ search, pid, requires_restart, page, limit })
+            Object.entries({ search, pid, requires_restart, is_recording, page, limit })
             .filter(([_, value]) => value != null)
         )
 

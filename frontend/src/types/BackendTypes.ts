@@ -43,6 +43,7 @@ export type CameraType = {
     path: string
     pid: number | null
     requires_restart: boolean
+    is_recording: boolean
 }
 
 export type CameraCreateUpdateType = {

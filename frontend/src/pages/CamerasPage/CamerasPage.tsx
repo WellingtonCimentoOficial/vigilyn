@@ -36,9 +36,11 @@ const CamerasPage = (props: Props) => {
 
     const filterData: CameraFilterType[] = [
         {id: 0, title: "Recording now", value: false},
-        {id: 1, title: "Stopped", value: false},
+        {id: 1, title: "Not recording", value: false},
         {id: 2, title: "Applied settings", value: false},
-        {id: 3, title: "Pending settings", value: false}
+        {id: 3, title: "Pending settings", value: false},
+        {id: 4, title: "Process running", value: false},
+        {id: 5, title: "Process stopped", value: false},
     ]
 
     const [showFilters, setShowFilters] = useState<boolean>(false)
@@ -130,7 +132,7 @@ const CamerasPage = (props: Props) => {
                 setCameras(prev => 
                     prev.map(camera => 
                         camera.id === cameraIds[i] ?
-                        {...camera, pid: null} :
+                        {...camera, pid: null, is_recording: false} :
                         camera
                     )
                 )
@@ -190,15 +192,19 @@ const CamerasPage = (props: Props) => {
         (async () => {
             try {
                 const recordingNowFilter = filters.find(item => item.id === 0)
-                const recordingStoppedFilter = filters.find(item => item.id === 1)
+                const notRecordingFilter = filters.find(item => item.id === 1)
                 const appliedSettingsFilter = filters.find(item => item.id === 2)
                 const pendingSettingsFilter = filters.find(item => item.id === 3)
+                const processRunningFilter = filters.find(item => item.id === 4)
+                const processStoppedFilter = filters.find(item => item.id === 5)
                 const params = {
                     limit, 
                     page: currentPage, 
                     search: debouncedSearch,
-                    ...(recordingNowFilter?.value && {pid: true}),
-                    ...(recordingStoppedFilter?.value && {pid: false}),
+                    ...(processRunningFilter?.value && {pid: true}),
+                    ...(processStoppedFilter?.value && {pid: false}),
+                    ...(recordingNowFilter?.value && {is_recording: true}),
+                    ...(notRecordingFilter?.value && {is_recording: false}),
                     ...(appliedSettingsFilter?.value && {requires_restart: false}),
                     ...(pendingSettingsFilter?.value && {requires_restart: true}),
                 }
@@ -296,8 +302,9 @@ const CamerasPage = (props: Props) => {
                                         <th className={styles.th}>Username</th>
                                         <th className={styles.th}>Password</th>
                                         <th className={styles.th}>Path</th>
-                                        <th className={`${styles.th} ${styles.textCenter}`}>Status</th>
-                                        <th className={`${styles.th} ${styles.textCenter}`}>Settings State</th>
+                                        <th className={`${styles.th} ${styles.textCenter}`}>Process</th>
+                                        <th className={`${styles.th} ${styles.textCenter}`}>Recording</th>
+                                        <th className={`${styles.th} ${styles.textCenter}`}>Settings</th>
                                         <th className={`${styles.th} ${styles.textCenter}`}>Actions</th>
                                     </tr>
                                 </thead>
@@ -324,7 +331,12 @@ const CamerasPage = (props: Props) => {
                                             <td className={styles.td}>{camera.path}</td>
                                             <td className={`${styles.td} ${styles.textCenter}`}>
                                                 <span className={`${styles.status} ${camera.pid ? styles.success : styles.error}`}>
-                                                    {camera.pid ? "Recording" : "Stopped"}
+                                                    {camera.pid ? "Running" : "Stopped"}
+                                                </span>
+                                            </td>
+                                            <td className={`${styles.td} ${styles.textCenter}`}>
+                                                <span className={`${styles.status} ${camera.is_recording ? styles.success : styles.error}`}>
+                                                    {camera.is_recording ? "Recording" : "Not Recording"}
                                                 </span>
                                             </td>
                                             <td className={`${styles.td} ${styles.textCenter}`}>
