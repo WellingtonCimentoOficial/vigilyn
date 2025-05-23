@@ -20,3 +20,9 @@ export type SelectType = {
     data: SelectDataType[]
     callback: (data: SelectDataType) => void
 }
+
+export type CameraFilterType = {
+    id: number
+    title: string
+    value: boolean
+}

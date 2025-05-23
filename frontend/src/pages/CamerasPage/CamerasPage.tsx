@@ -2,17 +2,18 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import styles from "./CamerasPage.module.css"
 import PageLayout from '../../layouts/PageLayout/PageLayout'
 import ButtonComponent from '../../components/Buttons/ButtonComponent/ButtonComponent'
-import { PiPlus, PiTrash, PiPencilSimple, PiPlay, PiStop, PiArrowCounterClockwise } from "react-icons/pi";
+import { PiPlus, PiTrash, PiPencilSimple, PiPlay, PiStop, PiArrowCounterClockwise, PiPlugs } from "react-icons/pi";
 import CheckBoxComponent from '../../components/Checkboxes/CheckBoxComponent/CheckBoxComponent';
 import { CameraType } from '../../types/BackendTypes';
 import { useBackendRequests } from '../../hooks/useBackRequests';
 import { ToastContext } from '../../contexts/ToastContext';
-import ButtonFilterComponent from '../../components/Buttons/ButtonFilterComponent/ButtonFilterComponent';
 import SearchBarComponent from '../../components/Searches/SearchBarComponent/SearchBarComponent';
 import ModalConfirmationComponent from '../../components/Modals/ModalConfirmationComponent/ModalConfirmationComponent';
 import DropdownBasicComponent from '../../components/Dropdowns/DropdownBasicComponent/DropdownBasicComponent';
 import ModalCameraComponent from '../../components/Modals/ModalCameraComponent/ModalCameraComponent';
 import PaginatorComponent from '../../components/Paginators/PaginatorComponent/PaginatorComponent';
+import DropdownFilterComponent from '../../components/Dropdowns/DropdownFilterComponent/DropdownFilterComponent';
+import { CameraFilterType } from '../../types/FrontendTypes';
 
 type Props = {}
 
@@ -20,10 +21,11 @@ const CamerasPage = (props: Props) => {
     const [cameras, setCameras] = useState<CameraType[]>([])
     const [checkedItems, setCheckedItems] = useState<{id: number, checked: boolean}[]>([])
     const [showOptions, setShowOptions] = useState<{id: number, show: boolean}[]>([])
+    const [showActions, setShowActions] = useState<boolean>(false)
     const [search, setSearch] = useState<string>("")
     const [debouncedSearch, setDebouncedSearch] = useState("")
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
-    const [cameraIdToDelete, setCameraIdToDelete] = useState<number>(-1);
+    const [cameraIdsToDelete, setCameraIdsToDelete] = useState<number[]>([]);
     const [cameraToUpdate, setCameraToUpdate] = useState<CameraType | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [showModal, setShowModal] = useState<boolean>(false)
@@ -31,6 +33,16 @@ const CamerasPage = (props: Props) => {
     const [limit, setLimit] = useState<number>(10)
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [totalCount, setTotalCount] = useState<number>(0)
+
+    const filterData: CameraFilterType[] = [
+        {id: 0, title: "Recording now", value: false},
+        {id: 1, title: "Stopped", value: false},
+        {id: 2, title: "Applied settings", value: false},
+        {id: 3, title: "Pending settings", value: false}
+    ]
+
+    const [showFilters, setShowFilters] = useState<boolean>(false)
+    const [filters, setFilters] = useState<CameraFilterType[]>(filterData)
 
     const { 
         getCameras, 
@@ -67,87 +79,95 @@ const CamerasPage = (props: Props) => {
 
     const handleDeleteCamera = async () => {
         setIsLoading(true)
-        try {
-            await deleteCamera(cameraIdToDelete)
-            setCameras(prev => prev.filter(camera => camera.id !== cameraIdToDelete))
-            setToastMessage({
-                "title": "Camera deleted successfully!", 
-                "description": "The camera has been removed from your list.", 
-                success: true
-            })
-            setCameraIdToDelete(-1)
-            setTotalCount(current => current - 1)
-        } catch (error) {
-            setToastMessage({
-                "title": "Failed to delete camera", 
-                "description": "We couldn't delete the camera. Please try again later.", 
-                success: false
-            })
+        for(let i=0; i < cameraIdsToDelete.length; i++){
+            try {
+                await deleteCamera(cameraIdsToDelete[i])
+                setCameras(prev => prev.filter(camera => camera.id !== cameraIdsToDelete[i]))
+                setToastMessage({
+                    "title": "Camera deleted successfully!", 
+                    "description": "The camera has been removed from your list.", 
+                    success: true
+                })
+                setCameraIdsToDelete([])
+                setTotalCount(current => current - 1)
+            } catch (error) {
+                setToastMessage({
+                    "title": "Failed to delete camera", 
+                    "description": "We couldn't delete the camera. Please try again later.", 
+                    success: false
+                })
+            }
         }
         setIsLoading(false)
     }
 
-    const handleStartCamera = async (camerId: number) => {
+    const handleStartCamera = async (cameraIds: number[]) => {
         setIsLoading(true)
-        try {
-            const data = await startCamera(camerId)
-            setCameras(prev => [data, ...prev.filter(camera => camera.id !== camerId)])
-            setToastMessage({
-                "title": "Camera started successfully!", 
-                "description": "The camera is recording everything now", 
-                success: true
-            })
-        } catch (error) {
-            setToastMessage({
-                "title": "Failed to start camera", 
-                "description": "We couldn't start the camera. Please try again later.", 
-                success: false
-            })
+        for(let i=0; i < cameraIds.length; i++){
+            try {
+                const data = await startCamera(cameraIds[i])
+                setCameras(prev => [data, ...prev.filter(camera => camera.id !== cameraIds[i])])
+                setToastMessage({
+                    "title": "Camera started successfully!", 
+                    "description": "The camera is recording everything now", 
+                    success: true
+                })
+            } catch (error) {
+                setToastMessage({
+                    "title": "Failed to start camera", 
+                    "description": "We couldn't start the camera. Please try again later.", 
+                    success: false
+                })
+            }
         }
         setIsLoading(false)
     }
-    const handleStopCamera = async (camerId: number) => {
+    const handleStopCamera = async (cameraIds: number[]) => {
         setIsLoading(true)
-        try {
-            await stopCamera(camerId)
-            setCameras(prev => 
-                prev.map(camera => 
-                    camera.id === camerId ?
-                    {...camera, pid: null} :
-                    camera
+        for(let i=0; i < cameraIds.length; i++){
+            try {
+                await stopCamera(cameraIds[i])
+                setCameras(prev => 
+                    prev.map(camera => 
+                        camera.id === cameraIds[i] ?
+                        {...camera, pid: null} :
+                        camera
+                    )
                 )
-            )
-            setToastMessage({
-                "title": "Camera stopped successfully!", 
-                "description": "The camera is no longer recording now", 
-                success: true
-            })
-        } catch (error) {
-            setToastMessage({
-                "title": "Failed to stop camera", 
-                "description": "We couldn't stop the camera. Please try again later.", 
-                success: false
-            })
+                setToastMessage({
+                    "title": "Camera stopped successfully!", 
+                    "description": "The camera is no longer recording now", 
+                    success: true
+                })
+            } catch (error) {
+                setToastMessage({
+                    "title": "Failed to stop camera", 
+                    "description": "We couldn't stop the camera. Please try again later.", 
+                    success: false
+                })
+            }
         }
         setIsLoading(false)
     }
-    const handleRestartCamera = async (cameraId: number) => {
+    const handleRestartCamera = async (cameraIds: number[]) => {
         setIsLoading(true)
-        try {
-            await restartCamera(cameraId)
-            const data = await getCamera(cameraId)
-            setCameras(prev => [data, ...prev.filter(camera => camera.id !== cameraId)])
-            setToastMessage({
-                "title": "Camera restarted successfully!", 
-                "description": "The camera has been restarted.", 
-                success: true
-            })
-        } catch (error) {
-            setToastMessage({
-                "title": "Failed to restart camera", 
-                "description": "We couldn't restart the camera. Please try again later.", 
-                success: false
-            })
+        for(let i=0; i < cameraIds.length; i++){
+            try {
+                await restartCamera(cameraIds[i])
+                const data = await getCamera(cameraIds[i])
+                setCameras(prev => [data, ...prev.filter(camera => camera.id !== cameraIds[i])])
+                setToastMessage({
+                    "title": "Camera restarted successfully!", 
+                    "description": "The camera has been restarted.", 
+                    success: true
+                })
+            } catch (error) {
+                setToastMessage({
+                    "title": "Failed to restart camera", 
+                    "description": "We couldn't restart the camera. Please try again later.", 
+                    success: false
+                })
+            }
         }
         setIsLoading(false)
     }
@@ -169,7 +189,20 @@ const CamerasPage = (props: Props) => {
     useEffect(() => {
         (async () => {
             try {
-                const data = await getCameras({limit, page: currentPage, search: debouncedSearch})
+                const recordingNowFilter = filters.find(item => item.id === 0)
+                const recordingStoppedFilter = filters.find(item => item.id === 1)
+                const appliedSettingsFilter = filters.find(item => item.id === 2)
+                const pendingSettingsFilter = filters.find(item => item.id === 3)
+                const params = {
+                    limit, 
+                    page: currentPage, 
+                    search: debouncedSearch,
+                    ...(recordingNowFilter?.value && {pid: true}),
+                    ...(recordingStoppedFilter?.value && {pid: false}),
+                    ...(appliedSettingsFilter?.value && {requires_restart: false}),
+                    ...(pendingSettingsFilter?.value && {requires_restart: true}),
+                }
+                const data = await getCameras(params)
                 setTotalCount(data.total_count)
                 setCameras(data.data)
             } catch (error) {
@@ -180,7 +213,7 @@ const CamerasPage = (props: Props) => {
                 })
             }
         })()
-    }, [limit, currentPage, debouncedSearch, getCameras, setToastMessage])
+    }, [limit, currentPage, debouncedSearch, filters, getCameras, setToastMessage])
 
     useEffect(() => {
         setCheckedItems([
@@ -191,7 +224,7 @@ const CamerasPage = (props: Props) => {
     }, [cameras])
 
     useEffect(() => {
-        const timeout = setTimeout(() => setDebouncedSearch(search), 1000)
+        const timeout = setTimeout(() => setDebouncedSearch(search), 800)
         return () => clearTimeout(timeout)
     }, [search])
 
@@ -203,14 +236,42 @@ const CamerasPage = (props: Props) => {
         >
             <div className={styles.wrapper}>
                 <div className={styles.containerHeader}>
-                    <SearchBarComponent value={search} onChange={(e) => setSearch(e.target.value)} />
+                    <SearchBarComponent 
+                        className={styles.searchBar}
+                        value={search} 
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder='Search by name, ip address, port, username, password, pid'
+                        disabled={cameras.length <= 0}
+                    />
                     <div className={styles.containerFilters}>
                         <CheckBoxComponent 
                             className={styles.checkboxFilter} 
                             label={`${checkedItems.filter(item => item.id !== 999999999 && item.checked).length} selected`}
                             checked
                         />
-                        <ButtonFilterComponent text='Filters' />
+                        {(() => {
+                            const data = checkedItems.filter(item => item.checked).map(item => item.id)
+                            const disabled = data.length > 0 ? false : true
+                            return (
+                                <DropdownBasicComponent
+                                    data={[
+                                        {name: "Start", icon: <PiPlay />, disabled: disabled, callback: () => handleStartCamera(data)},
+                                        {name: "Stop", icon: <PiStop />, disabled: disabled, callback: () => handleStopCamera(data)},
+                                        {name: "Restart", icon: <PiArrowCounterClockwise />, disabled: disabled, callback: () => handleRestartCamera(data)},
+                                        {name: "Delete", icon: <PiTrash />, disabled: disabled, callback: () => {setCameraIdsToDelete(data);setShowConfirmation(true)}},
+                                    ]}
+                                    show={showActions}
+                                    callbackShow={(value) => setShowActions(current => value ?? !current)}
+                                    icon={<PiPlugs />}
+                                />
+                            )
+                        })()}
+                        <DropdownFilterComponent 
+                            data={filterData} 
+                            show={showFilters} 
+                            callbackShow={(value) => setShowFilters(current => value ?? !current)}
+                            callback={(id, checked) => setFilters(filter => filter.map(item => item.id === id ? {...item, value: checked} : item))} 
+                        />
                     </div>
                 </div>
                 <div className={styles.container}>
@@ -233,6 +294,7 @@ const CamerasPage = (props: Props) => {
                                         <th className={styles.th}>Path</th>
                                         <th className={`${styles.th} ${styles.textCenter}`}>Status</th>
                                         <th className={`${styles.th} ${styles.textCenter}`}>Settings State</th>
+                                        <th className={`${styles.th} ${styles.textCenter}`}>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className={styles.tbody}>
@@ -269,14 +331,15 @@ const CamerasPage = (props: Props) => {
                                             <td className={`${styles.td}`}>
                                                 <DropdownBasicComponent
                                                     data={[
-                                                        {name: "Start", icon: <PiPlay />, disabled: camera.pid ? true : false, callback: () => handleStartCamera(camera.id)},
-                                                        {name: "Stop", icon: <PiStop />, disabled: !camera.pid ? true : false, callback: () => handleStopCamera(camera.id)},
-                                                        {name: "Restart", icon: <PiArrowCounterClockwise />, disabled: !camera.pid ? true : false, callback: () => handleRestartCamera(camera.id)},
+                                                        {name: "Start", icon: <PiPlay />, disabled: camera.pid ? true : false, callback: () => handleStartCamera([camera.id])},
+                                                        {name: "Stop", icon: <PiStop />, disabled: !camera.pid ? true : false, callback: () => handleStopCamera([camera.id])},
+                                                        {name: "Restart", icon: <PiArrowCounterClockwise />, disabled: !camera.pid ? true : false, callback: () => handleRestartCamera([camera.id])},
                                                         {name: "Edit", icon: <PiPencilSimple />, callback: () => {setCameraToUpdate(camera);setShowModal(true)}},
-                                                        {name: "Delete", icon: <PiTrash />, callback: () => {setCameraIdToDelete(camera.id);setShowConfirmation(true)}},
+                                                        {name: "Delete", icon: <PiTrash />, callback: () => {setCameraIdsToDelete([camera.id]);setShowConfirmation(true)}},
                                                     ]}
                                                     show={showOptions.find(item => item.id === camera.id)?.show ?? false}
                                                     callbackShow={(value) => handleShowOptions(camera.id, value)}
+                                                    icon={<PiPlugs />}
                                                 />
                                             </td>
                                         </tr>
@@ -290,7 +353,7 @@ const CamerasPage = (props: Props) => {
                             />
                         </>
                     ):(
-                        <span style={{textAlign: "center"}}>nothing to see around here...</span>
+                        <span style={{textAlign: "center", color: "var(--black-color-light)"}}>nothing to see around here...</span>
                     )}
                 </div>
             </div>

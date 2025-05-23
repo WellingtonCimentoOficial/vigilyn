@@ -10,15 +10,23 @@ type DataType = {
 }
 
 type Props = {
+    icon?: React.ReactElement<any>
     data: DataType[]
     show: boolean
     callbackShow: (value?: boolean) => void
 }
 
-const DropdownBasicComponent = ({data, show, callbackShow}: Props) => {
+const DropdownBasicComponent = ({data, show, icon, callbackShow}: Props) => {
     return (
         <div className={styles.containerOptions} tabIndex={1} onBlur={() => callbackShow(false)}>
-            <PiDotsThree className={styles.containerOptionsIcon} onClick={() => callbackShow()} />
+            {icon ? (
+                React.cloneElement(icon, {
+                    className: styles.containerOptionsIcon,
+                    onClick: () => callbackShow()
+                })
+            ):(
+                <PiDotsThree className={styles.containerOptionsIcon} onClick={() => callbackShow()} />
+            )}
             <div 
                 className={`${styles.subContainerOptions} ${show ? styles.subContainerOptionsShow : ""}`} 
             >

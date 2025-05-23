@@ -1,0 +1,72 @@
+.wrapper .tgl {
+    display: none;
+}
+.wrapper .tgl,
+.wrapper .tgl:after,
+.wrapper .tgl:before,
+.wrapper .tgl *,
+.wrapper .tgl *:after,
+.wrapper .tgl *:before,
+.wrapper .tgl + .tglBtn {
+    box-sizing: border-box;
+}
+.wrapper .tgl::-moz-selection,
+.wrapper .tgl:after::-moz-selection,
+.wrapper .tgl:before::-moz-selection,
+.wrapper .tgl *::-moz-selection,
+.wrapper .tgl *:after::-moz-selection,
+.wrapper .tgl *:before::-moz-selection,
+.wrapper .tgl + .tglBtn::-moz-selection,
+.wrapper .tgl::selection,
+.wrapper .tgl:after::selection,
+.wrapper .tgl:before::selection,
+.wrapper .tgl *::selection,
+.wrapper .tgl *:after::selection,
+.wrapper .tgl *:before::selection,
+.wrapper .tgl + .tglBtn::selection {
+    background: none;
+}
+.wrapper .tgl + .tglBtn {
+    outline: 0;
+    display: block;
+    width: 3em;
+    height: 1.5em;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.wrapper .tgl + .tglBtn:after,
+.wrapper .tgl + .tglBtn:before {
+    position: relative;
+    display: block;
+    content: "";
+    width: 50%;
+    height: 100%;
+}
+.wrapper .tgl + .tglBtn:after {
+    left: 0;
+}
+.wrapper .tgl + .tglBtn:before {
+    display: none;
+}
+.wrapper .tgl:checked + .tglBtn:after {
+    left: 50%;
+}
+
+.wrapper .tglLight + .tglBtn {
+    background: #bebebe;
+    border-radius: 2em;
+    padding: 2px;
+    transition: all 0.4s ease;
+}
+.wrapper .tglLight + .tglBtn:after {
+    border-radius: 50%;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+.wrapper .tglLight:checked + .tglBtn {
+    background: var(--principal-color);
+}

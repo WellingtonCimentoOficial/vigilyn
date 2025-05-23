@@ -1,16 +1,9 @@
-.containerOptions {
+.wrapper {
     position: relative;
     /* background-color: red; */
     display: flex;
     align-items: center;
     justify-content: center;
-}
-.containerOptionsIcon {
-    width: 1.8rem;
-    height: 1.8rem;
-    /* background-color: green; */
-    fill: var(--black-color-light);
-    cursor: pointer;
 }
 .subContainerOptions {
     position: absolute;
@@ -44,14 +37,6 @@
 }
 .option:last-child {
     border-radius: 0px 0px var(--principal-border-radius) var(--principal-border-radius);
-}
-.option:hover {
-    background-color: rgb(240, 240, 240);
-}
-.optionDisabled {
-    opacity: 50%;
-    pointer-events: none;
-    cursor: auto;
 }
 .optionIcon {
     width: 1.2rem;

@@ -8,6 +8,9 @@
     align-items: center;
     gap: 20px;
 }
+.searchBar {
+    width: 450px;
+}
 .containerFilters {
     display: flex;
     align-items: center;

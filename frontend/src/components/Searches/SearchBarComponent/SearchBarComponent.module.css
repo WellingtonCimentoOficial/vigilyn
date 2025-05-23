@@ -3,7 +3,7 @@
     width: max-content;
 }
 .input {
-    width: 300px;
+    min-width: 300px;
     padding: 13px 40px 13px 20px;
     border-radius: var(--principal-border-radius);
     color: var(--black-color-light);
@@ -29,5 +29,4 @@
     width: 1.5rem;
     height: 1.5rem;
     fill: var(--black-color-light);
-    cursor: pointer;
 }

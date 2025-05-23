@@ -16,7 +16,7 @@ const ModalConfirmationComponent = ({title, description, showModal, isLoading, s
     return (
         <ModalBaseComponent 
             title={title ?? 'Confirm deletion' }
-            description={description ?? 'Are you sure you want to delete this item? This action cannot be undone.'}
+            description={description ?? 'Are you sure you want to delete the selected item(s)? This action cannot be undone.'}
             showModal={showModal}
             setShowModal={setShowModal}
         >

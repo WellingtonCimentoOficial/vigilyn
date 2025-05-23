@@ -4,7 +4,8 @@ import { useCallback } from "react"
 
 type GetCameraProps = {
     search?: string
-    pid?: string
+    pid?: boolean
+    requires_restart?: boolean
     page?: number
     limit?: number
 }
@@ -59,9 +60,9 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
-    const getCameras = useCallback(async ({search, pid, page, limit} : GetCameraProps = {}) => {
+    const getCameras = useCallback(async ({search, pid, requires_restart, page, limit} : GetCameraProps = {}) => {
         const params = Object.fromEntries(
-            Object.entries({ search, pid, page, limit })
+            Object.entries({ search, pid, requires_restart, page, limit })
             .filter(([_, value]) => value != null)
         )
 

@@ -21,8 +21,6 @@ type Props = {}
 
 const DashboardPage = (props: Props) => {
     const [cameras, setCameras] = useState<CameraType[]>([])
-    const [camerasWithPid, setCamerasWithPid] = useState<CameraType[]>([])
-    const [camerasWithoutPid, setCamerasWithoutPid] = useState<CameraType[]>([])
     const [system, setSystem] = useState<ChartType[]>([])
     const [timeIso, setTimeIso] = useState<string>("")
     const [storage, setStorage] = useState<ChartType[]>([])
@@ -36,10 +34,8 @@ const DashboardPage = (props: Props) => {
     useEffect(() => {
         (async () => {
             try {
-                const data = await getCameras({limit: 5})
+                const data = await getCameras()
                 setCameras(data.data)
-                setCamerasWithPid(data.data.filter(camera => camera.pid != null))
-                setCamerasWithoutPid(data.data.filter(camera => camera.pid === null))
             } catch (error) {
                 setToastMessage({
                     "title": "Failed to load cameras", 
@@ -93,11 +89,11 @@ const DashboardPage = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            setRecords([])
+            let recordsArr = []
             for(let i=0; i < cameras.length; i++){
                 try {
                     const data = await getRecords(cameras[i].id)
-                    setRecords(currentValue => [...currentValue, ...data])
+                    recordsArr.push(...data)
                 } catch (error) {
                     setToastMessage({
                         "title": "Failed to load records", 
@@ -106,6 +102,7 @@ const DashboardPage = (props: Props) => {
                     })
                 }
             }
+            setRecords(recordsArr)
         })()
     }, [cameras, getRecords, setToastMessage])
 
@@ -137,16 +134,17 @@ const DashboardPage = (props: Props) => {
                         path='/dashboard/cameras/'
                     />
                     <ButtonComponent 
-                        text="Import data" 
+                        text="Manage records"
+                        path='/dashboard/records/'
                     />
                 </div>
             }
         >
             <div className={styles.wrapper}>
                 <div className={styles.section1}>
-                    <CardComponent title='Cameras recording now' value={camerasWithPid.length} focus />
+                    <CardComponent title='Cameras recording now' value={cameras.filter(camera => camera.pid != null).length} focus />
                     <CardComponent title='Total Cameras' value={cameras.length} />
-                    <CardComponent title='Total Stopped Cameras' value={camerasWithoutPid.length} />
+                    <CardComponent title='Total Stopped Cameras' value={cameras.filter(camera => camera.pid === null).length} />
                     <CardComponent title='Total Records' value={records.length} />
                 </div>
                 <div className={styles.sectionContainer}>
