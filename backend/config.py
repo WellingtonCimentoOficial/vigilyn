@@ -6,7 +6,7 @@ load_dotenv()
 
 
 class Config:
-    SECRET_KEY = os.environ["SECRET_KEY"]
+    SECRET_KEY = os.environ["FLASK_SECRET_KEY"]
     DEBUG = True if os.getenv("FLASK_ENV", "development") == "development" else False
 
     SQLALCHEMY_DATABASE_URI = "sqlite:///sqlite.db"
