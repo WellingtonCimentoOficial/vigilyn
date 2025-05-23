@@ -53,3 +53,8 @@ class CameraPidParamException(AppException):
     default_error = "invalid_camera_pid_param"
     default_message = "The value of the 'pid' field is invalid"
     status_code = 400
+
+class CameraRequiresRestartParamException(AppException):
+    default_error = "invalid_camera_requires_restart_param"
+    default_message = "The value of the 'requires_restart' field is invalid"
+    status_code = 400

@@ -19,7 +19,6 @@ from app.services.role_services import update_roles
 from app.decorators.permission_decorators import permission_required
 from flask_jwt_extended import get_jwt_identity
 from app.utils.utils import generate_pagination_response
-import math
 
 user_bp = Blueprint("user", __name__, url_prefix="/api/users/")
 

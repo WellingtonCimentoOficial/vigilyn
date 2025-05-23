@@ -16,14 +16,13 @@ def is_idle(file_path: str, idle_seconds: float):
 
 
 def generate_rtsp_url(camera):
-    base = "rtsp://"
     credentials = (
         f"{camera.username}:{camera.password}" if
         camera.username and camera.password else
         camera.username or camera.password or ""
     )
     server = f"{camera.ip_address}:{camera.port}"
-    url = f"rtsp://{base}{credentials}@{server}{camera.path}"
+    url = f"rtsp://{credentials}@{server}{camera.path}"
 
     return url
 

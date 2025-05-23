@@ -18,7 +18,7 @@ def start_record(camera):
     last_email_sent = datetime.now() - timedelta(hours=1)
 
     process = fmpeg.start(camera)
-
+    
     while True:
         if process.poll() is not None:
             if (datetime.now() - last_email_sent).total_seconds() >= current_app.config[
