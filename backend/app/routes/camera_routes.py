@@ -34,6 +34,7 @@ def get_all():
     search_param = request.args.get("search", default="")
     page_param = request.args.get("page", default=1)
     pid_param = request.args.get("pid")
+    is_recording_param = request.args.get("is_recording")
     requires_restart_param = request.args.get("requires_restart")
     limit_param = request.args.get(
         "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"],
@@ -44,6 +45,7 @@ def get_all():
         search_param=search_param,
         pid_param=pid_param,
         requires_restart_param=requires_restart_param,
+        is_recording_param=is_recording_param,
         limit=limit_param,
         page=page_param,
     )

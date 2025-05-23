@@ -10,7 +10,8 @@ from app.exceptions.camera_exceptions import (
     CameraWasNotStoppedException,
     CameraWasNotStartedException,
     CameraPidParamException,
-    CameraRequiresRestartParamException
+    CameraRequiresRestartParamException,
+    CameraIsRecordingParamException
 )
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
 from sqlalchemy import or_, desc
@@ -26,6 +27,7 @@ def stop_camera(camera):
 
             if killed_processes:
                 camera.pid = None
+                camera.is_recording = False
 
                 db.session.add(camera)
                 db.session.commit()
@@ -166,7 +168,7 @@ def start_camera_async(camera):
         raise CameraWasNotStartedException()
 
 
-def filter_camera(search_param, page, limit, pid_param, requires_restart_param):
+def filter_camera(search_param, page, limit, pid_param, requires_restart_param, is_recording_param):
     if not str(page).isdigit():
         raise UrlPageParamException()
 
@@ -178,6 +180,9 @@ def filter_camera(search_param, page, limit, pid_param, requires_restart_param):
     
     if requires_restart_param != None and requires_restart_param != "false" and requires_restart_param != "true":
         raise CameraRequiresRestartParamException()
+    
+    if is_recording_param != None and is_recording_param != "false" and is_recording_param != "true":
+        raise CameraIsRecordingParamException()
 
     page = int(page)
     limit = int(limit)
@@ -206,6 +211,12 @@ def filter_camera(search_param, page, limit, pid_param, requires_restart_param):
             query = query.filter(Camera.requires_restart == True)
         else:
             query = query.filter(Camera.requires_restart == False)
+
+    if is_recording_param is not None:
+        if is_recording_param == "true":
+            query = query.filter(Camera.is_recording == True)
+        else:
+            query = query.filter(Camera.is_recording == False)
     
     query = query.order_by(desc(Camera.id))
 

@@ -17,6 +17,7 @@ class Camera(db.Model):
     records: Mapped[List["Record"]] = relationship(back_populates="camera")
     pid: Mapped[int] = mapped_column(nullable=True)
     requires_restart: Mapped[bool] = mapped_column(default=False, nullable=False)
+    is_recording: Mapped[bool] = mapped_column(default=False, nullable=False)
 
     def has_process_running(self):
         if self.pid and psutil.pid_exists(self.pid):

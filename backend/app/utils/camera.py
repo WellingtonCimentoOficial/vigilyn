@@ -4,6 +4,7 @@ from app.utils.logger import Log
 from app.utils.email import Email
 from app.utils.settings import get_settings
 from flask import current_app
+from app.factory import db
 import time
 
 
@@ -31,7 +32,12 @@ def start_record(camera):
                 )
                 last_email_sent = datetime.now()
 
+            camera.is_recording = False
             time.sleep(5)
             process = fmpeg.start(camera)
+        else:
+            camera.is_recording = True
+
+        db.session.commit()
 
         time.sleep(1)

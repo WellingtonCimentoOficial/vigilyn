@@ -58,3 +58,8 @@ class CameraRequiresRestartParamException(AppException):
     default_error = "invalid_camera_requires_restart_param"
     default_message = "The value of the 'requires_restart' field is invalid"
     status_code = 400
+
+class CameraIsRecordingParamException(AppException):
+    default_error = "invalid_camera_is_recording_param"
+    default_message = "The value of the 'is_recording' field is invalid"
+    status_code = 400

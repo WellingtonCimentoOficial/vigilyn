@@ -11,6 +11,7 @@ class CameraSchema(Schema):
     path = fields.Str()
     pid = fields.Int(allow_none=True)
     requires_restart = fields.Bool()
+    is_recording = fields.Bool()
 
 
 class CameraCreateUpdateSchema(Schema):
