@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import styles from "./DropdownBasicComponent.module.css"
 import { PiDotsThree } from "react-icons/pi";
 
@@ -17,8 +17,21 @@ type Props = {
 }
 
 const DropdownBasicComponent = ({data, show, icon, callbackShow}: Props) => {
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if(containerRef.current && !containerRef.current.contains(e.target as Node)){
+                callbackShow(false)
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [callbackShow])
+
     return (
-        <div className={styles.containerOptions} tabIndex={1} onBlur={() => callbackShow(false)}>
+        <div className={styles.containerOptions} ref={containerRef}>
             {icon ? (
                 React.cloneElement(icon, {
                     className: styles.containerOptionsIcon,

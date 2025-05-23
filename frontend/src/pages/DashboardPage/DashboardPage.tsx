@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import styles from './DashboardPage.module.css'
 import PageLayout from '../../layouts/PageLayout/PageLayout'
 import ButtonComponent from '../../components/Buttons/ButtonComponent/ButtonComponent'
-import { PiPlus } from "react-icons/pi";
+import { PiCamera } from "react-icons/pi";
 import { ChartType } from '../../types/FrontendTypes'
 import { CameraType, RecordType, UserType } from '../../types/BackendTypes'
 import { useBackendRequests } from '../../hooks/useBackRequests'
@@ -128,8 +128,8 @@ const DashboardPage = (props: Props) => {
             content={
                 <div className={styles.header}>
                     <ButtonComponent 
-                        icon={<PiPlus />} 
-                        text="Create camera" 
+                        icon={<PiCamera />} 
+                        text="Manage cameras" 
                         filled 
                         path='/dashboard/cameras/'
                     />

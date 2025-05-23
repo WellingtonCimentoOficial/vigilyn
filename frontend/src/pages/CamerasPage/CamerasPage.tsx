@@ -266,12 +266,16 @@ const CamerasPage = (props: Props) => {
                                 />
                             )
                         })()}
-                        <DropdownFilterComponent 
-                            data={filterData} 
-                            show={showFilters} 
-                            callbackShow={(value) => setShowFilters(current => value ?? !current)}
-                            callback={(id, checked) => setFilters(filter => filter.map(item => item.id === id ? {...item, value: checked} : item))} 
-                        />
+                        {(() => {
+                            return (
+                                <DropdownFilterComponent 
+                                    data={filterData} 
+                                    show={showFilters} 
+                                    callbackShow={(value) => setShowFilters(current => value ?? !current)}
+                                    callback={(id, checked) => setFilters(filter => filter.map(item => item.id === id ? {...item, value: checked} : item))} 
+                                />
+                            )
+                        })()}
                     </div>
                 </div>
                 <div className={styles.container}>

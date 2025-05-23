@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from "./DropdownFilterComponent.module.css"
 import ButtonFilterComponent from '../../Buttons/ButtonFilterComponent/ButtonFilterComponent'
 import CheckBoxSwitchComponent from '../../Checkboxes/CheckBoxSwitchComponent/CheckBoxSwitchComponent'
@@ -18,6 +18,7 @@ type CheckType = {
 
 const DropdownFilterComponent = ({show, data, callback, callbackShow}: Props) => {
     const [checkedItems, setCheckedItems] = useState<CheckType[]>([])
+    const containerRef = useRef<HTMLDivElement>(null)
 
     const handleCheck = (id: number) => {
         const itemCheck = checkedItems.find(item => item.id === id)
@@ -37,18 +38,27 @@ const DropdownFilterComponent = ({show, data, callback, callbackShow}: Props) =>
             }
         }
     }, [data, checkedItems])
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if(containerRef.current && !containerRef.current.contains(e.target as Node)){
+                callbackShow(false)
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [callbackShow])
     
     return (
-        <div className={styles.wrapper} >
+        <div className={styles.containerOptions} ref={containerRef}>
             <ButtonFilterComponent 
                 text='Filters' 
                 count={checkedItems.filter(item => item.checked).length}
                 onClick={() => callbackShow()}
             />
             <div 
-                className={`${styles.subContainerOptions} ${show ? styles.subContainerOptionsShow : ""}`} 
-                tabIndex={1} onBlur={() => callbackShow(false)}
-            >
+                className={`${styles.subContainerOptions} ${show ? styles.subContainerOptionsShow : ""}`} >
                 {data.map(item => (
                     <div key={item.id} className={styles.option}>
                         <CheckBoxSwitchComponent 
