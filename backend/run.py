@@ -7,4 +7,4 @@ if __name__ == "__main__":
     with app.app_context():
         create_tmp_dir()
 
-    app.run(debug=True)
+    app.run()

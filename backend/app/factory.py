@@ -35,7 +35,9 @@ def create_app():
     migrate.init_app(app, db)
     mail.init_app(app)
     jwt.init_app(app)
-    cors.init_app(app, resources={r"/*": {"origins": "*"}})
+    
+    if app.debug:
+        cors.init_app(app, resources={r"/*": {"origins": "*"}})
 
     app.cli.add_command(setup_cli)
 

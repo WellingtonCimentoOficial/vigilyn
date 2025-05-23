@@ -7,6 +7,7 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ["SECRET_KEY"]
+    DEBUG = True if os.getenv("FLASK_ENV", "development") == "development" else False
 
     SQLALCHEMY_DATABASE_URI = "sqlite:///sqlite.db"
     WTF_CSRF_ENABLED = False
@@ -24,8 +25,8 @@ class Config:
     BASE_DIR = BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
     JWT_SECRET_KEY = os.environ["JWT_SECRET_KEY"]
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=30)
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=15)
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=15)
     JWT_TOKEN_LOCATION = ["headers"]
     JWT_BLACKLIST_ENABLED = True
     JWT_BLACKLIST_TOKEN_CHECKS = ["access", "refresh"]
