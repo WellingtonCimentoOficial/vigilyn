@@ -127,6 +127,7 @@ const CamerasPage = (props: Props) => {
     const handleStopCamera = async (cameraIds: number[]) => {
         setIsLoading(true)
         for(let i=0; i < cameraIds.length; i++){
+            let success = false
             try {
                 await stopCamera(cameraIds[i])
                 setCameras(prev => 
@@ -136,16 +137,22 @@ const CamerasPage = (props: Props) => {
                         camera
                     )
                 )
+                success = true
+            } catch (error: any) {
+                if(error.response?.status === 400 && error.response?.data?.error === "camera_process_already_stopped"){
+                    success = true
+                }else{
+                    success = false
+                }
+            } finally {
                 setToastMessage({
-                    "title": "Camera stopped successfully!", 
-                    "description": "The camera is no longer recording now", 
-                    success: true
-                })
-            } catch (error) {
-                setToastMessage({
-                    "title": "Failed to stop camera", 
-                    "description": "We couldn't stop the camera. Please try again later.", 
-                    success: false
+                    "title": success ? 
+                    "Camera stopped successfully!" : 
+                    "Failed to stop camera", 
+                    "description": success ? 
+                    "The camera is no longer recording now" :
+                    "We couldn't stop the camera. Please try again later.", 
+                    success: success
                 })
             }
         }
