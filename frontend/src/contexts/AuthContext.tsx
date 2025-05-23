@@ -78,6 +78,28 @@ export const AuthContextProvider = ({children} : Props) => {
     }, [refreshTokens, getLocalToken, createSession, clearSession])
 
     useEffect(() => {
+        (async () => {
+            if(!isLoading && isAuthenticated){
+                const interval = setInterval(async () => {
+                    setIsLoading(true)
+                    const refreshToken = await getLocalToken()
+                    if(refreshToken){
+                        try {
+                            const updatedTokens = await refreshTokens(refreshToken)
+                            createSession(updatedTokens)
+                        } catch (error) {
+                            clearSession()
+                        }
+                    } 
+                    setIsLoading(false)
+                }, 1*1000*60*10)
+
+                return () => clearInterval(interval)
+            }
+        })()
+    }, [isLoading, isAuthenticated, refreshTokens, getLocalToken, createSession, clearSession])
+
+    useEffect(() => {
         if(!isLoading && !isAuthenticated){
             navigate("/auth/sign-in/")
         }
