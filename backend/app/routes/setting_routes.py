@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from app.models.setting_models import Setting
-from app.schemas.setting_schemas import SettingSchema
+from app.schemas.setting_schemas import SettingSchema, SettingUpdateSchema
 from app.services.setting_services import update_setting
 from app.decorators.auth_decorators import authentication_required
 from app.decorators.permission_decorators import permission_required
@@ -25,10 +25,12 @@ def get():
 def update():
     setting = Setting.query.first()
 
-    schema = SettingSchema()
-    request_data = schema.load(request.get_json())
+    schema_update = SettingUpdateSchema()
+    request_data = schema_update.load(request.get_json())
 
     setting_update = update_setting(setting, **request_data)
+
+    schema = SettingSchema()
     setting_updated_data = schema.dump(setting_update)
 
     return jsonify(setting_updated_data)

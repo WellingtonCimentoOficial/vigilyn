@@ -6,10 +6,12 @@ from app.services.auth_services import generate_tokens, revoke_token
 from app.schemas.auth_schemas import TokensSchema
 from app.exceptions.token_exceptions import TokenInvalidException
 from app.decorators.auth_decorators import authentication_required
+from app.extensions import limiter
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth/")
 
 
+@limiter.limit("5 per minute")
 @auth_bp.route("/signin/", methods=["POST"])
 def signin():
     data = UserLoginSchema().load(request.json)

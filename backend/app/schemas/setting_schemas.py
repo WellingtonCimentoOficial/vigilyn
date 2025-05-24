@@ -1,10 +1,20 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validate
+
+validators = [
+    validate.Regexp(
+        r"^\/(?:[a-zA-Z0-9_-]+\/?)*$",
+        error="Path must start with '/' and only contain valid folder names (letters, numbers, -, _).",
+    )
+]
 
 
-class SettingSchema(Schema):
-    save_directory_path = fields.Str()
+class SettingUpdateSchema(Schema):
+    save_directory_path = fields.Str(validate=validators)
     allow_notifications = fields.Bool()
-    tmp_directory_path = fields.Str()
+    tmp_directory_path = fields.Str(validate=validators)
     video_format = fields.Str()
     segment_time = fields.Int()
+
+
+class SettingSchema(SettingUpdateSchema):
     requires_restart = fields.Bool()

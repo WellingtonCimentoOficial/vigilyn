@@ -48,7 +48,7 @@ class CameraCreateUpdateSchema(Schema):
         validate=[
             validate.Regexp(
                 r"^\/(?:[a-zA-Z0-9_-]+\/?)*$",
-                error="Path must be a relative path starting with /."
+                error="Path must be a relative path starting with /.",
             )
-        ]
+        ],
     )
