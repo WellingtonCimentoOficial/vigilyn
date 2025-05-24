@@ -122,6 +122,11 @@ const SignInPage = (props: Props) => {
                                     className={styles.button} 
                                     disabled={isLoading}
                                 />
+                                <div
+                                    className="cf-turnstile"
+                                    data-sitekey="0x4AAAAAABeaaxqdXwcbYxFV"
+                                    data-callback="javascriptCallback"
+                                    ></div>
                             </form>
                         </div>
                     </div>

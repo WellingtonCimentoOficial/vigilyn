@@ -1,0 +1,13 @@
+.status {
+    font-weight: 400;
+    padding: 5px;
+    white-space: nowrap;
+}
+.error {
+    background-color: rgba(255, 0, 0, 0.500);
+    color: red;
+}
+.success {
+    background-color: rgba(0, 255, 0, 0.500);
+    color: green;
+}

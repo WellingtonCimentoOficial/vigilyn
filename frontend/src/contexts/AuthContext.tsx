@@ -81,7 +81,7 @@ export const AuthContextProvider = ({children} : Props) => {
         (async () => {
             if(!isLoading && isAuthenticated){
                 const interval = setInterval(async () => {
-                    setIsLoading(true)
+                    // setIsLoading(true)
                     const refreshToken = await getLocalToken()
                     if(refreshToken){
                         try {
@@ -91,7 +91,7 @@ export const AuthContextProvider = ({children} : Props) => {
                             clearSession()
                         }
                     } 
-                    setIsLoading(false)
+                    // setIsLoading(false)
                 }, 1*1000*60*10)
 
                 return () => clearInterval(interval)

@@ -1,5 +1,5 @@
 import { useAxios } from "./useAxios"
-import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordType, RoleType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserExtendedType, UserPaginationType, UserType, UserUpdateType } from "../types/BackendTypes"
+import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordType, RoleType, SettingsType, SettingsUpdateType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserExtendedType, UserPaginationType, UserType, UserUpdateType } from "../types/BackendTypes"
 import { useCallback } from "react"
 
 type GetCameraProps = {
@@ -151,6 +151,29 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
+    const getSettings = useCallback(async () => {
+        const response = await axiosPrivate.get("/settings/")
+        const data: SettingsType = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const updateSettings = useCallback(async (settingsData: SettingsUpdateType) => {
+        const response = await axiosPrivate.patch("/settings/", {...settingsData})
+        const data: SettingsType = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const restartSystem = useCallback(async () => {
+        const response = await axiosPrivate.post("/system/restart/")
+        const data: SuccessMessageType = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const stopSystem = useCallback(async () => {
+        const response = await axiosPrivate.post("/system/stop/")
+        const data: SuccessMessageType = await response.data
+        return data
+    }, [axiosPrivate])
 
     return {
         signIn, 
@@ -165,11 +188,15 @@ export const useBackendRequests = () => {
         restartCamera,
         updateCamera,
         createCamera,
-        getSystem, 
+        getSystem,
+        restartSystem,
+        stopSystem,
         getStorage, 
         getRecords,
         getUsers,
         getRoles,
-        updateMe
+        updateMe,
+        getSettings,
+        updateSettings
     }
 }

@@ -7,6 +7,7 @@ import ButtonComponent from '../../Buttons/ButtonComponent/ButtonComponent'
 import { ToastContext } from '../../../contexts/ToastContext'
 import { useBackendRequests } from '../../../hooks/useBackRequests'
 import { ipRegex, pathRegex } from '../../../utils/regex'
+import { PiFloppyDisk } from "react-icons/pi";
 
 type Props = {
     showModal: boolean
@@ -222,6 +223,7 @@ const ModalCameraComponent = ({showModal, data, setShowModal, callback}: Props) 
                         disabled={isLoading}
                         isLoading={isLoading}
                         filled
+                        icon={data ? <PiFloppyDisk /> : undefined}
                         form='form'
                     />
                 </div>

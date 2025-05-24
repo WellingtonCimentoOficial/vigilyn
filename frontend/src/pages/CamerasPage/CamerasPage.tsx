@@ -14,6 +14,8 @@ import ModalCameraComponent from '../../components/Modals/ModalCameraComponent/M
 import PaginatorComponent from '../../components/Paginators/PaginatorComponent/PaginatorComponent';
 import DropdownFilterComponent from '../../components/Dropdowns/DropdownFilterComponent/DropdownFilterComponent';
 import { CameraFilterType } from '../../types/FrontendTypes';
+import TagStatusComponent from '../../components/Tags/TagStatusComponent/TagStatusComponent';
+import { SettingsContext } from '../../contexts/SettingsContext';
 
 type Props = {}
 
@@ -56,6 +58,7 @@ const CamerasPage = (props: Props) => {
     } = useBackendRequests()
     
     const { setToastMessage } = useContext(ToastContext)
+    const { settings } = useContext(SettingsContext)
 
     const handleCheckAll = (checked: boolean) => {
         setCheckedItems(prev => 
@@ -337,19 +340,22 @@ const CamerasPage = (props: Props) => {
                                             <td className={styles.td}>{camera.password !== "" ? camera.password : "-"}</td>
                                             <td className={styles.td}>{camera.path}</td>
                                             <td className={`${styles.td} ${styles.textCenter}`}>
-                                                <span className={`${styles.status} ${camera.pid ? styles.success : styles.error}`}>
-                                                    {camera.pid ? "Running" : "Stopped"}
-                                                </span>
+                                                <TagStatusComponent 
+                                                    text={camera.pid ? "Running" : "Stopped"} 
+                                                    success={camera.pid ? true : false} 
+                                                />
                                             </td>
                                             <td className={`${styles.td} ${styles.textCenter}`}>
-                                                <span className={`${styles.status} ${camera.is_recording ? styles.success : styles.error}`}>
-                                                    {camera.is_recording ? "Recording" : "Not Recording"}
-                                                </span>
+                                                <TagStatusComponent 
+                                                    text={camera.is_recording ? "Recording" : "Not Recording"} 
+                                                    success={camera.is_recording} 
+                                                />
                                             </td>
                                             <td className={`${styles.td} ${styles.textCenter}`}>
-                                                <span className={`${styles.status} ${camera.requires_restart ? styles.error : styles.success}`}>
-                                                    {camera.requires_restart ? "Pending" : "Applied"}
-                                                </span>
+                                                <TagStatusComponent 
+                                                    text={(camera.requires_restart || settings?.requires_restart) ? "Pending" : "Applied"} 
+                                                    success={!camera.requires_restart && !settings?.requires_restart} 
+                                                />
                                             </td>
                                             <td className={`${styles.td}`}>
                                                 <DropdownBasicComponent

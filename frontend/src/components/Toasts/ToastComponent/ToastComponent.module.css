@@ -1,6 +1,6 @@
 .wrapper {
     display: flex;
-    position: absolute;
+    position: fixed;
     right: 20px;
     top: 20px;
     background-color: white;

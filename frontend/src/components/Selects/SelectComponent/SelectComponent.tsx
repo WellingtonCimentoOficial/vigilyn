@@ -5,12 +5,12 @@ import { PiCaretDown, PiCaretUp } from "react-icons/pi";
 import { motion, AnimatePresence } from "framer-motion"
 
 
-const SelectComponent = ({value, data, callback}: SelectType) => {
+const SelectComponent = ({value, data, fullWidth, disabled, callback}: SelectType) => {
     const [showOptions, setShowOptions] = useState<boolean>(false)
 
     return (
         <AnimatePresence>
-            <div className={styles.wrapper} tabIndex={1} onBlur={() => setShowOptions(false)}>
+            <div className={`${styles.wrapper} ${fullWidth ? styles.fullWidth : ""} ${disabled ? styles.disabled : ""}`} tabIndex={1} onBlur={() => setShowOptions(false)}>
                 <div 
                     className={styles.header} onClick={() => setShowOptions(current => !current)} >
                     <span className={styles.title}>{value}</span>

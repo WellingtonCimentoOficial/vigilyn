@@ -16,8 +16,10 @@ export type SelectDataType = {
 }
 
 export type SelectType = {
+    fullWidth?: boolean
     value: string
     data: SelectDataType[]
+    disabled?: boolean
     callback: (data: SelectDataType) => void
 }
 

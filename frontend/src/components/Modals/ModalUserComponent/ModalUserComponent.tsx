@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import ModalBaseComponent from '../ModalBaseComponent/ModalBaseComponent'
 import styles from "./ModalUserComponent.module.css"
-import { PiUser } from "react-icons/pi";
+import { PiUser, PiFloppyDisk } from "react-icons/pi";
 import InputComponent from '../../Inputs/InputComponent/InputComponent';
 import ButtonComponent from '../../Buttons/ButtonComponent/ButtonComponent';
 import { nameRegex, passwordRegex } from '../../../utils/regex';
@@ -168,6 +168,7 @@ const ModalUserComponent = ({showModal, setShowModal}: Props) => {
                         form='form'
                         disabled={isLoading}
                         isLoading={isLoading}
+                        icon={<PiFloppyDisk />}
                     />
                 </div>
             }

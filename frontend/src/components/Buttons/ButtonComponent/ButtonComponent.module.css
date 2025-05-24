@@ -51,13 +51,18 @@
 .containerLoader {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
+    width: 100%;
 }
 .loader {
     width: 0.60rem;
     height: 0.60rem;
     border-radius: 100%;
     animation: bounce 0.6s infinite ease-in-out;
+    background-color: var(--principal-color);
+}
+.loaderFilled {
     background-color: white;
 }
 .loader:nth-child(1) {

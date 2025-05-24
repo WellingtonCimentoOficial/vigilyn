@@ -70,3 +70,7 @@
 .wrapper .tglLight:checked + .tglBtn {
     background: var(--principal-color);
 }
+.disabled {
+    opacity: 50%;
+    pointer-events: none;
+}

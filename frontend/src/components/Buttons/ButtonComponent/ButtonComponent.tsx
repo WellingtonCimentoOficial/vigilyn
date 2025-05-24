@@ -33,9 +33,9 @@ const ButtonComponent = ({icon, text, filled, className, disabled, isLoading, pa
 
             ):(
                 <div className={styles.containerLoader}>
-                    <div className={styles.loader}></div>
-                    <div className={styles.loader}></div>
-                    <div className={styles.loader}></div>
+                    <div className={`${styles.loader} ${filled ? styles.loaderFilled : ""}`}></div>
+                    <div className={`${styles.loader} ${filled ? styles.loaderFilled : ""}`}></div>
+                    <div className={`${styles.loader} ${filled ? styles.loaderFilled : ""}`}></div>
                 </div>
             )}
         </button>
