@@ -14,6 +14,7 @@ class Record(db.Model):
     camera_id: Mapped[int] = mapped_column(ForeignKey("camera_table.id"))
     camera: Mapped["Camera"] = relationship(back_populates="records")
     size_in_mb: Mapped[float] = mapped_column(default=0, nullable=False)
+    duration_seconds: Mapped[float] = mapped_column(nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), onupdate=func.now()

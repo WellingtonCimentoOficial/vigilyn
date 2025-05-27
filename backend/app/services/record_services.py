@@ -10,9 +10,34 @@ import psutil
 import platform
 
 
+def get_duration(filepath):
+    duration_seconds = subprocess.run(
+        [
+            "ffprobe",
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration",
+            "-of",
+            "default=noprint_wrappers=1:nokey=1",
+            filepath,
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=True,
+    )
+    return float(duration_seconds.stdout.strip())
+
+
 def create_record(camera, filename, filepath, size_in_mb, segment_time):
     name = ".".join(filename.split(".")[:-1])
     created_at = datetime.fromtimestamp(os.path.getctime(filepath), tz=timezone.utc)
+    try:
+        duration_seconds = get_duration(filepath)
+    except:
+        duration_seconds = segment_time
+
     record = Record(
         camera=camera,
         name=name,
@@ -23,6 +48,7 @@ def create_record(camera, filename, filepath, size_in_mb, segment_time):
             if not platform.system().lower() == "windows"
             else created_at
         ),
+        duration_seconds=duration_seconds,
     )
 
     db.session.add(record)
