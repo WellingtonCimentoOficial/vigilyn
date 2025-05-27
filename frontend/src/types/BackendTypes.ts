@@ -93,8 +93,11 @@ export type SystemType = {
 
 export type RecordType = {
     id: number
+    name: string
     path: string
+    duration_seconds: number
     created_at: string
+    updated_at: string
 }
 export type ErrorType = {
     error: string
