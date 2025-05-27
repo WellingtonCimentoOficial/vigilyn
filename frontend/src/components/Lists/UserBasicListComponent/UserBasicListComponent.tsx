@@ -51,30 +51,27 @@ const UserBasicListComponent = ({data}: Props) => {
             }
         >
             <ul className={styles.list}>
-                {users.map(user => {
-                    const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`
-                    return (
-                        <li key={user.id} className={styles.listLi}>
-                            <NavLink className={styles.listLiA} to="">
-                                <div className={styles.listLiAImage} style={{backgroundColor: randomColor}}>{user.name[0].toUpperCase()}</div>
-                                <div className={styles.listLiAContent}>
-                                    <span className={styles.listLiAContentTitle}>{user.name}</span>
-                                    <span className={styles.listLiAContentDescription}>
-                                        Assigned Roles(s)
-                                        <span className={styles.bold}>
-                                            {user.roles.map(role => role.name).join(", ")}
-                                        </span>
+                {users.map(user => (
+                    <li key={user.id} className={styles.listLi}>
+                        <NavLink className={styles.listLiA} to="/dashboard/users/">
+                            <div className={styles.listLiAImage} style={{backgroundColor: user.profile_color}}>{user.name[0].toUpperCase()}</div>
+                            <div className={styles.listLiAContent}>
+                                <span className={styles.listLiAContentTitle}>{user.name}</span>
+                                <span className={styles.listLiAContentDescription}>
+                                    Assigned Roles(s)
+                                    <span className={styles.bold}>
+                                        {user.roles.map(role => role.name).join(", ")}
                                     </span>
-                                </div>
-                                <div className={`${styles.listLiAContent} ${styles.levelContainer}`}>
-                                    <span className={`${styles.listLiAContentDescription} ${styles.level} ${user.is_active ? styles.high : styles.low}`}>
-                                        {user.is_active ? "Active" : "Inactive"}
-                                    </span>
-                                </div>
-                            </NavLink>
-                        </li>
-                    )
-                })}
+                                </span>
+                            </div>
+                            <div className={`${styles.listLiAContent} ${styles.levelContainer}`}>
+                                <span className={`${styles.listLiAContentDescription} ${styles.level} ${user.is_active ? styles.high : styles.low}`}>
+                                    {user.is_active ? "Active" : "Inactive"}
+                                </span>
+                            </div>
+                        </NavLink>
+                    </li>
+                ))}
             </ul>
         </SectionComponent>
     )

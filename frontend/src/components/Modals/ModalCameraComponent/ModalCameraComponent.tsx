@@ -7,7 +7,9 @@ import ButtonComponent from '../../Buttons/ButtonComponent/ButtonComponent'
 import { ToastContext } from '../../../contexts/ToastContext'
 import { useBackendRequests } from '../../../hooks/useBackRequests'
 import { ipRegex, pathRegex } from '../../../utils/regex'
-import { PiFloppyDisk } from "react-icons/pi";
+import { PiFloppyDisk, PiCaretDown } from "react-icons/pi";
+import { HexColorPicker } from 'react-colorful'
+import { motion, AnimatePresence } from "framer-motion"
 
 type Props = {
     showModal: boolean
@@ -35,6 +37,9 @@ const ModalCameraComponent = ({showModal, data, setShowModal, callback}: Props) 
 
     const [path, setPath] = useState<string>("")
     const [pathIsValid, setPathIsValid] = useState<boolean>(false)
+
+    const [profileColor, setProfileColor] = useState<string>("#ff5100")
+    const [showColorPicker, setShowColorPicker] = useState<boolean>(false)
 
     const [wasSubmitted, setWasSubmitted] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -89,6 +94,7 @@ const ModalCameraComponent = ({showModal, data, setShowModal, callback}: Props) 
             try {
                 const dataToCreateUpdate = {
                     name,
+                    profile_color: profileColor,
                     ip_address: ipAddress,
                     port,
                     ...(username && {username}),
@@ -231,6 +237,10 @@ const ModalCameraComponent = ({showModal, data, setShowModal, callback}: Props) 
         >
             <div className={styles.wrapper}>
                 <form id='form' className={styles.form} onSubmit={handleSubmit}>
+                    <div className={styles.profileContainer}>
+                        <div className={styles.profile} style={{backgroundColor: profileColor}}></div>
+                        <HexColorPicker color={profileColor} onChange={setProfileColor} />
+                    </div>
                     <InputComponent
                         type='text'
                         name='name'

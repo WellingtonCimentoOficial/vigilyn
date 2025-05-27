@@ -142,10 +142,10 @@ const DashboardPage = (props: Props) => {
         >
             <div className={styles.wrapper}>
                 <div className={styles.section1}>
-                    <CardComponent title='Cameras recording now' value={cameras.filter(camera => camera.pid != null).length} focus />
-                    <CardComponent title='Total Cameras' value={cameras.length} />
-                    <CardComponent title='Total Stopped Cameras' value={cameras.filter(camera => camera.pid === null).length} />
-                    <CardComponent title='Total Records' value={records.length} />
+                    <CardComponent href='/dashboard/cameras/' title='Cameras recording now' value={cameras.filter(camera => camera.is_recording).length} focus />
+                    <CardComponent href='/dashboard/cameras/' title='Total Cameras' value={cameras.length} />
+                    <CardComponent href='/dashboard/cameras/' title='Total Stopped Cameras' value={cameras.filter(camera => !camera.is_recording).length} />
+                    <CardComponent href='/dashboard/records/' title='Total Records' value={records.length} />
                 </div>
                 <div className={styles.sectionContainer}>
                     <div className={styles.aside}>

@@ -12,6 +12,7 @@ export type RoleType = {
 export type UserType = {
     id: number
     name: string
+    profile_color: string
     email: string
     is_active: boolean
     created_at: string
@@ -20,6 +21,7 @@ export type UserType = {
 
 export type UserUpdateType = {
     name: string
+    profile_color?: string
     password?: string
     confirm_password?: string
 }
@@ -36,6 +38,7 @@ export type TokensType = {
 export type CameraType = {
     id: number,
     name: string,
+    profile_color: string
     ip_address: string
     port: number
     username: string
@@ -48,6 +51,7 @@ export type CameraType = {
 
 export type CameraCreateUpdateType = {
     name: string,
+    profile_color?: string
     ip_address: string
     port: number
     username?: string

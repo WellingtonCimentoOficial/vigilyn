@@ -20,3 +20,23 @@
 .button {
     font-size: 0.9rem
 }
+.profileContainer {
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profile {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 100%;
+    font-size: 2.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.profileContainer :global(.react-colorful) {
+    height: 100px;
+    width: 100%;
+}

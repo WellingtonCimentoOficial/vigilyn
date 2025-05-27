@@ -4,7 +4,7 @@ import PageLayout from '../../layouts/PageLayout/PageLayout'
 import CheckBoxSwitchComponent from '../../components/Checkboxes/CheckBoxSwitchComponent/CheckBoxSwitchComponent'
 import InputComponent from '../../components/Inputs/InputComponent/InputComponent'
 import SelectComponent from '../../components/Selects/SelectComponent/SelectComponent'
-import { SelectDataType } from '../../types/FrontendTypes'
+import { ModalConfirmationData, SelectDataType } from '../../types/FrontendTypes'
 import TagStatusComponent from '../../components/Tags/TagStatusComponent/TagStatusComponent'
 import { useBackendRequests } from '../../hooks/useBackRequests'
 import { ToastContext } from '../../contexts/ToastContext'
@@ -13,6 +13,7 @@ import { pathRegex } from '../../utils/regex'
 import { ErrorValidationType, SettingsType } from '../../types/BackendTypes'
 import { PiFloppyDisk, PiStop, PiArrowCounterClockwise } from "react-icons/pi";
 import { SettingsContext } from '../../contexts/SettingsContext'
+import ModalConfirmationComponent from '../../components/Modals/ModalConfirmationComponent/ModalConfirmationComponent'
 
 type Props = {}
 
@@ -37,6 +38,8 @@ const SettingsPage = (props: Props) => {
     const [wasSubmitted, setWasSubmitted] = useState<boolean>(false)
     const [getAgain, setGetAgain] = useState<boolean>(false)
 
+    const [modalConfirmationData, setModalConfirmationData] = useState<ModalConfirmationData|null>(null)
+    const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const { setSettings, settings } = useContext(SettingsContext)
     
     const videoFormats = useMemo(() => [
@@ -192,6 +195,24 @@ const SettingsPage = (props: Props) => {
             })
         }
         setStopIsLoading(false)
+    }
+
+    const handleRestartSystemConfirmation = () => {
+        setModalConfirmationData({
+            title: "Confirm restart",
+            description: "Are you sure you want to restart the system? This action may interrupt active processes.",
+            callback: handleRestartSystem
+        })
+        setShowConfirmation(true)
+    }
+
+    const handleStopSystemConfirmation = () => {
+        setModalConfirmationData({
+            title: "Confirm stop",
+            description: "Are you sure you want to stop the system? This will terminate all active processes.",
+            callback: handleStopSystem
+        })
+        setShowConfirmation(true)
     }
 
     useEffect(() => {
@@ -372,7 +393,7 @@ const SettingsPage = (props: Props) => {
                                         text='Restart' 
                                         disabled={isLoading || restartIsLoading || stopIsLoading}
                                         isLoading={restartIsLoading} 
-                                        onClick={handleRestartSystem}
+                                        onClick={handleRestartSystemConfirmation}
                                         icon={<PiArrowCounterClockwise />}
                                     />
                                 </div>
@@ -394,7 +415,7 @@ const SettingsPage = (props: Props) => {
                                         text='Stop' 
                                         disabled={isLoading || restartIsLoading || stopIsLoading}
                                         isLoading={stopIsLoading}
-                                        onClick={handleStopSystem}
+                                        onClick={handleStopSystemConfirmation}
                                         icon={<PiStop />}
                                     />
                                 </div>
@@ -403,6 +424,15 @@ const SettingsPage = (props: Props) => {
                     </div>
                 </div>
             </div>
+            {modalConfirmationData &&
+                <ModalConfirmationComponent 
+                    title={modalConfirmationData.title}
+                    description={modalConfirmationData.description}
+                    showModal={showConfirmation} 
+                    setShowModal={setShowConfirmation}
+                    callback={async () => {modalConfirmationData.callback();setShowConfirmation(false)}}
+                />
+            }
         </PageLayout>
     )
 }

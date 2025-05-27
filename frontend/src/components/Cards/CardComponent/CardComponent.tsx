@@ -8,11 +8,12 @@ type Props = {
     focus?: boolean
     title: string
     value: number
+    href: string
 }
 
-const CardComponent = ({title, value, focus}: Props) => {
+const CardComponent = ({title, value, focus, href}: Props) => {
     return (
-        <NavLink className={`${styles.wrapper} ${focus ? styles.focusBackground : ""}`} to="/">
+        <NavLink className={`${styles.wrapper} ${focus ? styles.focusBackground : ""}`} to={href}>
             <div className={styles.header}>
                 <span className={`${styles.title} ${focus ? styles.focusText : ""}`}>{title}</span>
                 <div className={`${styles.containerHeaderIcon} ${!focus ? styles.focusText : ""}`}>

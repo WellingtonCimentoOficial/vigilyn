@@ -28,3 +28,9 @@ export type CameraFilterType = {
     title: string
     value: boolean
 }
+
+export type ModalConfirmationData = {
+    title: string
+    description: string
+    callback: () => void
+}

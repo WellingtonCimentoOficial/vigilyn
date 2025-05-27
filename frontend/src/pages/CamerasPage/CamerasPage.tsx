@@ -328,10 +328,7 @@ const CamerasPage = (props: Props) => {
                                                 />
                                             </th>
                                             <td className={`${styles.td} ${styles.profile}`}>
-                                                {(() => {
-                                                    const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 35%)`
-                                                    return <div className={styles.profileContainerIcon} style={{backgroundColor: randomColor}}>{camera.name[0]}</div>
-                                                })()}
+                                                <div className={styles.profileContainerIcon} style={{backgroundColor: camera.profile_color}}>{camera.name[0]}</div>
                                                 {camera.name}
                                             </td>
                                             <td className={styles.td}>{camera.ip_address}</td>

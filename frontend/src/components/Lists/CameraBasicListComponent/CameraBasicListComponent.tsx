@@ -24,23 +24,20 @@ const CameraBasicListComponent = ({data}: Props) => {
             }
         >
             <ul className={styles.list}>
-                {data.map(item => {
-                    const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 35%)`
-                    return (
-                        <li key={item.id} className={styles.listLi}>
-                            <NavLink className={styles.listLiA} to="">
-                                <div className={styles.listLiAImage} style={{backgroundColor: randomColor}}>{item.name[0].toUpperCase()}</div>
-                                <div className={styles.listLiAContent}>
-                                    <span className={styles.listLiAContentTitle}>{item.name}</span>
-                                    <span className={styles.listLiAContentDescription}>
-                                        Accessed by IP
-                                        <span className={styles.bold}>{item.ip_address}</span>
-                                    </span>
-                                </div>
-                            </NavLink>
-                        </li>
-                    )
-                })}
+                {data.map(item => (
+                    <li key={item.id} className={styles.listLi}>
+                        <NavLink className={styles.listLiA} to="/dashboard/cameras/">
+                            <div className={styles.listLiAImage} style={{backgroundColor: item.profile_color}}>{item.name[0].toUpperCase()}</div>
+                            <div className={styles.listLiAContent}>
+                                <span className={styles.listLiAContentTitle}>{item.name}</span>
+                                <span className={styles.listLiAContentDescription}>
+                                    Accessed by IP
+                                    <span className={styles.bold}>{item.ip_address}</span>
+                                </span>
+                            </div>
+                        </NavLink>
+                    </li>
+                ))}
             </ul>
         </SectionComponent>
     )
