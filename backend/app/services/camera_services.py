@@ -242,4 +242,4 @@ def initialize_camera_processes():
     cameras = Camera.query.filter(Camera.pid.isnot(None)).all()
     for camera in cameras:
         if not camera.has_process_running():
-            start_camera_async()
+            start_camera_async(camera)
