@@ -45,8 +45,10 @@ def organize_records():
 
                 create_record(
                     camera=camera,
+                    filename=new_filename,
                     filepath=new_filepath,
                     size_in_mb=os.path.getsize(new_filepath) / (1024 * 1024),
+                    segment_time=settings.segment_time,
                 )
 
                 log.write(

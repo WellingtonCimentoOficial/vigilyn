@@ -9,11 +9,15 @@ class Record(db.Model):
     __tablename__ = "record_table"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(unique=True, nullable=False)
     path: Mapped[str] = mapped_column(unique=True, nullable=False)
     camera_id: Mapped[int] = mapped_column(ForeignKey("camera_table.id"))
     camera: Mapped["Camera"] = relationship(back_populates="records")
     size_in_mb: Mapped[float] = mapped_column(default=0, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), onupdate=func.now()
+    )
 
 
 class OrganizeRecord(db.Model):

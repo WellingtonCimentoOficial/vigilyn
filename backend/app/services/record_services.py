@@ -2,15 +2,28 @@ from app.extensions import db
 from app.models.record_models import Record, OrganizeRecord
 from app.utils.utils import kill_processes
 from flask import current_app
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import os
 import subprocess
 import threading
 import psutil
+import platform
 
 
-def create_record(camera, filepath, size_in_mb):
-    record = Record(camera=camera, path=filepath, size_in_mb=size_in_mb)
+def create_record(camera, filename, filepath, size_in_mb, segment_time):
+    name = ".".join(filename.split(".")[:-1])
+    created_at = datetime.fromtimestamp(os.path.getctime(filepath), tz=timezone.utc)
+    record = Record(
+        camera=camera,
+        name=name,
+        path=filepath,
+        size_in_mb=size_in_mb,
+        created_at=(
+            created_at - timedelta(seconds=segment_time)
+            if not platform.system().lower() == "windows"
+            else created_at
+        ),
+    )
 
     db.session.add(record)
     db.session.commit()
