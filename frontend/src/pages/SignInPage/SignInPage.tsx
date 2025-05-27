@@ -30,12 +30,18 @@ const SignInPage = (props: Props) => {
     const navigate = useNavigate()
     
     const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(wasSubmitted){
+            setPasswordIsValid(true)
+        }
         setEmail(e.target.value)
         setEmailIsValid(emailRegex.test(e.target.value))
         setWasSubmitted(false)
     }
     
     const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(wasSubmitted){
+            setEmailIsValid(true)
+        }
         setPassword(e.target.value)
         setPasswordIsValid(passwordRegex.test(e.target.value))
         setWasSubmitted(false)
