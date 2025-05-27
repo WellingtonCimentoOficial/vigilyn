@@ -38,7 +38,10 @@ def create_user(**kwargs):
 def update_user(user, **kwargs):
     try:
         for key, value in kwargs.items():
-            setattr(user, key, value)
+            if key == "password":
+                setattr(user, key, bcrypt.generate_password_hash(value).decode("utf-8"))
+            else:
+                setattr(user, key, value)
 
         db.session.commit()
 

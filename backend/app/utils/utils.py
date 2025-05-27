@@ -3,6 +3,8 @@ import time
 from .settings import get_settings
 import signal
 from flask import jsonify
+from sqlalchemy import inspect
+from app.extensions import db
 
 
 def create_tmp_dir():
@@ -17,9 +19,9 @@ def is_idle(file_path: str, idle_seconds: float):
 
 def generate_rtsp_url(camera):
     credentials = (
-        f"{camera.username}:{camera.password}" if
-        camera.username and camera.password else
-        camera.username or camera.password or ""
+        f"{camera.username}:{camera.password}"
+        if camera.username and camera.password
+        else camera.username or camera.password or ""
     )
     server = f"{camera.ip_address}:{camera.port}"
     url = f"rtsp://{credentials}@{server}{camera.path}"
@@ -49,9 +51,19 @@ def generate_error_message(error, message, status_code):
 
 def generate_pagination_response(current_page, total_count, limit, data):
     payload = {
-        "current_page": current_page, 
+        "current_page": current_page,
         "total_count": total_count,
-        "limit": limit, 
-        "data": data
+        "limit": limit,
+        "data": data,
     }
     return payload
+
+
+def tables_exists(table_names):
+    tables_verified = []
+    inspector = inspect(db.engine)
+    for table_name in table_names:
+        if inspector.has_table(table_name):
+            tables_verified.append(table_name)
+
+    return tables_verified == table_names

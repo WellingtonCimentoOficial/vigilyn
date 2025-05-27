@@ -22,7 +22,7 @@ class Config:
     MAIL_DEFAULT_RECEIVER = os.environ["SMTP_DEFAULT_RECEIVER"]
     MAIL_INTERVAL = 300
 
-    BASE_DIR = BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
     JWT_SECRET_KEY = os.environ["JWT_SECRET_KEY"]
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=15)

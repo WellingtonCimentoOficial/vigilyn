@@ -10,6 +10,7 @@ class User(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False)
+    profile_color: Mapped[str] = mapped_column(default="#ff5100", nullable=False)
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     tokens: Mapped[List["Token"]] = relationship(

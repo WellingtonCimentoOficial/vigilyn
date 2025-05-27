@@ -10,6 +10,9 @@ from .routes.role_routes import role_bp
 from .routes.base_routes import base_bp
 from .commands import setup_cli
 from app.handlers import register_error_handlers
+from app.services.camera_services import initialize_camera_processes
+from app.services.record_services import initialize_organize_records
+from app.utils.utils import tables_exists
 import os
 
 
@@ -36,12 +39,17 @@ def create_app():
     mail.init_app(app)
     jwt.init_app(app)
     limiter.init_app(app)
-    
+
     if app.debug:
         cors.init_app(app, resources={r"/*": {"origins": "*"}})
 
     app.cli.add_command(setup_cli)
 
     register_error_handlers(app)
+
+    with app.app_context():
+        if tables_exists(["camera_table", "organize_record_table"]):
+            initialize_camera_processes()
+            initialize_organize_records()
 
     return app

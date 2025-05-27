@@ -4,6 +4,7 @@ from marshmallow import Schema, fields, validate, validates, ValidationError
 class CameraSchema(Schema):
     id = fields.Int()
     name = fields.Str()
+    profile_color = fields.Str()
     ip_address = fields.Str()
     port = fields.Int()
     username = fields.Str()
@@ -22,6 +23,15 @@ class CameraCreateUpdateSchema(Schema):
                 min=4,
                 max=15,
                 error="The name must contain at least 3 characters and a maximum of 15.",
+            )
+        ],
+    )
+    profile_color = fields.Str(
+        required=True,
+        validate=[
+            validate.Regexp(
+                r"^#[0-9A-Fa-f]{6}$",
+                error="Invalid color format. Please use a hex code like '#FFFFFF'.",
             )
         ],
     )

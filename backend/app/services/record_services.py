@@ -2,9 +2,11 @@ from app.extensions import db
 from app.models.record_models import Record, OrganizeRecord
 from app.utils.utils import kill_processes
 from flask import current_app
+from datetime import datetime
 import os
 import subprocess
 import threading
+import psutil
 
 
 def create_record(camera, filepath, size_in_mb):
@@ -24,11 +26,13 @@ def delete_records(records):
     db.session.commit()
 
 
-def create_organize_record(pid):
+def create_organize_record(pid, timestamp):
     OrganizeRecord.query.delete()
     db.session.commit()
 
-    organize_record = OrganizeRecord(pid=pid)
+    organize_record = OrganizeRecord(
+        pid=pid, started_at=datetime.fromtimestamp(timestamp)
+    )
     db.session.add(organize_record)
     db.session.commit()
 
@@ -58,7 +62,7 @@ def start_organize_records_async():
             stderr=subprocess.DEVNULL,
         )
 
-        create_organize_record(process.pid)
+        create_organize_record(process.pid, psutil.Process(process.pid).create_time())
 
 
 def stop_organize_records():
@@ -98,3 +102,9 @@ def restart_organize_records_async():
 
     thread = threading.Thread(target=_restart, daemon=True)
     thread.start()
+
+
+def initialize_organize_records():
+    organize_records = OrganizeRecord.query.first()
+    if organize_records and not organize_records.has_process_running():
+        start_organize_records_async()

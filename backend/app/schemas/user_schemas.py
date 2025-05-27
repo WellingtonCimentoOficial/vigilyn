@@ -29,6 +29,7 @@ def validate_passwords_match(password, confirm_password):
 class UserSchema(Schema):
     id = fields.Int()
     name = fields.Str()
+    profile_color = fields.Str()
     email = fields.Str()
     is_active = fields.Bool()
     created_at = fields.DateTime()
@@ -39,6 +40,15 @@ class UserCreateSchema(Schema):
     name = fields.Str(
         required=True,
         validate=name_validate,
+    )
+    profile_color = fields.Str(
+        required=False,
+        validate=[
+            validate.Regexp(
+                r"^#[0-9A-Fa-f]{6}$",
+                error="Invalid color format. Please use a hex code like '#FFFFFF'.",
+            )
+        ],
     )
     email = fields.Str(
         required=True,
@@ -72,6 +82,15 @@ class UserUpdateSchema(Schema):
     name = fields.Str(
         required=False,
         validate=name_validate,
+    )
+    profile_color = fields.Str(
+        required=False,
+        validate=[
+            validate.Regexp(
+                r"^#[0-9A-Fa-f]{6}$",
+                error="Invalid color format. Please use a hex code like '#FFFFFF'.",
+            )
+        ],
     )
     password = fields.Str(
         required=False,

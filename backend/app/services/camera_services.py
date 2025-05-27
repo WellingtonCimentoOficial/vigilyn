@@ -11,13 +11,15 @@ from app.exceptions.camera_exceptions import (
     CameraWasNotStartedException,
     CameraPidParamException,
     CameraRequiresRestartParamException,
-    CameraIsRecordingParamException
+    CameraIsRecordingParamException,
 )
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
 from sqlalchemy import or_, desc
+from datetime import datetime
 import threading
 import subprocess
 import os
+import psutil
 
 
 def stop_camera(camera):
@@ -100,7 +102,7 @@ def create_camera(name, ip_address, port, **kwargs):
             ip_address=ip_address,
             port=port,
         )
-        
+
         for key, value in kwargs.items():
             setattr(camera, key, value)
 
@@ -118,7 +120,7 @@ def create_camera(name, ip_address, port, **kwargs):
 def update_camera(camera, **kwargs):
     try:
         camera_by_name = Camera.query.filter_by(name=kwargs["name"]).first()
-        
+
         if camera_by_name and camera_by_name.id != camera.id:
             raise CameraAlreadyExistsException()
 
@@ -160,6 +162,9 @@ def start_camera_async(camera):
         )
 
         camera.pid = process.pid
+        camera.started_at = datetime.fromtimestamp(
+            psutil.Process(process.pid).create_time()
+        )
         camera.requires_restart = False
         db.session.commit()
 
@@ -168,7 +173,9 @@ def start_camera_async(camera):
         raise CameraWasNotStartedException()
 
 
-def filter_camera(search_param, page, limit, pid_param, requires_restart_param, is_recording_param):
+def filter_camera(
+    search_param, page, limit, pid_param, requires_restart_param, is_recording_param
+):
     if not str(page).isdigit():
         raise UrlPageParamException()
 
@@ -177,11 +184,19 @@ def filter_camera(search_param, page, limit, pid_param, requires_restart_param, 
 
     if pid_param != None and pid_param != "false" and pid_param != "true":
         raise CameraPidParamException()
-    
-    if requires_restart_param != None and requires_restart_param != "false" and requires_restart_param != "true":
+
+    if (
+        requires_restart_param != None
+        and requires_restart_param != "false"
+        and requires_restart_param != "true"
+    ):
         raise CameraRequiresRestartParamException()
-    
-    if is_recording_param != None and is_recording_param != "false" and is_recording_param != "true":
+
+    if (
+        is_recording_param != None
+        and is_recording_param != "false"
+        and is_recording_param != "true"
+    ):
         raise CameraIsRecordingParamException()
 
     page = int(page)
@@ -217,7 +232,14 @@ def filter_camera(search_param, page, limit, pid_param, requires_restart_param, 
             query = query.filter(Camera.is_recording == True)
         else:
             query = query.filter(Camera.is_recording == False)
-    
+
     query = query.order_by(desc(Camera.id))
 
     return query.offset((page - 1) * limit).limit(limit), query.count()
+
+
+def initialize_camera_processes():
+    cameras = Camera.query.filter(Camera.pid.isnot(None)).all()
+    for camera in cameras:
+        if not camera.has_process_running():
+            start_camera_async()
