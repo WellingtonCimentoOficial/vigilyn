@@ -106,4 +106,8 @@ class Fmpeg:
             subprocess.run(command)
         except Exception as e:
             log = Log()
-            log.write(log.GENERAL, message=f"func: generate_thumbnail error: " + e)
+            log.write(
+                log.GENERAL,
+                level="error",
+                message=f"func: generate_thumbnail error: {str(e)}",
+            )
