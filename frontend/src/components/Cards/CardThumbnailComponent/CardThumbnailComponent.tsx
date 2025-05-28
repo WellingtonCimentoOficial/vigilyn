@@ -126,11 +126,7 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
                 const data = await getRecordThumbnail(record.id)
                 setThumbnailUrl(data)
             } catch (error) {
-                setToastMessage({
-                    title: "Failed to load thumbnail", 
-                    description: "We couldn't to fetch record thumbnail. Please try again later.", 
-                    success: false
-                })
+                
             }
         })()
     }, [record, getRecordThumbnail, setToastMessage])
