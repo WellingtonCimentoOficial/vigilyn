@@ -5,7 +5,11 @@ from app.services.record_services import delete_records, filter_record
 from app.decorators.auth_decorators import authentication_required
 from app.decorators.permission_decorators import permission_required
 from app.utils.utils import generate_pagination_response
-
+from app.exceptions.record_exceptions import (
+    RecordNotFoundException,
+    RecordThumbnailNotFoundException,
+)
+import os
 
 record_bp = Blueprint("records", __name__, url_prefix="/api/records/")
 
@@ -53,6 +57,9 @@ def get(record_pk):
 def play_video(record_pk):
     record = Record.query.filter_by(id=record_pk).first_or_404()
 
+    if not os.path.isfile(record.path):
+        raise RecordNotFoundException()
+
     return send_file(record.path)
 
 
@@ -62,6 +69,9 @@ def play_video(record_pk):
 def download_video(record_pk):
     record = Record.query.filter_by(id=record_pk).first_or_404()
 
+    if not os.path.isfile(record.path):
+        raise RecordNotFoundException()
+
     return send_file(record.path, as_attachment=True)
 
 
@@ -70,6 +80,9 @@ def download_video(record_pk):
 @permission_required("view_record")
 def get_thumbnail(record_pk):
     record = Record.query.filter_by(id=record_pk).first_or_404()
+
+    if not os.path.isfile(record.thumbnail_path):
+        raise RecordThumbnailNotFoundException()
 
     return send_file(record.thumbnail_path)
 
