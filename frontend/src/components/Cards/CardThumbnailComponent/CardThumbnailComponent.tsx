@@ -49,7 +49,7 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
         } catch (error) {
             setToastMessage({
                 title: "Download failed",
-                description: "We couldn’t fetch the record thumbnail. Please try again later.",
+                description: "We couldn’t fetch the record. Please try again later.",
                 success: false
             })
         }
