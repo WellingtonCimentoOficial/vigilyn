@@ -1,6 +1,7 @@
 from app.extensions import db
 from app.models.record_models import Record, OrganizeRecord
 from app.utils.utils import kill_processes
+from app.utils.logger import Log
 from flask import current_app
 from sqlalchemy import or_, desc
 from datetime import datetime, timezone, timedelta
@@ -68,6 +69,9 @@ def delete_records(records):
         try:
             os.remove(record.path)
             os.remove(record.thumbnail_path)
+        except Exception as e:
+            log = Log()
+            log.write(category=log.GENERAL, message=f"func: delete_records error: " + e)
         finally:
             db.session.delete(record)
 

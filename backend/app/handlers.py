@@ -1,4 +1,3 @@
-from flask import jsonify
 from marshmallow import ValidationError
 from app.exceptions.base_exception import AppException
 from werkzeug.exceptions import MethodNotAllowed, NotFound, UnsupportedMediaType

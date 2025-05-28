@@ -7,7 +7,7 @@ class Log:
     STORAGE = "[STORAGE]"
     RTSP = "[RTSP]"
     ORGANIZER = "[ORGANIZER]"
-    METADATA = "[METADATA]"
+    GENERAL = "[GENERAL]"
 
     def __init__(self, output_filename="log.txt"):
         self.output_filename = output_filename

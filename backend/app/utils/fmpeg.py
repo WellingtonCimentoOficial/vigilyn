@@ -88,18 +88,22 @@ class Fmpeg:
 
     @staticmethod
     def generate_thumbnail(filepath, output_path):
-        command = [
-            "ffmpeg",
-            "-ss",
-            "00:00:01",
-            "-i",
-            filepath,
-            "-vframes",
-            "1",
-            "-q:v",
-            "1",
-            "-y",
-            output_path,
-        ]
+        try:
+            command = [
+                "ffmpeg",
+                "-ss",
+                "00:00:01",
+                "-i",
+                filepath,
+                "-vframes",
+                "1",
+                "-q:v",
+                "1",
+                "-y",
+                output_path,
+            ]
 
-        subprocess.run(command)
+            subprocess.run(command)
+        except Exception as e:
+            log = Log()
+            log.write(log.GENERAL, message=f"func: generate_thumbnail error: " + e)
