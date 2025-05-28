@@ -2,7 +2,7 @@ from app.models.setting_models import Setting
 from app.extensions import db, bcrypt
 from app.models.permission_models import Permission
 from app.models.role_models import Role
-from app.models.user_models import User
+from app.models.user_models import User, UserFavorite
 
 
 def get_settings():
@@ -130,5 +130,7 @@ def create_default_user():
         password=bcrypt.generate_password_hash("Admin@123").decode("utf-8"),
         roles=[role],
     )
+    favorite = UserFavorite(user=user)
     db.session.add(user)
+    db.session.add(favorite)
     db.session.commit()

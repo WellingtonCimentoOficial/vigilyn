@@ -2,6 +2,7 @@ from app.extensions import db
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, DateTime, func
 from datetime import datetime
+from typing import List
 import psutil
 
 
@@ -11,10 +12,16 @@ class Record(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
     path: Mapped[str] = mapped_column(unique=True, nullable=False)
-    camera_id: Mapped[int] = mapped_column(ForeignKey("camera_table.id"))
-    camera: Mapped["Camera"] = relationship(back_populates="records")
+    format: Mapped[str] = mapped_column(nullable=False)
+    thumbnail_path: Mapped[str] = mapped_column(unique=True, nullable=False)
     size_in_mb: Mapped[float] = mapped_column(default=0, nullable=False)
     duration_seconds: Mapped[float] = mapped_column(nullable=False)
+    is_public: Mapped[bool] = mapped_column(default=False, nullable=False)
+    camera_id: Mapped[int] = mapped_column(ForeignKey("camera_table.id"))
+    camera: Mapped["Camera"] = relationship(back_populates="records")
+    favorites: Mapped[List["UserFavorite"]] = relationship(
+        secondary="user_favorite_record_table", back_populates="records"
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), onupdate=func.now()

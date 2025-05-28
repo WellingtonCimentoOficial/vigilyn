@@ -43,10 +43,15 @@ def organize_records():
                 new_filepath = os.path.join(camera_dir, new_filename)
                 os.rename(filepath, new_filepath)
 
+                thumbnail_filename = ".".join([*new_filename.split(".")[:-1], "jpg"])
+                thumbnail_filepath = os.path.join(camera_dir, thumbnail_filename)
+                Fmpeg.generate_thumbnail(new_filepath, thumbnail_filepath)
+
                 create_record(
                     camera=camera,
                     filename=new_filename,
                     filepath=new_filepath,
+                    thumbnail_filepath=thumbnail_filepath,
                     size_in_mb=os.path.getsize(new_filepath) / (1024 * 1024),
                     segment_time=settings.segment_time,
                 )

@@ -35,3 +35,9 @@ class UserIsActiveParamException(AppException):
     default_error = "invalid_user_is_active_param"
     default_message = "The value of the 'is_active' field is invalid"
     status_code = 400
+
+
+class UserFavoriteInvalidIDsException(AppException):
+    default_error = "user_favorite_invalid_ids"
+    default_message = "Some of the provided IDs are invalid"
+    status_code = 400

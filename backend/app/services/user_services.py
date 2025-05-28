@@ -1,14 +1,16 @@
 from app.extensions import db, bcrypt
-from app.models.user_models import User
+from app.models.user_models import User, UserFavorite
 from app.exceptions.user_exceptions import (
     UserWasNotCreatedException,
     UserWasNotUpdatedException,
     UserWasNotDeletedException,
     UserIsActiveParamException,
+    UserFavoriteInvalidIDsException,
 )
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
 from sqlalchemy import or_, desc
 from app.models.role_models import Role
+from app.models.record_models import Record
 from sqlalchemy.orm import joinedload
 
 
@@ -27,7 +29,10 @@ def create_user(**kwargs):
         kwargs["password"] = hashed_password
 
         user = User(**kwargs)
+        favorite = UserFavorite(user=user)
+
         db.session.add(user)
+        db.session.add(favorite)
         db.session.commit()
 
         return user
@@ -96,3 +101,17 @@ def filter_user(search_param, role_param, is_active_param, page, limit):
     query = query.order_by(desc(User.id))
 
     return query.offset((page - 1) * limit).limit(limit), query.count()
+
+
+def update_user_favorite(user, record_ids):
+    records = Record.query.filter(Record.id.in_(record_ids)).all()
+
+    found_ids = {record.id for record in records}
+    invalid_ids = set(record_ids) - found_ids
+    if invalid_ids:
+        raise UserFavoriteInvalidIDsException()
+
+    user.favorite.records = records
+    db.session.commit()
+
+    return user

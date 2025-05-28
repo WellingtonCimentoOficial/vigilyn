@@ -7,6 +7,7 @@ from app.schemas.user_schemas import (
     UserCreateSchema,
     UserAdminUpdateSchema,
     UserExtendedSchema,
+    UserFavoriteUpdateSchema,
 )
 from app.schemas.role_schemas import RoleSchema, RoleUpdateSchema
 from app.services.user_services import (
@@ -14,6 +15,7 @@ from app.services.user_services import (
     delete_user,
     create_user,
     filter_user,
+    update_user_favorite,
 )
 from app.services.role_services import update_roles
 from app.decorators.permission_decorators import permission_required
@@ -42,8 +44,7 @@ def get_all():
     is_active_param = request.args.get("is_active", default="true")
     page_param = request.args.get("page", default=1, type=int)
     limit_param = request.args.get(
-        "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"], 
-        type=int
+        "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"], type=int
     )
 
     users, total = filter_user(
@@ -56,10 +57,7 @@ def get_all():
     users_schema = UserSchema(many=True).dump(users)
 
     data = generate_pagination_response(
-        current_page=page_param, 
-        total_count=total,
-        limit=limit_param, 
-        data=users_schema
+        current_page=page_param, total_count=total, limit=limit_param, data=users_schema
     )
     return jsonify(data), 200
 
@@ -69,6 +67,7 @@ def get_all():
 def get_me():
     user_id = get_jwt_identity()
     user = User.query.get_or_404(user_id)
+
     schema = UserExtendedSchema()
     data = schema.dump(user)
     return jsonify(data), 200
@@ -85,8 +84,25 @@ def update_me():
     data.pop("confirm_password", None)
 
     updated_user = update_user(user, **data)
-    user_schema = UserSchema()
+    user_schema = UserExtendedSchema()
     updated_data = user_schema.dump(updated_user)
+
+    return jsonify(updated_data), 200
+
+
+@user_bp.route("me/favorites/", methods=["PUT"])
+@authentication_required()
+def update_favorite():
+    user_id = get_jwt_identity()
+    user = User.query.get_or_404(user_id)
+
+    schema = UserFavoriteUpdateSchema()
+    data = schema.load(request.json)
+
+    updated_user_favorite = update_user_favorite(user, data["record_ids"])
+
+    user_schema = UserExtendedSchema()
+    updated_data = user_schema.dump(updated_user_favorite)
 
     return jsonify(updated_data), 200
 

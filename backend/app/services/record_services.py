@@ -2,7 +2,9 @@ from app.extensions import db
 from app.models.record_models import Record, OrganizeRecord
 from app.utils.utils import kill_processes
 from flask import current_app
+from sqlalchemy import or_, desc
 from datetime import datetime, timezone, timedelta
+from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
 import os
 import subprocess
 import threading
@@ -30,7 +32,9 @@ def get_duration(filepath):
     return float(duration_seconds.stdout.strip())
 
 
-def create_record(camera, filename, filepath, size_in_mb, segment_time):
+def create_record(
+    camera, filename, filepath, size_in_mb, segment_time, thumbnail_filepath
+):
     name = ".".join(filename.split(".")[:-1])
     created_at = datetime.fromtimestamp(os.path.getctime(filepath), tz=timezone.utc)
     try:
@@ -42,6 +46,7 @@ def create_record(camera, filename, filepath, size_in_mb, segment_time):
         camera=camera,
         name=name,
         path=filepath,
+        format=filepath.split(".")[-1],
         size_in_mb=size_in_mb,
         created_at=(
             created_at - timedelta(seconds=segment_time)
@@ -49,6 +54,7 @@ def create_record(camera, filename, filepath, size_in_mb, segment_time):
             else created_at
         ),
         duration_seconds=duration_seconds,
+        thumbnail_path=thumbnail_filepath,
     )
 
     db.session.add(record)
@@ -60,6 +66,7 @@ def create_record(camera, filename, filepath, size_in_mb, segment_time):
 def delete_records(records):
     for record in records:
         os.remove(record.path)
+        os.remove(record.thumbnail_path)
         db.session.delete(record)
 
     db.session.commit()
@@ -147,3 +154,22 @@ def initialize_organize_records():
     organize_records = OrganizeRecord.query.first()
     if organize_records and not organize_records.has_process_running():
         start_organize_records_async()
+
+
+def filter_record(search_param, page, limit):
+    if not str(page).isdigit():
+        raise UrlPageParamException()
+
+    if not str(limit).isdigit():
+        raise UrlLimitParamException()
+
+    page = int(page)
+    limit = int(limit)
+    query = db.session.query(Record)
+
+    if search_param:
+        query = query.filter(Record.name.ilike(f"%{search_param}%"))
+
+    query = query.order_by(desc(Record.id))
+
+    return query.offset((page - 1) * limit).limit(limit), query.count()

@@ -85,3 +85,21 @@ class Fmpeg:
             )
 
         return process
+
+    @staticmethod
+    def generate_thumbnail(filepath, output_path):
+        command = [
+            "ffmpeg",
+            "-ss",
+            "00:00:01",
+            "-i",
+            filepath,
+            "-vframes",
+            "1",
+            "-q:v",
+            "1",
+            "-y",
+            output_path,
+        ]
+
+        subprocess.run(command)

@@ -14,3 +14,10 @@ role_permission_table = Table(
     Column("role_id", ForeignKey("role_table.id"), primary_key=True),
     Column("permission_id", ForeignKey("permission_table.id"), primary_key=True),
 )
+
+user_favorite_record_table = Table(
+    "user_favorite_record_table",
+    db.metadata,
+    Column("user_favorite_id", ForeignKey("user_favorite_table.id"), primary_key=True),
+    Column("record_id", ForeignKey("record_table.id"), primary_key=True),
+)
