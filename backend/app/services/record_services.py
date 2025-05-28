@@ -65,9 +65,11 @@ def create_record(
 
 def delete_records(records):
     for record in records:
-        os.remove(record.path)
-        os.remove(record.thumbnail_path)
-        db.session.delete(record)
+        try:
+            os.remove(record.path)
+            os.remove(record.thumbnail_path)
+        finally:
+            db.session.delete(record)
 
     db.session.commit()
 
