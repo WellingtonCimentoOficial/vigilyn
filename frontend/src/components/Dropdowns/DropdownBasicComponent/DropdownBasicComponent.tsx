@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import styles from "./DropdownBasicComponent.module.css"
-import { PiDotsThree } from "react-icons/pi";
+import { PiPlugs } from "react-icons/pi";
 
 type DataType = {
     name: string
@@ -21,31 +21,34 @@ const DropdownBasicComponent = ({data, show, icon, callbackShow}: Props) => {
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
+            const clickedOutside = containerRef.current && !containerRef.current.contains(e.target as Node)
             if(containerRef.current && !containerRef.current.contains(e.target as Node)){
-                callbackShow(false)
+                if(clickedOutside && show){
+                    callbackShow(false)
+                }
             }
         }
 
         document.addEventListener("mousedown", handleClickOutside)
         return () => document.removeEventListener("mousedown", handleClickOutside)
-    }, [callbackShow])
+    }, [show, callbackShow])
 
     return (
         <div className={styles.containerOptions} ref={containerRef}>
             {icon ? (
                 React.cloneElement(icon, {
-                    className: styles.containerOptionsIcon,
+                    className: icon.props.className ?? styles.containerOptionsIcon,
                     onClick: () => callbackShow()
                 })
             ):(
-                <PiDotsThree className={styles.containerOptionsIcon} onClick={() => callbackShow()} />
+                <PiPlugs className={styles.containerOptionsIcon} onClick={() => callbackShow()} />
             )}
             <div 
                 className={`${styles.subContainerOptions} ${show ? styles.subContainerOptionsShow : ""}`} 
             >
                 {data.map((item, index) => (
                     <div key={index} className={`${styles.option} ${item.disabled ? styles.optionDisabled : ""}`} onClick={() => {item.callback();callbackShow()}}>
-                        {React.cloneElement(item.icon, {className: styles.optionIcon})}
+                        {React.cloneElement(item.icon, {className: `${styles.optionIcon} ${item.icon.props.className}`, style: item.icon.props.style})}
                         <span className={styles.optionText}>{item.name}</span>
                     </div>
                 ))}

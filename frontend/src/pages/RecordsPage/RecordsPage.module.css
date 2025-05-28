@@ -1,0 +1,8 @@
+.section1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.containerThumb {
+    flex-grow: 1;
+}

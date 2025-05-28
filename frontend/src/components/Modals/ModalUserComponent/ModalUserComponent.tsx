@@ -75,7 +75,7 @@ const ModalUserComponent = ({showModal, setShowModal}: Props) => {
                 const data = await updateMe(dataToUpdate)
                 setCurrentUser(prev => {
                     if(prev){
-                        return {...data, roles: prev.roles}
+                        return {...data, roles: prev.roles, favorite: prev.favorite}
                     }
                     return prev
                 })

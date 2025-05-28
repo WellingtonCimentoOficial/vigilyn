@@ -1,5 +1,5 @@
 import { useAxios } from "./useAxios"
-import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordType, RoleType, SettingsType, SettingsUpdateType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserExtendedType, UserPaginationType, UserType, UserUpdateType } from "../types/BackendTypes"
+import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordPaginationType, RoleType, SettingsType, SettingsUpdateType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserExtendedType, UserPaginationType, UserUpdateType } from "../types/BackendTypes"
 import { useCallback } from "react"
 
 type GetCameraProps = {
@@ -7,6 +7,12 @@ type GetCameraProps = {
     pid?: boolean
     requires_restart?: boolean
     is_recording?: boolean
+    page?: number
+    limit?: number
+}
+
+type GetRecordsProps = {
+    search?: string
     page?: number
     limit?: number
 }
@@ -57,7 +63,15 @@ export const useBackendRequests = () => {
 
     const updateMe = useCallback(async (userUpdateData: UserUpdateType) => {
         const response = await axiosPrivate.patch("/users/me/", {...userUpdateData})
-        const data: UserType = await response.data
+        const data: UserExtendedType = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const updateFavorite = useCallback(async (recordIds: number[]) => {
+        const response = await axiosPrivate.put("/users/me/favorites/", {
+            record_ids: recordIds
+        })
+        const data: UserExtendedType = await response.data
         return data
     }, [axiosPrivate])
 
@@ -128,9 +142,40 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
-    const getRecords = useCallback(async (cameraId: number) => {
-        const response = await axiosPrivate.get(`/cameras/${cameraId}/records/`)
-        const data: RecordType[] = response.data
+    const getRecords = useCallback(async ({ search, limit, page }: GetRecordsProps = {}) => {
+        const params = Object.fromEntries(
+            Object.entries({ search, page, limit })
+            .filter(([_, value]) => value != null)
+        )
+
+        const response = await axiosPrivate.get(`/records/`, {
+            params
+        })
+        const data: RecordPaginationType = response.data
+        return data
+    }, [axiosPrivate])
+
+    const getRecordThumbnail = useCallback(async (recordId: number) => {
+        const response = await axiosPrivate.get(`/records/${recordId}/video/thumbnail/`,{
+            responseType: "blob"
+        })
+        const blob = await response.data
+        const data: string = URL.createObjectURL(blob)
+        return data
+    }, [axiosPrivate])
+
+    const downloadRecord = useCallback(async (recordId: number) => {
+        const response = await axiosPrivate.get(`/records/${recordId}/video/download/`,{
+            responseType: "blob"
+        })
+        const blob = await response.data
+        const data: string = URL.createObjectURL(blob)
+        return data
+    }, [axiosPrivate])
+
+    const deleteRecord = useCallback(async (recordId: number) => {
+        const response = await axiosPrivate.delete(`/records/${recordId}/`)
+        const data: SuccessMessageType = await response.data
         return data
     }, [axiosPrivate])
 
@@ -179,7 +224,8 @@ export const useBackendRequests = () => {
         signIn, 
         signOut, 
         refreshTokens, 
-        getMe, 
+        getMe,
+        updateFavorite,
         getCameras,
         getCamera,
         deleteCamera,
@@ -193,6 +239,9 @@ export const useBackendRequests = () => {
         stopSystem,
         getStorage, 
         getRecords,
+        getRecordThumbnail,
+        downloadRecord,
+        deleteRecord,
         getUsers,
         getRoles,
         updateMe,

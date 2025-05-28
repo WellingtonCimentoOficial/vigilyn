@@ -16,3 +16,13 @@ export const formatDateTime = (isoString: string) => {
         hour12: true,
     }).format(new Date(isoString))
 }
+export const formatDuration = (seconds: number): string => {
+    const totalSeconds = Math.floor(seconds)
+    const minutes = Math.floor(totalSeconds / 60)
+    const remainingSeconds = totalSeconds % 60
+
+    const mm = minutes.toString().padStart(2, '0')
+    const ss = remainingSeconds.toString().padStart(2, '0')
+
+    return `${mm}:${ss}`
+}

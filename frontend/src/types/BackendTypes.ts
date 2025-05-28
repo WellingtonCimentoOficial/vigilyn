@@ -26,8 +26,14 @@ export type UserUpdateType = {
     confirm_password?: string
 }
 
+export type UserFavoriteType = {
+    id: number
+    records: number[]
+}
+
 export type UserExtendedType = UserType & {
     roles: RoleType[]
+    favorite: UserFavoriteType
 }
 
 export type TokensType = {
@@ -95,9 +101,13 @@ export type RecordType = {
     id: number
     name: string
     path: string
+    format: string
     duration_seconds: number
     created_at: string
     updated_at: string
+}
+export type RecordPaginationType = PaginationType & {
+    data: RecordType[]
 }
 export type ErrorType = {
     error: string

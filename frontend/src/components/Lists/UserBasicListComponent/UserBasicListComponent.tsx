@@ -26,7 +26,7 @@ const UserBasicListComponent = ({data}: Props) => {
                 try {
                     const user = data[i]
                     const roles = await getRoles(user.id)
-                    setUsers(currentValue => [...currentValue, {...user, roles: roles}])
+                    setUsers(currentValue => [...currentValue, {...user, roles: roles, favorite: {id: user.id, records: []}}])
                 } catch (error) {
                     setToastMessage({
                         "title": "Failed to load roles", 

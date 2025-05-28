@@ -4,7 +4,7 @@ import PageLayout from '../../layouts/PageLayout/PageLayout'
 import ButtonComponent from '../../components/Buttons/ButtonComponent/ButtonComponent'
 import { PiCamera } from "react-icons/pi";
 import { ChartType } from '../../types/FrontendTypes'
-import { CameraType, RecordType, UserType } from '../../types/BackendTypes'
+import { CameraType, UserType } from '../../types/BackendTypes'
 import { useBackendRequests } from '../../hooks/useBackRequests'
 import { ToastContext } from '../../contexts/ToastContext'
 import SectionComponent from '../../components/Sections/SectionComponent/SectionComponent'
@@ -24,7 +24,7 @@ const DashboardPage = (props: Props) => {
     const [system, setSystem] = useState<ChartType[]>([])
     const [timeIso, setTimeIso] = useState<string>("")
     const [storage, setStorage] = useState<ChartType[]>([])
-    const [records, setRecords] = useState<RecordType[]>([])
+    const [totalRecords, setTotalRecords] = useState<number>(0)
     const [users, setUsers] = useState<UserType[]>([])
 
     const { getCameras, getSystem, getStorage, getRecords, getUsers } = useBackendRequests()
@@ -89,22 +89,18 @@ const DashboardPage = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            let recordsArr = []
-            for(let i=0; i < cameras.length; i++){
-                try {
-                    const data = await getRecords(cameras[i].id)
-                    recordsArr.push(...data)
-                } catch (error) {
-                    setToastMessage({
-                        "title": "Failed to load records", 
-                        "description": "We couldn't fetch the records data. Please try again later.", 
-                        success: false
-                    })
-                }
+            try {
+                const data = await getRecords()
+                setTotalRecords(data.total_count)
+            } catch (error) {
+                setToastMessage({
+                    "title": "Failed to load records", 
+                    "description": "We couldn't fetch the records data. Please try again later.", 
+                    success: false
+                })
             }
-            setRecords(recordsArr)
         })()
-    }, [cameras, getRecords, setToastMessage])
+    }, [getRecords, setToastMessage])
 
     useEffect(() => {
         (async () => {
@@ -145,7 +141,7 @@ const DashboardPage = (props: Props) => {
                     <CardComponent href='/dashboard/cameras/' title='Cameras recording now' value={cameras.filter(camera => camera.is_recording).length} focus />
                     <CardComponent href='/dashboard/cameras/' title='Total Cameras' value={cameras.length} />
                     <CardComponent href='/dashboard/cameras/' title='Total Stopped Cameras' value={cameras.filter(camera => !camera.is_recording).length} />
-                    <CardComponent href='/dashboard/records/' title='Total Records' value={records.length} />
+                    <CardComponent href='/dashboard/records/' title='Total Records' value={totalRecords} />
                 </div>
                 <div className={styles.sectionContainer}>
                     <div className={styles.aside}>
