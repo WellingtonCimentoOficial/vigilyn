@@ -200,9 +200,12 @@ def restart_organize_records_async():
 
 
 def initialize_organize_records():
-    organize_records = OrganizeRecord.query.first()
-    if organize_records and not organize_records.has_process_running():
-        start_organize_records_async()
+    app = current_app._get_current_object()
+
+    with app.app_context():
+        organize_records = OrganizeRecord.query.first()
+        if organize_records and not organize_records.has_process_running():
+            start_organize_records_async()
 
 
 def filter_record(search_param, page, limit):
