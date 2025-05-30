@@ -43,23 +43,24 @@ def create_record(
     except:
         duration_seconds = segment_time
 
-    record = Record(
-        camera=camera,
-        name=name,
-        path=filepath,
-        format=filepath.split(".")[-1],
-        size_in_mb=size_in_mb,
-        created_at=(
-            created_at - timedelta(seconds=segment_time)
-            if not platform.system().lower() == "windows"
-            else created_at
-        ),
-        duration_seconds=duration_seconds,
-        thumbnail_path=thumbnail_filepath,
-    )
+    if not db.session.query(Record.query.filter_by(name=name).exists()).scalar():
+        record = Record(
+            camera=camera,
+            name=name,
+            path=filepath,
+            format=filepath.split(".")[-1],
+            size_in_mb=size_in_mb,
+            created_at=(
+                created_at - timedelta(seconds=segment_time)
+                if not platform.system().lower() == "windows"
+                else created_at
+            ),
+            duration_seconds=duration_seconds,
+            thumbnail_path=thumbnail_filepath,
+        )
 
-    db.session.add(record)
-    db.session.commit()
+        db.session.add(record)
+        db.session.commit()
 
     return record
 
