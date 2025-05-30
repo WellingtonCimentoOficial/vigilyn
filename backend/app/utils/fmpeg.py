@@ -4,6 +4,7 @@ import time
 from .email import Email
 from .utils import generate_rtsp_url
 import subprocess
+import os
 
 
 class Fmpeg:
@@ -31,7 +32,7 @@ class Fmpeg:
         log = Log()
 
         title = "%H-%M-%S"
-        filename = "_".join([str(camera.id), "%d-%m-%Y", title]) + self.video_format
+        filename = "_".join([str(camera.id), "%Y-%m-%d", title]) + self.video_format
 
         tmp_dir = get_settings().tmp_directory_path
         output_path = f"{tmp_dir}/{filename}"
@@ -88,6 +89,7 @@ class Fmpeg:
 
     @staticmethod
     def generate_thumbnail(filepath, output_path):
+        log = Log()
         try:
             command = [
                 "ffmpeg",
@@ -102,10 +104,13 @@ class Fmpeg:
                 "-y",
                 output_path,
             ]
-
             subprocess.run(command)
+
+            log.write(
+                log.ORGANIZER,
+                message=f"{os.path.basename(output_path)} moved to {os.path.dirname(output_path)}",
+            )
         except Exception as e:
-            log = Log()
             log.write(
                 log.GENERAL,
                 level="error",

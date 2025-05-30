@@ -4,13 +4,12 @@ from app.utils.utils import kill_processes
 from app.utils.logger import Log
 from flask import current_app
 from sqlalchemy import desc
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
 import os
 import subprocess
 import threading
 import psutil
-import platform
 
 
 def get_duration(filepath):
@@ -40,28 +39,24 @@ def get_duration(filepath):
 
 
 def create_record(
-    camera, filename, filepath, size_in_mb, segment_time, thumbnail_filepath
+    camera, filename, filepath, size_in_mb, segment_time, thumbnail_filepath, created_at
 ):
     try:
-        name = ".".join(filename.split(".")[:-1])
-        created_at = datetime.fromtimestamp(os.path.getctime(filepath), tz=timezone.utc)
         try:
             duration_seconds = get_duration(filepath)
         except:
             duration_seconds = segment_time
 
-        if not db.session.query(Record.query.filter_by(name=name).exists()).scalar():
+        if not db.session.query(
+            Record.query.filter_by(path=filepath).exists()
+        ).scalar():
             record = Record(
                 camera=camera,
-                name=name,
+                name=filename,
                 path=filepath,
                 format=filepath.split(".")[-1],
                 size_in_mb=size_in_mb,
-                created_at=(
-                    created_at - timedelta(seconds=segment_time)
-                    if not platform.system().lower() == "windows"
-                    else created_at
-                ),
+                created_at=created_at,
                 duration_seconds=duration_seconds,
                 thumbnail_path=thumbnail_filepath,
             )
