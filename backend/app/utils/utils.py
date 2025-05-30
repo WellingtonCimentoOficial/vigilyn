@@ -34,15 +34,17 @@ def generate_rtsp_url(camera):
 def kill_process(pid):
     try:
         proc = psutil.Process(pid)
-
         children = proc.children(recursive=True)
 
         for child in children:
             child.terminate()
-
         proc.terminate()
 
-        proc.wait(timeout=3)
+        try:
+            proc.wait(timeout=3)
+        except psutil.TimeoutExpired:
+            proc.kill()
+            proc.wait(timeout=3)
 
         if proc.is_running():
             return False
