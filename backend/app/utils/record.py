@@ -17,7 +17,7 @@ def organize_records():
     records_dir = os.path.join(base_dir, "records")
     thumbnails_dir = os.path.join(base_dir, "thumbnails")
     tmp_dir = settings.tmp_directory_path
-    timeout = Fmpeg.TIMEOUT
+    timeout = Fmpeg.TIMEOUT + 5
 
     while True:
         for filename in os.listdir(tmp_dir):
