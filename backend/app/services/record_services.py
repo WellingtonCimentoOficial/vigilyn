@@ -6,10 +6,12 @@ from flask import current_app
 from sqlalchemy import desc
 from datetime import datetime
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
+from app.utils.settings import get_settings
 import os
 import subprocess
 import threading
 import psutil
+import fcntl
 
 
 def get_duration(filepath):
@@ -200,12 +202,18 @@ def restart_organize_records_async():
 
 
 def initialize_organize_records():
-    app = current_app._get_current_object()
+    settings = get_settings()
+    lock_file = os.path.join(settings.tmp_directory_path, "initialize_camera.lock")
 
-    with app.app_context():
-        organize_records = OrganizeRecord.query.first()
-        if organize_records and not organize_records.has_process_running():
-            start_organize_records_async()
+    with open(lock_file, "w") as lockfile:
+        try:
+            fcntl.flock(lockfile, fcntl.LOCK_EX)
+
+            organize_records = OrganizeRecord.query.first()
+            if organize_records and not organize_records.has_process_running():
+                start_organize_records_async()
+        finally:
+            fcntl.flock(lockfile, fcntl.LOCK_UN)
 
 
 def filter_record(search_param, page, limit):
