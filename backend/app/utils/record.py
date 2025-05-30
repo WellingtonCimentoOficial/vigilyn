@@ -60,10 +60,10 @@ def organize_records():
                     category=log.ORGANIZER,
                     message=f"{new_filename} moved to {camera_dir}",
                 )
-            except:
+            except Exception as e:
                 log.write(
                     category=log.ORGANIZER,
-                    message=f"Error moving {filename}",
+                    message=f"func: organize_records error: Error moving {filename} {str(e)}",
                     level="error",
                 )
 

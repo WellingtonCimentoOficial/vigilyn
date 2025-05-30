@@ -14,91 +14,131 @@ import platform
 
 
 def get_duration(filepath):
-    duration_seconds = subprocess.run(
-        [
-            "ffprobe",
-            "-v",
-            "error",
-            "-show_entries",
-            "format=duration",
-            "-of",
-            "default=noprint_wrappers=1:nokey=1",
-            filepath,
-        ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        check=True,
-    )
-    return float(duration_seconds.stdout.strip())
+    try:
+        duration_seconds = subprocess.run(
+            [
+                "ffprobe",
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=noprint_wrappers=1:nokey=1",
+                filepath,
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True,
+        )
+        return float(duration_seconds.stdout.strip())
+    except Exception as e:
+        log = Log()
+        log.write(
+            log.GENERAL, level="error", message=f"func: get_duration error: {str(e)}"
+        )
 
 
 def create_record(
     camera, filename, filepath, size_in_mb, segment_time, thumbnail_filepath
 ):
-    name = ".".join(filename.split(".")[:-1])
-    created_at = datetime.fromtimestamp(os.path.getctime(filepath), tz=timezone.utc)
     try:
-        duration_seconds = get_duration(filepath)
-    except:
-        duration_seconds = segment_time
+        name = ".".join(filename.split(".")[:-1])
+        created_at = datetime.fromtimestamp(os.path.getctime(filepath), tz=timezone.utc)
+        try:
+            duration_seconds = get_duration(filepath)
+        except:
+            duration_seconds = segment_time
 
-    if not db.session.query(Record.query.filter_by(name=name).exists()).scalar():
-        record = Record(
-            camera=camera,
-            name=name,
-            path=filepath,
-            format=filepath.split(".")[-1],
-            size_in_mb=size_in_mb,
-            created_at=(
-                created_at - timedelta(seconds=segment_time)
-                if not platform.system().lower() == "windows"
-                else created_at
-            ),
-            duration_seconds=duration_seconds,
-            thumbnail_path=thumbnail_filepath,
+        if not db.session.query(Record.query.filter_by(name=name).exists()).scalar():
+            record = Record(
+                camera=camera,
+                name=name,
+                path=filepath,
+                format=filepath.split(".")[-1],
+                size_in_mb=size_in_mb,
+                created_at=(
+                    created_at - timedelta(seconds=segment_time)
+                    if not platform.system().lower() == "windows"
+                    else created_at
+                ),
+                duration_seconds=duration_seconds,
+                thumbnail_path=thumbnail_filepath,
+            )
+
+            db.session.add(record)
+            db.session.commit()
+
+        return record
+    except Exception as e:
+        log = Log()
+        log.write(
+            log.GENERAL, level="error", message=f"func: create_record error: {str(e)}"
         )
-
-        db.session.add(record)
-        db.session.commit()
-
-    return record
 
 
 def delete_records(records):
-    for record in records:
-        try:
-            os.remove(record.path)
-            os.remove(record.thumbnail_path)
-        except Exception as e:
-            log = Log()
-            log.write(
-                category=log.GENERAL,
-                level="error",
-                message=f"func: delete_records error: {str(e)}",
-            )
-        finally:
-            db.session.delete(record)
+    try:
+        for record in records:
+            try:
+                for file_path in [record.path, record.thumbnail_path]:
+                    try:
+                        os.remove(file_path)
+                    except FileNotFoundError:
+                        pass
+                    except Exception:
+                        raise
 
-    db.session.commit()
+                db.session.delete(record)
+            except Exception as e:
+                log = Log()
+                log.write(
+                    category=log.GENERAL,
+                    level="error",
+                    message=f"func: delete_records error: {str(e)}",
+                )
+        db.session.commit()
+    except Exception as e:
+        log = Log()
+        log.write(
+            category=log.GENERAL,
+            level="error",
+            message=f"func: delete_records error: {str(e)}",
+        )
 
 
 def create_organize_record(pid, timestamp):
-    OrganizeRecord.query.delete()
-    db.session.commit()
+    try:
+        OrganizeRecord.query.delete()
+        db.session.commit()
 
-    organize_record = OrganizeRecord(
-        pid=pid, started_at=datetime.fromtimestamp(timestamp)
-    )
-    db.session.add(organize_record)
-    db.session.commit()
+        organize_record = OrganizeRecord(
+            pid=pid, started_at=datetime.fromtimestamp(timestamp)
+        )
+        db.session.add(organize_record)
+        db.session.commit()
 
-    return organize_record
+        return organize_record
+    except Exception as e:
+        log = Log()
+        log.write(
+            log.GENERAL,
+            level="error",
+            message=f"func: create_organize_record error: {str(e)}",
+        )
 
 
 def get_organize_record():
-    organize_records = OrganizeRecord.query.first()
-    return organize_records
+    try:
+        organize_records = OrganizeRecord.query.first()
+        return organize_records
+    except Exception as e:
+        log = Log()
+        log.write(
+            log.GENERAL,
+            level="error",
+            message=f"func: get_organize_record error: {str(e)}",
+        )
 
 
 def start_organize_records_async():
@@ -168,19 +208,25 @@ def initialize_organize_records():
 
 
 def filter_record(search_param, page, limit):
-    if not str(page).isdigit():
-        raise UrlPageParamException()
+    try:
+        if not str(page).isdigit():
+            raise UrlPageParamException()
 
-    if not str(limit).isdigit():
-        raise UrlLimitParamException()
+        if not str(limit).isdigit():
+            raise UrlLimitParamException()
 
-    page = int(page)
-    limit = int(limit)
-    query = db.session.query(Record)
+        page = int(page)
+        limit = int(limit)
+        query = db.session.query(Record)
 
-    if search_param:
-        query = query.filter(Record.name.ilike(f"%{search_param}%"))
+        if search_param:
+            query = query.filter(Record.name.ilike(f"%{search_param}%"))
 
-    query = query.order_by(desc(Record.id))
+        query = query.order_by(desc(Record.id))
 
-    return query.offset((page - 1) * limit).limit(limit), query.count()
+        return query.offset((page - 1) * limit).limit(limit), query.count()
+    except Exception as e:
+        log = Log()
+        log.write(
+            log.GENERAL, level="error", message=f"func: filter_record error: {str(e)}"
+        )
