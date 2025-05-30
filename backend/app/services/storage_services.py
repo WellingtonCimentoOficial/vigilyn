@@ -2,7 +2,7 @@ from app.models.storage_models import StorageChecker
 from app.models.record_models import Record
 from sqlalchemy import func
 from app.extensions import db
-from app.utils.utils import kill_processes
+from app.utils.utils import kill_process
 from flask import current_app
 import os
 import subprocess
@@ -78,7 +78,7 @@ def stop_storage_checker():
     storage_checker = get_storage_checker()
 
     if storage_checker and storage_checker.has_process_running():
-        killed_processes = kill_processes([storage_checker.pid])
+        killed_processes = kill_process(storage_checker.pid)
 
         if killed_processes:
             db.session.delete(storage_checker)

@@ -1,6 +1,6 @@
 from app.extensions import db
 from app.models.camera_models import Camera
-from app.utils.utils import kill_processes
+from app.utils.utils import kill_process
 from flask import current_app
 from app.exceptions.camera_exceptions import (
     CameraAlreadyExistsException,
@@ -25,7 +25,7 @@ import psutil
 def stop_camera(camera):
     try:
         if camera.has_process_running():
-            killed_processes = kill_processes([camera.pid])
+            killed_processes = kill_process(camera.pid)
 
             if killed_processes:
                 camera.pid = None
@@ -152,13 +152,18 @@ def start_camera_async(camera):
         venv_python = os.path.join(
             current_app.config["BASE_DIR"], "venv", "bin", "python3"
         )
-        command = [venv_python, "-m", "app.workers.camera_worker", str(camera.id)]
+        command = [
+            venv_python,
+            "-m",
+            "app.workers.camera_worker",
+            str(camera.id),
+        ]
 
         process = subprocess.Popen(
             command,
-            start_new_session=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
+            preexec_fn=os.setsid,
         )
 
         camera.pid = process.pid

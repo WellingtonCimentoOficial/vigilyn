@@ -1,6 +1,6 @@
 from app.extensions import db
 from app.models.record_models import Record, OrganizeRecord
-from app.utils.utils import kill_processes
+from app.utils.utils import kill_process
 from app.utils.logger import Log
 from flask import current_app
 from sqlalchemy import desc
@@ -164,7 +164,7 @@ def stop_organize_records():
     organize_record = get_organize_record()
 
     if organize_record and organize_record.has_process_running():
-        killed_processes = kill_processes([organize_record.pid])
+        killed_processes = kill_process(organize_record.pid)
 
         if killed_processes:
             db.session.delete(organize_record)

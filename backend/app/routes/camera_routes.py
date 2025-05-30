@@ -37,8 +37,7 @@ def get_all():
     is_recording_param = request.args.get("is_recording")
     requires_restart_param = request.args.get("requires_restart")
     limit_param = request.args.get(
-        "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"],
-        type=int
+        "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"], type=int
     )
 
     cameras, total = filter_camera(
@@ -50,14 +49,14 @@ def get_all():
         page=page_param,
     )
     cameras_schema = CameraSchema(many=True).dump(cameras)
-    
+
     data = generate_pagination_response(
-        current_page=page_param, 
+        current_page=page_param,
         total_count=total,
-        limit=limit_param, 
-        data=cameras_schema
+        limit=limit_param,
+        data=cameras_schema,
     )
-    
+
     return jsonify(data)
 
 
@@ -78,7 +77,7 @@ def get(pk):
 def create():
     schema = CameraCreateUpdateSchema()
     data = schema.load(request.json)
-    
+
     new_camera = create_camera(**data)
     new_camera_schema = CameraSchema()
     new_camera_data = new_camera_schema.dump(new_camera)
@@ -93,7 +92,7 @@ def update(pk):
     camera = Camera.query.get_or_404(pk)
     schema = CameraCreateUpdateSchema()
     data = schema.load(request.json)
-    
+
     camera_updated = update_camera(camera, **data)
     camera_updated_schema = CameraSchema()
     camera_updated_data = camera_updated_schema.dump(camera_updated)

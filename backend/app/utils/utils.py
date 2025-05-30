@@ -1,10 +1,12 @@
 import os
 import time
+import psutil
 from .settings import get_settings
 import signal
 from flask import jsonify
 from sqlalchemy import inspect
 from app.extensions import db
+from app.utils.logger import Log
 
 
 def create_tmp_dir():
@@ -29,19 +31,34 @@ def generate_rtsp_url(camera):
     return url
 
 
-def kill_processes(pids):
-    killed_processes = []
+def kill_process(pid):
+    try:
+        proc = psutil.Process(pid)
 
-    for pid in pids:
-        try:
-            os.killpg(os.getpgid(pid), signal.SIGTERM)
-        except Exception as e:
-            if not isinstance(e, ProcessLookupError):
-                continue
+        children = proc.children(recursive=True)
 
-        killed_processes.append(pid)
+        for child in children:
+            child.terminate()
 
-    return killed_processes
+        proc.terminate()
+
+        proc.wait(timeout=3)
+
+        if proc.is_running():
+            return False
+
+    except psutil.NoSuchProcess:
+        pass
+
+    except Exception as e:
+        log = Log()
+        log.write(
+            log.GENERAL,
+            level="error",
+            message=f"func: kill_process error (PID {pid}): {str(e)}",
+        )
+
+    return True
 
 
 def generate_error_message(error, message, status_code):
