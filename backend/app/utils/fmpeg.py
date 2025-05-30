@@ -92,7 +92,7 @@ class Fmpeg:
             command = [
                 "ffmpeg",
                 "-ss",
-                "00:00:01",
+                "00:00:03",
                 "-i",
                 filepath,
                 "-vframes",
