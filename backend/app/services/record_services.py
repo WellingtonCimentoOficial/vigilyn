@@ -34,7 +34,9 @@ def get_duration(filepath):
     except Exception as e:
         log = Log()
         log.write(
-            log.GENERAL, level="error", message=f"func: get_duration error: {str(e)}"
+            log.GENERAL,
+            level="error",
+            message=f"func: get_duration error: {str(e.stderr)}",
         )
 
 
