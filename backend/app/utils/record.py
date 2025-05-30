@@ -3,7 +3,7 @@ from app.utils.logger import Log
 from app.utils.settings import get_settings
 from app.utils.utils import is_idle
 from app.models.camera_models import Camera
-from app.services.record_services import create_record
+from app.services.record_services import create_record, get_duration
 from app.utils.fmpeg import Fmpeg
 from datetime import datetime, timezone
 import os
@@ -33,6 +33,7 @@ def organize_records():
                 camera = Camera.query.get(int(filename.split("_")[0]))
 
                 filename_without_ext = os.path.splitext(filename)[0]
+                duration_seconds = get_duration(filepath)
 
                 os.makedirs(records_dir, exist_ok=True)
 
@@ -57,7 +58,11 @@ def organize_records():
                     filepath=new_filepath,
                     thumbnail_filepath=thumbnail_filepath,
                     size_in_mb=os.path.getsize(new_filepath) / (1024 * 1024),
-                    segment_time=settings.segment_time,
+                    duration_seconds=(
+                        duration_seconds
+                        if isinstance(duration_seconds, float)
+                        else settings.segment_time
+                    ),
                     created_at=datetime_obj,
                 )
 

@@ -39,14 +39,15 @@ def get_duration(filepath):
 
 
 def create_record(
-    camera, filename, filepath, size_in_mb, segment_time, thumbnail_filepath, created_at
+    camera,
+    filename,
+    filepath,
+    size_in_mb,
+    thumbnail_filepath,
+    created_at,
+    duration_seconds,
 ):
     try:
-        try:
-            duration_seconds = get_duration(filepath)
-        except:
-            duration_seconds = segment_time
-
         if not db.session.query(
             Record.query.filter_by(path=filepath).exists()
         ).scalar():
