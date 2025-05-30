@@ -163,9 +163,9 @@ def start_camera_async(camera):
 
         process = subprocess.Popen(
             command,
+            start_new_session=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
-            preexec_fn=os.setsid,
         )
 
         camera.pid = process.pid

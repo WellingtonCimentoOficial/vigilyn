@@ -203,7 +203,9 @@ def restart_organize_records_async():
 
 def initialize_organize_records():
     settings = get_settings()
-    lock_file = os.path.join(settings.tmp_directory_path, "initialize_camera.lock")
+    lock_file = os.path.join(
+        settings.tmp_directory_path, "initialize_organize_records.lock"
+    )
 
     with open(lock_file, "w") as lockfile:
         try:
