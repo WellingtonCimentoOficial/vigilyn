@@ -16,10 +16,12 @@ from app.exceptions.camera_exceptions import (
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
 from sqlalchemy import or_, desc
 from datetime import datetime
+from app.utils.settings import get_settings
 import threading
 import subprocess
 import os
 import psutil
+import fcntl
 
 
 def stop_camera(camera):
@@ -244,7 +246,16 @@ def filter_camera(
 
 
 def initialize_camera_processes():
-    cameras = Camera.query.filter(Camera.pid.isnot(None)).all()
-    for camera in cameras:
-        if not camera.has_process_running():
-            start_camera_async(camera)
+    settings = get_settings()
+    lock_file = os.path.join(settings.tmp_directory_path, "initialize_camera.lock")
+
+    with open(lock_file, "w") as lockfile:
+        try:
+            fcntl.flock(lockfile, fcntl.LOCK_EX)
+
+            cameras = Camera.query.filter(Camera.pid.isnot(None)).all()
+            for camera in cameras:
+                if not camera.has_process_running():
+                    start_camera_async(camera)
+        finally:
+            fcntl.flock(lockfile, fcntl.LOCK_UN)
