@@ -74,6 +74,7 @@ const RecordsPage = (props: Props) => {
         const year = date.getFullYear()
         const month = String(date.getMonth() + 1).padStart(2, '0')
         const day = String(date.getDate()).padStart(2, '0')
+
         return `${year}-${month}-${day}`
     }
 
@@ -194,23 +195,30 @@ const RecordsPage = (props: Props) => {
                         })()}
                         <DropdownFilterRecordsComponent 
                             show={showFilters}
+                            isLoading={isLoading}
                             callback={(props) => {setShowFavoritesFilter(props.showFavorites);setInitialDateFilter(props.initialDate);setFinalDateFilter(props.finalDate)}}
                             callbackShow={(value) => setShowFilters(current => value ?? !current)}
                         />
                     </div>
                 </div>
                 <div className={styles.section1}>
-                    {records.map(record => (
-                        <div key={record.id} className={styles.containerThumb}>
-                            <CardThumbnailComponent record={record} callback={handleRemove} />
-                            <div className={styles.containerCheckbox}>
-                                <CheckBoxComponent 
-                                    checked={checkedItems.find(item => item.id === record.id)?.checked ?? false}
-                                    callback={(checked) => handleCheck(record.id, checked)}
-                                />
-                            </div>
-                        </div>
-                    ))}
+                    {records.length > 0 ? (
+                        <>
+                            {records.map(record => (
+                                <div key={record.id} className={styles.containerThumb}>
+                                    <CardThumbnailComponent record={record} callback={handleRemove} />
+                                    <div className={styles.containerCheckbox}>
+                                        <CheckBoxComponent 
+                                            checked={checkedItems.find(item => item.id === record.id)?.checked ?? false}
+                                            callback={(checked) => handleCheck(record.id, checked)}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </>
+                    ):(
+                        <span style={{textAlign: "center", color: "var(--black-color-light)", width: "100%"}}>nothing to see around here...</span>
+                    )}
                 </div>
                 <ModalConfirmationComponent
                     showModal={showConfirmation} 

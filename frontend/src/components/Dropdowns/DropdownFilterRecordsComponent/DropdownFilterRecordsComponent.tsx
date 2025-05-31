@@ -12,13 +12,14 @@ type CallbackProps = {
 }
 type Props = {
     show: boolean
+    isLoading?: boolean
     callbackShow: (value?: boolean) => void
     callback: ({showFavorites, initialDate, finalDate}: CallbackProps) => void
 }
 
-const DropdownFilterRecordsComponent = ({show, callback, callbackShow}: Props) => {
+const DropdownFilterRecordsComponent = ({show, isLoading, callback, callbackShow}: Props) => {
     const containerRef = useRef<HTMLDivElement>(null)
-    const [rangeIsActive, setRangeIsActive] = useState<boolean>(false)
+    const [rangeIsActive, setRangeIsActive] = useState<boolean>(true)
     const [showInitialCalendar, setShowInitialCalendar] = useState<boolean>(false)
     const [showFinalCalendar, setShowFinalCalendar] = useState<boolean>(false)
     const [initialDate, setInitialDate] = useState<Date>(new Date())
@@ -26,10 +27,13 @@ const DropdownFilterRecordsComponent = ({show, callback, callbackShow}: Props) =
     const [showFavorites, setShowFavorites] = useState<boolean>(false)
     const [filtersActiveCount, setFiltersActiveCount] = useState<number>(0)
     const [apply, setApply] = useState<boolean>(false)
+    const [applyIsLoading, setApplyIsLoading] = useState<boolean>(false)
+    const [resetIsLoading, setResetIsLoading] = useState<boolean>(false)
 
     const handleDisableFilters = () => {
         setRangeIsActive(false)
         setShowFavorites(false)
+        setResetIsLoading(true)
         setApply(true)
     }
 
@@ -65,6 +69,14 @@ const DropdownFilterRecordsComponent = ({show, callback, callbackShow}: Props) =
         }
     }, [showFavorites, rangeIsActive, initialDate, finalDate, apply, callback])
 
+    useEffect(() => {
+        if(!isLoading && (applyIsLoading || resetIsLoading)){
+            setApplyIsLoading(false)
+            setResetIsLoading(false)
+            callbackShow(false)
+        }
+    }, [isLoading, applyIsLoading, resetIsLoading, callbackShow])
+
     return (
         <div className={styles.containerOptions} ref={containerRef}>
             <ButtonFilterComponent 
@@ -81,6 +93,7 @@ const DropdownFilterRecordsComponent = ({show, callback, callbackShow}: Props) =
                             <DropdownCalendarComponent
                                 show={showInitialCalendar} 
                                 data={initialDate}
+                                disabled={resetIsLoading || applyIsLoading}
                                 callbackShow={(value) => setShowInitialCalendar(current => value ?? !current)} 
                                 callback={(value) => {setInitialDate(value);setRangeIsActive(true)}}
                             />
@@ -90,6 +103,7 @@ const DropdownFilterRecordsComponent = ({show, callback, callbackShow}: Props) =
                             <DropdownCalendarComponent 
                                 show={showFinalCalendar} 
                                 data={finalDate}
+                                disabled={resetIsLoading || applyIsLoading}
                                 callbackShow={(value) => setShowFinalCalendar(current => value ?? !current)} 
                                 callback={(value) => {setFinalDate(value);setRangeIsActive(true)}}
                             />
@@ -104,6 +118,7 @@ const DropdownFilterRecordsComponent = ({show, callback, callbackShow}: Props) =
                             checked={showFavorites} 
                             callback={() => setShowFavorites(current => !current)}
                             size={3}
+                            disabled={resetIsLoading || applyIsLoading}
                         />
                     </div>
                 </div>
@@ -112,17 +127,17 @@ const DropdownFilterRecordsComponent = ({show, callback, callbackShow}: Props) =
                         <ButtonComponent 
                             className={styles.button}
                             text="Reset all"
-                            disabled={false}
-                            isLoading={false}
-                            onClick={() => {handleDisableFilters();callbackShow()}}
+                            disabled={resetIsLoading || filtersActiveCount === 0}
+                            isLoading={resetIsLoading}
+                            onClick={() => filtersActiveCount > 0 && handleDisableFilters()}
                         />
                         <ButtonComponent 
                             className={styles.button}
                             text="Apply now"
-                            disabled={false}
-                            isLoading={false}
+                            disabled={applyIsLoading}
+                            isLoading={applyIsLoading}
                             filled
-                            onClick={() => {setApply(true);callbackShow()}}
+                            onClick={() => {setApply(true);setApplyIsLoading(true)}}
                         />
                     </div>
                 </div>

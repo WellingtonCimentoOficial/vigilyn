@@ -16,6 +16,10 @@
     background-color: white;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
 }
+.disabled {
+    opacity: 50%;
+    pointer-events: none;
+}
 .title {
     color: var(--black-color-light);
 }

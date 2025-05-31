@@ -8,11 +8,12 @@ import { PiCalendar } from "react-icons/pi";
 type Props = {
     data: Date
     show: boolean
+    disabled?: boolean
     callbackShow: (value?: boolean) => void
     callback: (value: Date) => void
 }
 
-const DropdownCalendarComponent = ({show, data, callback, callbackShow}: Props) => {
+const DropdownCalendarComponent = ({show, data, disabled, callback, callbackShow}: Props) => {
     const containerRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -35,7 +36,7 @@ const DropdownCalendarComponent = ({show, data, callback, callbackShow}: Props) 
 
     return (
         <div className={styles.wrapper} ref={containerRef}>
-            <div className={styles.header} onClick={() => callbackShow()}>
+            <div className={`${styles.header} ${disabled ? styles.disabled : ""}`} onClick={() => callbackShow()}>
                 <span className={styles.title}>
                     {handleFormat()}
                 </span>
