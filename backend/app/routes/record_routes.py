@@ -102,14 +102,10 @@ def delete(record_pk):
 @authentication_required()
 @permission_required("delete_record")
 def delete_all():
-    ids = request.get_json()
-
     schema = RecordIdsSchema()
-    errors = schema.validate(ids)
-    if errors:
-        return jsonify(errors), 400
+    data = schema.load(request.json)
 
-    records = Record.query.filter(Record.id.in_(ids)).all()
+    records = Record.query.filter(Record.id.in_(data["ids"])).all()
 
     if not records:
         return jsonify({"error": "No records found"}), 404

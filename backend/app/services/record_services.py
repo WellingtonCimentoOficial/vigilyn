@@ -233,9 +233,12 @@ def filter_record(search_param, page, limit):
         if search_param:
             query = query.filter(Record.name.ilike(f"%{search_param}%"))
 
-        query = query.order_by(desc(Record.id))
+        total = query.count()
+        paginated_query = (
+            query.order_by(desc(Record.id)).offset((page - 1) * limit).limit(limit)
+        )
 
-        return query.offset((page - 1) * limit).limit(limit), query.count()
+        return paginated_query.all(), total
     except Exception as e:
         log = Log()
         log.write(

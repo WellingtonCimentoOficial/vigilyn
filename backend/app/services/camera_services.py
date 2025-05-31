@@ -240,9 +240,12 @@ def filter_camera(
         else:
             query = query.filter(Camera.is_recording == False)
 
-    query = query.order_by(desc(Camera.id))
+    total = query.count()
+    paginated_query = (
+        query.order_by(desc(Camera.id)).offset((page - 1) * limit).limit(limit)
+    )
 
-    return query.offset((page - 1) * limit).limit(limit), query.count()
+    return paginated_query.all(), total
 
 
 def initialize_camera_processes():

@@ -98,9 +98,13 @@ def filter_user(search_param, role_param, is_active_param, page, limit):
         )
 
     query = query.filter(User.is_active == is_active_param)
-    query = query.order_by(desc(User.id))
 
-    return query.offset((page - 1) * limit).limit(limit), query.count()
+    total = query.count()
+    paginated_query = (
+        query.order_by(desc(User.id)).offset((page - 1) * limit).limit(limit)
+    )
+
+    return paginated_query.all(), total
 
 
 def update_user_favorite(user, record_ids):
