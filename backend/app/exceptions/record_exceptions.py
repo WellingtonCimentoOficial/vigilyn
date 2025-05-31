@@ -13,3 +13,9 @@ class RecordThumbnailNotFoundException(AppException):
         "The thumbnail for the requested record was not found on the server."
     )
     status_code = 404
+
+
+class RecordShowFavoritesParamException(AppException):
+    default_error = "invalid_record_show_favorites_param"
+    default_message = "The value of the 'show_favorites' field is invalid"
+    status_code = 400

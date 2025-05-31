@@ -6,6 +6,7 @@ from flask import current_app
 from sqlalchemy import desc
 from datetime import datetime
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
+from app.exceptions.record_exceptions import RecordShowFavoritesParamException
 from app.utils.settings import get_settings
 import os
 import subprocess
@@ -218,7 +219,15 @@ def initialize_organize_records():
             fcntl.flock(lockfile, fcntl.LOCK_UN)
 
 
-def filter_record(search_param, page, limit):
+def filter_record(
+    search_param,
+    page,
+    limit,
+    show_favorites_param,
+    initial_date_param,
+    final_date_param,
+    favorite_record_ids,
+):
     try:
         if not str(page).isdigit():
             raise UrlPageParamException()
@@ -226,12 +235,22 @@ def filter_record(search_param, page, limit):
         if not str(limit).isdigit():
             raise UrlLimitParamException()
 
+        if (
+            show_favorites_param != None
+            and show_favorites_param != "true"
+            and show_favorites_param != "false"
+        ):
+            raise RecordShowFavoritesParamException()
+
         page = int(page)
         limit = int(limit)
         query = db.session.query(Record)
 
         if search_param:
             query = query.filter(Record.name.ilike(f"%{search_param}%"))
+
+        if show_favorites_param == "true":
+            query = query.filter(Record.id.in_(favorite_record_ids))
 
         total = query.count()
         paginated_query = (

@@ -50,7 +50,7 @@ def organize_records():
                     " ".join(filename_without_ext.split("_")[1:]), "%Y-%m-%d %H-%M-%S"
                 ).replace(tzinfo=timezone.utc)
                 date_str = datetime_obj.strftime("%Y/%m/%d")
-                time_str = datetime_obj.strftime("%H-%M-%S")
+                time_str = datetime_obj.strftime("%H:%M:%S")
 
                 create_record(
                     camera=camera,

@@ -9,6 +9,8 @@ from app.exceptions.record_exceptions import (
     RecordNotFoundException,
     RecordThumbnailNotFoundException,
 )
+from app.models.user_models import User
+from flask_jwt_extended import get_jwt_identity
 import os
 
 record_bp = Blueprint("records", __name__, url_prefix="/api/records/")
@@ -23,9 +25,21 @@ def get_all():
     limit_param = request.args.get(
         "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"], type=int
     )
+    show_favorites_param = request.args.get("show_favorites")
+    initial_date_param = request.args.get("initial_date")
+    final_date_param = request.args.get("final_date")
+
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
 
     records, total = filter_record(
-        search_param=search_param, limit=limit_param, page=page_param
+        search_param=search_param,
+        limit=limit_param,
+        page=page_param,
+        show_favorites_param=show_favorites_param,
+        initial_date_param=initial_date_param,
+        final_date_param=final_date_param,
+        favorite_record_ids=[record.id for record in user.favorite.records],
     )
     records_schema = RecordSchema(many=True).dump(records)
 
