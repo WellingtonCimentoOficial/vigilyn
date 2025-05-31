@@ -2,7 +2,6 @@ import os
 import time
 import psutil
 from .settings import get_settings
-import signal
 from flask import jsonify
 from sqlalchemy import inspect
 from app.extensions import db

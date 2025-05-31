@@ -1,11 +1,15 @@
 from app.extensions import db
 from app.models.record_models import Record, OrganizeRecord
 from app.utils.utils import kill_process
+from app.utils.validators import validate_date_range
 from app.utils.logger import Log
 from flask import current_app
 from sqlalchemy import desc
 from datetime import datetime
-from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
+from app.exceptions.url_exceptions import (
+    UrlLimitParamException,
+    UrlPageParamException,
+)
 from app.exceptions.record_exceptions import RecordShowFavoritesParamException
 from app.utils.settings import get_settings
 import os
@@ -242,6 +246,11 @@ def filter_record(
         ):
             raise RecordShowFavoritesParamException()
 
+        if initial_date_param != None or final_date_param != None:
+            initial_date_param, final_date_param = validate_date_range(
+                initial_date_param, final_date_param
+            )
+
         page = int(page)
         limit = int(limit)
         query = db.session.query(Record)
@@ -251,6 +260,11 @@ def filter_record(
 
         if show_favorites_param == "true":
             query = query.filter(Record.id.in_(favorite_record_ids))
+
+        if initial_date_param and final_date_param:
+            query = query.filter(
+                Record.created_at.between(initial_date_param, final_date_param)
+            )
 
         total = query.count()
         paginated_query = (
