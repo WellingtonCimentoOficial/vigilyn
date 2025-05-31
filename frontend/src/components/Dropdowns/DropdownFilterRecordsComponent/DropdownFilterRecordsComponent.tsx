@@ -5,14 +5,18 @@ import DropdownCalendarComponent from '../DropdownCalendarComponent/DropdownCale
 import ButtonComponent from '../../Buttons/ButtonComponent/ButtonComponent'
 import CheckBoxSwitchComponent from '../../Checkboxes/CheckBoxSwitchComponent/CheckBoxSwitchComponent'
 
+type CallbackProps = {
+    showFavorites: boolean
+    initialDate: Date | null
+    finalDate: Date | null
+}
 type Props = {
     show: boolean
-    data: []
     callbackShow: (value?: boolean) => void
-    callback: (id: number, checked: boolean) => void
+    callback: ({showFavorites, initialDate, finalDate}: CallbackProps) => void
 }
 
-const DropdownFilterRecordsComponent = ({show, data, callback, callbackShow}: Props) => {
+const DropdownFilterRecordsComponent = ({show, callback, callbackShow}: Props) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const [rangeIsActive, setRangeIsActive] = useState<boolean>(false)
     const [showInitialCalendar, setShowInitialCalendar] = useState<boolean>(false)
@@ -21,10 +25,12 @@ const DropdownFilterRecordsComponent = ({show, data, callback, callbackShow}: Pr
     const [finalDate, setFinalDate] = useState<Date>(new Date())
     const [showFavorites, setShowFavorites] = useState<boolean>(false)
     const [filtersActiveCount, setFiltersActiveCount] = useState<number>(0)
+    const [apply, setApply] = useState<boolean>(false)
 
     const handleDisableFilters = () => {
         setRangeIsActive(false)
         setShowFavorites(false)
+        setApply(true)
     }
 
     useEffect(() => {
@@ -47,6 +53,17 @@ const DropdownFilterRecordsComponent = ({show, data, callback, callbackShow}: Pr
             }
         }
     }, [rangeIsActive, showFavorites])
+
+    useEffect(() => {
+        if(apply){
+            callback({
+                showFavorites,
+                initialDate: rangeIsActive ? initialDate : null,
+                finalDate: rangeIsActive ? finalDate : null
+            })
+            setApply(false)
+        }
+    }, [showFavorites, rangeIsActive, initialDate, finalDate, apply, callback])
 
     return (
         <div className={styles.containerOptions} ref={containerRef}>
@@ -97,7 +114,7 @@ const DropdownFilterRecordsComponent = ({show, data, callback, callbackShow}: Pr
                             text="Reset all"
                             disabled={false}
                             isLoading={false}
-                            onClick={handleDisableFilters}
+                            onClick={() => {handleDisableFilters();callbackShow()}}
                         />
                         <ButtonComponent 
                             className={styles.button}
@@ -105,7 +122,7 @@ const DropdownFilterRecordsComponent = ({show, data, callback, callbackShow}: Pr
                             disabled={false}
                             isLoading={false}
                             filled
-                            onClick={() => callbackShow()}
+                            onClick={() => {setApply(true);callbackShow()}}
                         />
                     </div>
                 </div>

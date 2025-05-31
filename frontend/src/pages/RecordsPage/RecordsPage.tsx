@@ -27,6 +27,9 @@ const RecordsPage = (props: Props) => {
     const [showFilters, setShowFilters] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
+    const [showFavoritesFilter, setShowFavoritesFilter] = useState<boolean>(false)
+    const [initialDateFilter, setInitialDateFilter] = useState<Date|null>(null)
+    const [finalDateFilter, setFinalDateFilter] = useState<Date|null>(null)
 
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const hasLoadedOnce = useRef(false)
@@ -67,11 +70,31 @@ const RecordsPage = (props: Props) => {
         setRecords(prev => prev.filter(item => item.id !== recordId))
     }
 
+    const handleFormatDateFilter = (date: Date) => {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+    }
+
     useEffect(() => {
         (async () => {
             try {
-                const data = await getRecords({limit: 16, page})
-                setRecords(current => [...current, ...data.data])
+                const data = await getRecords({
+                    limit: 16, 
+                    page,
+                    search,
+                    show_favorites: showFavoritesFilter,
+                    ...(initialDateFilter && {initial_date: handleFormatDateFilter(initialDateFilter)}),
+                    ...(finalDateFilter && {final_date: handleFormatDateFilter(finalDateFilter)})
+                })
+
+                if(page === 1){
+                    setRecords(data.data)    
+                }else{
+                    setRecords(current => [...current, ...data.data])
+                }
+
                 setTotalPages(Math.ceil(data.total_count / limit))
             } catch (error) {
                 setToastMessage({
@@ -81,7 +104,11 @@ const RecordsPage = (props: Props) => {
                 })
             }
         })()
-    }, [page, getRecords, setToastMessage])
+    }, [page, showFavoritesFilter, initialDateFilter, finalDateFilter, search, getRecords, setToastMessage])
+
+    useEffect(() => {
+        setPage(1)
+    }, [showFavoritesFilter, initialDateFilter, finalDateFilter, search])
 
     const observer = useMemo(() => {
         const obs = new IntersectionObserver((entries) => {
@@ -167,8 +194,7 @@ const RecordsPage = (props: Props) => {
                         })()}
                         <DropdownFilterRecordsComponent 
                             show={showFilters}
-                            data={[]}
-                            callback={() => {}}
+                            callback={(props) => {setShowFavoritesFilter(props.showFavorites);setInitialDateFilter(props.initialDate);setFinalDateFilter(props.finalDate)}}
                             callbackShow={(value) => setShowFilters(current => value ?? !current)}
                         />
                     </div>
