@@ -1,0 +1,42 @@
+.calendar :global(.react-calendar__tile:disabled) {
+    background-color: #f0f0f0;
+    color: #ababab;
+}
+
+
+.calendar :global(.react-calendar__tile:enabled:hover),
+.calendar :global(.react-calendar__tile:enabled:focus) {
+    background-color: #e6e6e6;
+}
+
+.calendar :global(.react-calendar__tile--now) {
+    background: var(--second-color);
+}
+
+.calendar :global(.react-calendar__tile--now:enabled:hover),
+.calendar :global(.react-calendar__tile--now:enabled:focus) {
+    background: var(--second-color);
+}
+
+.calendar :global(.react-calendar__tile--hasActive) {
+    background: #76baff;
+}
+
+.calendar :global(.react-calendar__tile--hasActive:enabled:hover),
+.calendar :global(.react-calendar__tile--hasActive:enabled:focus) {
+    background: #a9d4ff;
+}
+
+.calendar :global(.react-calendar__tile--active) {
+    background: var(--principal-color);
+    color: white;
+}
+
+.calendar :global(.react-calendar__tile--active:enabled:hover),
+.calendar :global(.react-calendar__tile--active:enabled:focus) {
+    background: var(--principal-color-light);
+}
+
+.calendar :global(.react-calendar--selectRange .react-calendar__tile--hover) {
+    background-color: #e6e6e6;
+}

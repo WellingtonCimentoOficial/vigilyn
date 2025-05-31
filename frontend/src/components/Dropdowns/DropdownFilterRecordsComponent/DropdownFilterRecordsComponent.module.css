@@ -1,0 +1,81 @@
+.containerOptions {
+    position: relative;
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.subContainerOptions {
+    position: absolute;
+    background-color: white;
+    top: calc(100% + 5px);
+    right: 0;
+    border-radius: var(--principal-border-radius);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
+    transform: scaleY(0);
+    transform-origin: top;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 2;
+}
+.subContainerOptionsShow {
+    transform: scaleY(100%);
+    opacity: 1;
+}
+.option {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 20px;
+    transition: 0.2s;
+    background-color: white;
+    user-select: none;
+}
+.option:first-child {
+    border-radius: var(--principal-border-radius) var(--principal-border-radius) 0px 0px;
+}
+.option:last-child {
+    border-radius: 0px 0px var(--principal-border-radius) var(--principal-border-radius);
+}
+.optionIcon {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: var(--black-color-light);
+}
+.optionText {
+    color: var(--black-color-light);
+    text-align: center;
+}
+.calendarRange {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.calendarContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.calendarText {
+    font-size: 0.8rem;
+    color: var(--black-color-light);
+}
+.bottom {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between
+}
+.button {
+    font-size: 0.8rem;
+}
+.containerCheck {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
+.checkText {
+    font-size: 0.9rem;
+    color: var(--black-color-light);
+}

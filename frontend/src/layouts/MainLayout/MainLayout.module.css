@@ -5,9 +5,8 @@
 }
 .sideNav {
     position: sticky;
-    left: 0;
-    top: 0;
-    height: 100vh;
+    top: 20px;
+    height: 100%;
 }
 .main {
     flex-grow: 1;
@@ -16,7 +15,7 @@
     gap: 10px;
 }
 .header {
+
 }
 .body {
-
 }

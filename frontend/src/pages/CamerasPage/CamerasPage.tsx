@@ -343,7 +343,7 @@ const CamerasPage = (props: Props) => {
                                             </td>
                                             <td className={`${styles.td} ${styles.textCenter}`}>
                                                 <TagStatusComponent 
-                                                    text={camera.is_recording ? "Recording" : "Not Recording"} 
+                                                    text={(!camera.is_recording || !camera.pid) ? "Not Recording" : "Recording"} 
                                                     success={camera.is_recording} 
                                                 />
                                             </td>

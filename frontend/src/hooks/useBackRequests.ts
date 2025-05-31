@@ -179,6 +179,14 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
+    const deleteRecords = useCallback(async (recordIds: number[]) => {
+        const response = await axiosPrivate.delete("/records/", {
+            data: {ids: recordIds},
+        })
+        const data: SuccessMessageType = await response.data
+        return data
+    }, [axiosPrivate])
+
     const getUsers = useCallback(async ({search, role, is_active, page, limit}: GetUsersProps = {}) => {
         const params = Object.fromEntries(
             Object.entries({ search, role, is_active, page, limit })
@@ -242,6 +250,7 @@ export const useBackendRequests = () => {
         getRecordThumbnail,
         downloadRecord,
         deleteRecord,
+        deleteRecords,
         getUsers,
         getRoles,
         updateMe,

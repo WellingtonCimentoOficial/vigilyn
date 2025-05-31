@@ -1,3 +1,13 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.containerHeader {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 .section1 {
     display: flex;
     flex-wrap: wrap;
@@ -5,4 +15,22 @@
 }
 .containerThumb {
     flex-grow: 1;
+    position: relative;
+}
+.containerCheckbox {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
+.checkboxFilter {
+    pointer-events: none;
+}
+.containerFilters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.searchBar {
+    width: 450px;
 }
