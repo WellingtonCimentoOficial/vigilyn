@@ -1,7 +1,7 @@
 from app.extensions import db
 from app.models.record_models import Record, OrganizeRecord
 from app.utils.utils import kill_process
-from app.utils.validators import validate_date_range
+from app.utils.validators import validate_date_range, validate_hour_range
 from app.utils.logger import Log
 from flask import current_app
 from sqlalchemy import desc
@@ -230,6 +230,8 @@ def filter_record(
     show_favorites_param,
     initial_date_param,
     final_date_param,
+    initial_hour_param,
+    final_hour_param,
     favorite_record_ids,
 ):
     try:
@@ -251,6 +253,11 @@ def filter_record(
                 initial_date_param, final_date_param
             )
 
+        if initial_hour_param != None or final_hour_param != None:
+            initial_hour_param, final_hour_param = validate_hour_range(
+                initial_hour_param, final_hour_param
+            )
+
         page = int(page)
         limit = int(limit)
         query = db.session.query(Record)
@@ -262,8 +269,17 @@ def filter_record(
             query = query.filter(Record.id.in_(favorite_record_ids))
 
         if initial_date_param and final_date_param:
+            if initial_hour_param and final_hour_param:
+                initial_datetime = datetime.combine(
+                    initial_date_param, initial_hour_param
+                )
+                final_datetime = datetime.combine(final_date_param, final_hour_param)
+            else:
+                initial_datetime = initial_date_param
+                final_datetime = final_date_param
+
             query = query.filter(
-                Record.created_at.between(initial_date_param, final_date_param)
+                Record.created_at.between(initial_datetime, final_datetime)
             )
 
         total = query.count()

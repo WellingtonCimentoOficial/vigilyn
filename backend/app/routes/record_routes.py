@@ -28,6 +28,8 @@ def get_all():
     show_favorites_param = request.args.get("show_favorites")
     initial_date_param = request.args.get("initial_date")
     final_date_param = request.args.get("final_date")
+    initial_hour_param = request.args.get("initial_hour")
+    final_hour_param = request.args.get("final_hour")
 
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
@@ -39,6 +41,8 @@ def get_all():
         show_favorites_param=show_favorites_param,
         initial_date_param=initial_date_param,
         final_date_param=final_date_param,
+        initial_hour_param=initial_hour_param,
+        final_hour_param=final_hour_param,
         favorite_record_ids=[record.id for record in user.favorite.records],
     )
     records_schema = RecordSchema(many=True).dump(records)
