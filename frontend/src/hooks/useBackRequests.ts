@@ -18,6 +18,8 @@ type GetRecordsProps = {
     show_favorites?: boolean
     initial_date?: string
     final_date?: string
+    initial_hour?: string
+    final_hour?: string
 }
 
 type GetUsersProps = {
@@ -145,9 +147,9 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
-    const getRecords = useCallback(async ({ search, limit, page, show_favorites, initial_date, final_date }: GetRecordsProps = {}) => {
+    const getRecords = useCallback(async ({ search, limit, page, show_favorites, initial_date, final_date, initial_hour, final_hour }: GetRecordsProps = {}) => {
         const params = Object.fromEntries(
-            Object.entries({ search, page, limit, show_favorites, initial_date, final_date })
+            Object.entries({ search, page, limit, show_favorites, initial_date, final_date, initial_hour, final_hour })
             .filter(([_, value]) => value != null)
         )
 

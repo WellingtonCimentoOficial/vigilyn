@@ -4,28 +4,35 @@ import ButtonFilterComponent from '../../Buttons/ButtonFilterComponent/ButtonFil
 import DropdownCalendarComponent from '../DropdownCalendarComponent/DropdownCalendarComponent'
 import ButtonComponent from '../../Buttons/ButtonComponent/ButtonComponent'
 import CheckBoxSwitchComponent from '../../Checkboxes/CheckBoxSwitchComponent/CheckBoxSwitchComponent'
+import InputHourFilterComponent from '../../Inputs/InputHourFilterComponent/InputHourFilterComponent'
 
 type CallbackProps = {
     showFavorites: boolean
     initialDate: Date
     finalDate: Date
+    initialHour: string
+    finalHour: string
 }
 type Props = {
     show: boolean
     initialDate: Date
     finalDate: Date
+    initialHour: string
+    finalHour: string
     showFavorites: boolean
     isLoading?: boolean
     callbackShow: (value?: boolean) => void
-    callback: ({showFavorites, initialDate, finalDate}: CallbackProps) => void
+    callback: ({showFavorites, initialDate, finalDate, initialHour, finalHour}: CallbackProps) => void
 }
 
-const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate, showFavorites, callback, callbackShow}: Props) => {
+const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate, initialHour, finalHour, showFavorites, callback, callbackShow}: Props) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const [showInitialCalendar, setShowInitialCalendar] = useState<boolean>(false)
     const [showFinalCalendar, setShowFinalCalendar] = useState<boolean>(false)
     const [initialDateFilter, setInitialDateFilter] = useState<Date>(initialDate)
     const [finalDateFilter, setFinalDateFilter] = useState<Date>(finalDate)
+    const [initialHourFilter, setInitialHourFiltler] = useState<string>(initialHour.replace(/\D/g, ''))
+    const [finalHourFilter, setFinalHourFilter] = useState<string>(finalHour.replace(/\D/g, ''))
     const [showFavoritesFilter, setShowFavoritesFilter] = useState<boolean>(showFavorites)
     const [filtersActiveCount, setFiltersActiveCount] = useState<number>(0)
     const [apply, setApply] = useState<boolean>(false)
@@ -35,9 +42,28 @@ const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate
     const handleDisableFilters = () => {
         setInitialDateFilter(new Date())
         setFinalDateFilter(new Date())
+        setInitialHourFiltler("000000")
+        setFinalHourFilter("235959")
         setShowFavoritesFilter(false)
         setResetIsLoading(true)
         setApply(true)
+    }
+
+    const handleChangeHour = (prev: string, value: string) => {
+        const raw = value.replace(/\D/g, '')
+        const trimmed = raw.slice(-6)
+
+        return trimmed
+    }
+
+    const handleFormatHour = (value: string) => {
+        const padded = value.padStart(6, '0').slice(-6)
+
+        let h = padded.slice(0, 2)
+        let m = padded.slice(2, 4)
+        let s = padded.slice(4, 6)
+
+        return `${h}:${m}:${s}`
     }
 
     useEffect(() => {
@@ -52,7 +78,7 @@ const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate
     }, [callbackShow])
 
     useEffect(() => {
-        setFiltersActiveCount(1)
+        setFiltersActiveCount(2)
         const filters = [showFavoritesFilter]
         for(let i=0;i < filters.length;i++){
             if(filters[i]){
@@ -66,11 +92,13 @@ const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate
             callback({
                 showFavorites: showFavoritesFilter,
                 initialDate: initialDateFilter,
-                finalDate: finalDateFilter
+                finalDate: finalDateFilter,
+                initialHour: handleFormatHour(initialHourFilter),
+                finalHour: handleFormatHour(finalHourFilter)
             })
             setApply(false)
         }
-    }, [showFavoritesFilter, initialDateFilter, finalDateFilter, apply, callback])
+    }, [showFavoritesFilter, initialDateFilter, finalDateFilter, initialHourFilter, finalHourFilter, apply, callback])
 
     useEffect(() => {
         if(!isLoading && (applyIsLoading || resetIsLoading)){
@@ -94,7 +122,7 @@ const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate
                         <div className={styles.calendarContainer}>
                             <span className={styles.calendarText}>From:</span>
                             <DropdownCalendarComponent
-                                show={showInitialCalendar} 
+                                show={showInitialCalendar}
                                 data={initialDateFilter}
                                 disabled={resetIsLoading || applyIsLoading}
                                 callbackShow={(value) => setShowInitialCalendar(current => value ?? !current)} 
@@ -109,6 +137,27 @@ const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate
                                 disabled={resetIsLoading || applyIsLoading}
                                 callbackShow={(value) => setShowFinalCalendar(current => value ?? !current)} 
                                 callback={(value) => setFinalDateFilter(value)}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className={styles.option}>
+                    <span className={styles.optionText}>Hour range</span>
+                    <div className={styles.calendarRange}>
+                        <div className={styles.calendarContainer}>
+                            <span className={styles.calendarText}>From:</span>
+                            <InputHourFilterComponent 
+                                maxLength={9}
+                                value={handleFormatHour(initialHourFilter)} 
+                                onChange={(e) => setInitialHourFiltler(prev => handleChangeHour(prev, e.target.value))}
+                            />
+                        </div>
+                        <div className={styles.calendarContainer}>
+                            <span className={styles.calendarText}>To:</span>
+                            <InputHourFilterComponent 
+                                maxLength={9}
+                                value={handleFormatHour(finalHourFilter)} 
+                                onChange={(e) => setFinalHourFilter(prev => handleChangeHour(prev, e.target.value))}
                             />
                         </div>
                     </div>

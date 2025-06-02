@@ -29,6 +29,8 @@ const RecordsPage = (props: Props) => {
     const [showFavoritesFilter, setShowFavoritesFilter] = useState<boolean>(false)
     const [initialDateFilter, setInitialDateFilter] = useState<Date>(new Date())
     const [finalDateFilter, setFinalDateFilter] = useState<Date>(new Date())
+    const [initialHourFilter, setInitialHourFilter] = useState<string>("00:00:00")
+    const [finalHourFilter, setFinalHourFilter] = useState<string>("23:59:59")
 
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const hasLoadedOnce = useRef(false)
@@ -85,8 +87,10 @@ const RecordsPage = (props: Props) => {
                     page,
                     search,
                     show_favorites: showFavoritesFilter,
-                    ...(initialDateFilter && {initial_date: handleFormatDateFilter(initialDateFilter)}),
-                    ...(finalDateFilter && {final_date: handleFormatDateFilter(finalDateFilter)})
+                    initial_date: handleFormatDateFilter(initialDateFilter),
+                    final_date: handleFormatDateFilter(finalDateFilter),
+                    initial_hour: initialHourFilter,
+                    final_hour: finalHourFilter
                 })
 
                 if(page === 1){
@@ -99,7 +103,7 @@ const RecordsPage = (props: Props) => {
             } catch (error: any) {
                 if(error.response?.status === 400){
                     const data: ErrorType = error.response.data
-                    if ("invalid_initial_data_param" === data.error) {
+                    if ("invalid_initial_date_param" === data.error) {
                         setToastMessage({
                             title: "Invalid Start Date",
                             description: "The start date provided is not valid. Please check the format and try again.",
@@ -123,6 +127,30 @@ const RecordsPage = (props: Props) => {
                             description: "The start date must be earlier than the end date. Please adjust the range and try again.",
                             success: false
                         })
+                    }else if ("invalid_initial_hour_param" === data.error) {
+                        setToastMessage({
+                            title: "Invalid Start Hour",
+                            description: "The start hour provided is not valid. Please check the format and try again.",
+                            success: false
+                        })
+                    } else if ("invalid_final_hour_param" === data.error) {
+                        setToastMessage({
+                            title: "Invalid End Hour",
+                            description: "The end hour provided is not valid. Please check the format and try again.",
+                            success: false
+                        })
+                    } else if ("missing_hour_param" === data.error) {
+                        setToastMessage({
+                            title: "Missing Hour",
+                            description: "A required hour parameter is missing. Please select both start and end hours.",
+                            success: false
+                        })
+                    } else if ("invalid_hour_range_param" === data.error) {
+                        setToastMessage({
+                            title: "Invalid Hour Range",
+                            description: "The start hour must be earlier than the end hour. Please adjust the range and try again.",
+                            success: false
+                        })
                     }
                 }else{
                     setToastMessage({
@@ -133,7 +161,7 @@ const RecordsPage = (props: Props) => {
                 }
             }
         })()
-    }, [page, showFavoritesFilter, initialDateFilter, finalDateFilter, search, getRecords, setToastMessage])
+    }, [page, showFavoritesFilter, initialDateFilter, finalDateFilter, search, initialHourFilter, finalHourFilter, getRecords, setToastMessage])
 
     useEffect(() => {
         setPage(1)
@@ -226,8 +254,16 @@ const RecordsPage = (props: Props) => {
                             isLoading={isLoading}
                             initialDate={initialDateFilter}
                             finalDate={finalDateFilter}
+                            initialHour={initialHourFilter}
+                            finalHour={finalHourFilter}
                             showFavorites={showFavoritesFilter}
-                            callback={(props) => {setShowFavoritesFilter(props.showFavorites);setInitialDateFilter(props.initialDate);setFinalDateFilter(props.finalDate)}}
+                            callback={(props) => {
+                                setShowFavoritesFilter(props.showFavorites)
+                                setInitialDateFilter(props.initialDate)
+                                setFinalDateFilter(props.finalDate)
+                                setInitialHourFilter(props.initialHour)
+                                setFinalHourFilter(props.finalHour)
+                            }}
                             callbackShow={(value) => setShowFilters(current => value ?? !current)}
                         />
                     </div>
