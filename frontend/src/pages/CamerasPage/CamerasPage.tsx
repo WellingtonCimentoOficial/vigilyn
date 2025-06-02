@@ -4,7 +4,7 @@ import PageLayout from '../../layouts/PageLayout/PageLayout'
 import ButtonComponent from '../../components/Buttons/ButtonComponent/ButtonComponent'
 import { PiPlus, PiTrash, PiPencilSimple, PiPlay, PiStop, PiArrowCounterClockwise } from "react-icons/pi";
 import CheckBoxComponent from '../../components/Checkboxes/CheckBoxComponent/CheckBoxComponent';
-import { CameraType } from '../../types/BackendTypes';
+import { CameraType, ErrorType } from '../../types/BackendTypes';
 import { useBackendRequests } from '../../hooks/useBackRequests';
 import { ToastContext } from '../../contexts/ToastContext';
 import SearchBarComponent from '../../components/Searches/SearchBarComponent/SearchBarComponent';
@@ -142,7 +142,8 @@ const CamerasPage = (props: Props) => {
                 )
                 success = true
             } catch (error: any) {
-                if(error.response?.status === 400 && error.response?.data?.error === "camera_process_already_stopped"){
+                const data: ErrorType = error.response?.data
+                if(error.response?.status === 400 && data.error === "camera_process_already_stopped"){
                     success = true
                 }else{
                     success = false

@@ -3,10 +3,9 @@ import styles from "./RecordsPage.module.css"
 import PageLayout from '../../layouts/PageLayout/PageLayout'
 import CardThumbnailComponent from '../../components/Cards/CardThumbnailComponent/CardThumbnailComponent'
 import { useBackendRequests } from '../../hooks/useBackRequests'
-import { RecordType } from '../../types/BackendTypes'
+import { ErrorType, RecordType } from '../../types/BackendTypes'
 import { ToastContext } from '../../contexts/ToastContext'
 import SearchBarComponent from '../../components/Searches/SearchBarComponent/SearchBarComponent'
-import DropdownCalendarComponent from '../../components/Dropdowns/DropdownCalendarComponent/DropdownCalendarComponent'
 import CheckBoxComponent from '../../components/Checkboxes/CheckBoxComponent/CheckBoxComponent'
 import DropdownBasicComponent from '../../components/Dropdowns/DropdownBasicComponent/DropdownBasicComponent'
 import { PiTrash } from "react-icons/pi";
@@ -28,8 +27,8 @@ const RecordsPage = (props: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const [showFavoritesFilter, setShowFavoritesFilter] = useState<boolean>(false)
-    const [initialDateFilter, setInitialDateFilter] = useState<Date|null>(null)
-    const [finalDateFilter, setFinalDateFilter] = useState<Date|null>(null)
+    const [initialDateFilter, setInitialDateFilter] = useState<Date>(new Date())
+    const [finalDateFilter, setFinalDateFilter] = useState<Date>(new Date())
 
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const hasLoadedOnce = useRef(false)
@@ -97,12 +96,41 @@ const RecordsPage = (props: Props) => {
                 }
 
                 setTotalPages(Math.ceil(data.total_count / limit))
-            } catch (error) {
-                setToastMessage({
-                    "title": "Failed to load records", 
-                    "description": "We couldn't fetch the records data. Please try again later.", 
-                    success: false
-                })
+            } catch (error: any) {
+                if(error.response?.status === 400){
+                    const data: ErrorType = error.response.data
+                    if ("invalid_initial_data_param" === data.error) {
+                        setToastMessage({
+                            title: "Invalid Start Date",
+                            description: "The start date provided is not valid. Please check the format and try again.",
+                            success: false
+                        })
+                    } else if ("invalid_final_date_param" === data.error) {
+                        setToastMessage({
+                            title: "Invalid End Date",
+                            description: "The end date provided is not valid. Please check the format and try again.",
+                            success: false
+                        })
+                    } else if ("missing_date_param" === data.error) {
+                        setToastMessage({
+                            title: "Missing Date",
+                            description: "A required date parameter is missing. Please select both start and end dates.",
+                            success: false
+                        })
+                    } else if ("invalid_date_range_param" === data.error) {
+                        setToastMessage({
+                            title: "Invalid Date Range",
+                            description: "The start date must be earlier than the end date. Please adjust the range and try again.",
+                            success: false
+                        })
+                    }
+                }else{
+                    setToastMessage({
+                        "title": "Failed to load records", 
+                        "description": "We couldn't fetch the records data. Please try again later.", 
+                        success: false
+                    })
+                }
             }
         })()
     }, [page, showFavoritesFilter, initialDateFilter, finalDateFilter, search, getRecords, setToastMessage])
@@ -196,6 +224,9 @@ const RecordsPage = (props: Props) => {
                         <DropdownFilterRecordsComponent 
                             show={showFilters}
                             isLoading={isLoading}
+                            initialDate={initialDateFilter}
+                            finalDate={finalDateFilter}
+                            showFavorites={showFavoritesFilter}
                             callback={(props) => {setShowFavoritesFilter(props.showFavorites);setInitialDateFilter(props.initialDate);setFinalDateFilter(props.finalDate)}}
                             callbackShow={(value) => setShowFilters(current => value ?? !current)}
                         />
@@ -217,7 +248,7 @@ const RecordsPage = (props: Props) => {
                             ))}
                         </>
                     ):(
-                        <span style={{textAlign: "center", color: "var(--black-color-light)", width: "100%"}}>nothing to see around here...</span>
+                        <span style={{textAlign: "center", color: "var(--black-color-light)", width: "100%"}}>Oops! We couldn’t find anything that matches your filters and date range.</span>
                     )}
                 </div>
                 <ModalConfirmationComponent

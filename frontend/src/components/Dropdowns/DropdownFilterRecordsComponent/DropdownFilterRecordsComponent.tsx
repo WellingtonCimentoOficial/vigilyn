@@ -7,32 +7,35 @@ import CheckBoxSwitchComponent from '../../Checkboxes/CheckBoxSwitchComponent/Ch
 
 type CallbackProps = {
     showFavorites: boolean
-    initialDate: Date | null
-    finalDate: Date | null
+    initialDate: Date
+    finalDate: Date
 }
 type Props = {
     show: boolean
+    initialDate: Date
+    finalDate: Date
+    showFavorites: boolean
     isLoading?: boolean
     callbackShow: (value?: boolean) => void
     callback: ({showFavorites, initialDate, finalDate}: CallbackProps) => void
 }
 
-const DropdownFilterRecordsComponent = ({show, isLoading, callback, callbackShow}: Props) => {
+const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate, showFavorites, callback, callbackShow}: Props) => {
     const containerRef = useRef<HTMLDivElement>(null)
-    const [rangeIsActive, setRangeIsActive] = useState<boolean>(true)
     const [showInitialCalendar, setShowInitialCalendar] = useState<boolean>(false)
     const [showFinalCalendar, setShowFinalCalendar] = useState<boolean>(false)
-    const [initialDate, setInitialDate] = useState<Date>(new Date())
-    const [finalDate, setFinalDate] = useState<Date>(new Date())
-    const [showFavorites, setShowFavorites] = useState<boolean>(false)
+    const [initialDateFilter, setInitialDateFilter] = useState<Date>(initialDate)
+    const [finalDateFilter, setFinalDateFilter] = useState<Date>(finalDate)
+    const [showFavoritesFilter, setShowFavoritesFilter] = useState<boolean>(showFavorites)
     const [filtersActiveCount, setFiltersActiveCount] = useState<number>(0)
     const [apply, setApply] = useState<boolean>(false)
     const [applyIsLoading, setApplyIsLoading] = useState<boolean>(false)
     const [resetIsLoading, setResetIsLoading] = useState<boolean>(false)
 
     const handleDisableFilters = () => {
-        setRangeIsActive(false)
-        setShowFavorites(false)
+        setInitialDateFilter(new Date())
+        setFinalDateFilter(new Date())
+        setShowFavoritesFilter(false)
         setResetIsLoading(true)
         setApply(true)
     }
@@ -49,25 +52,25 @@ const DropdownFilterRecordsComponent = ({show, isLoading, callback, callbackShow
     }, [callbackShow])
 
     useEffect(() => {
-        setFiltersActiveCount(0)
-        const filters = [showFavorites, rangeIsActive]
+        setFiltersActiveCount(1)
+        const filters = [showFavoritesFilter]
         for(let i=0;i < filters.length;i++){
             if(filters[i]){
                 setFiltersActiveCount(current => current + 1)
             }
         }
-    }, [rangeIsActive, showFavorites])
+    }, [showFavoritesFilter])
 
     useEffect(() => {
         if(apply){
             callback({
-                showFavorites,
-                initialDate: rangeIsActive ? initialDate : null,
-                finalDate: rangeIsActive ? finalDate : null
+                showFavorites: showFavoritesFilter,
+                initialDate: initialDateFilter,
+                finalDate: finalDateFilter
             })
             setApply(false)
         }
-    }, [showFavorites, rangeIsActive, initialDate, finalDate, apply, callback])
+    }, [showFavoritesFilter, initialDateFilter, finalDateFilter, apply, callback])
 
     useEffect(() => {
         if(!isLoading && (applyIsLoading || resetIsLoading)){
@@ -92,20 +95,20 @@ const DropdownFilterRecordsComponent = ({show, isLoading, callback, callbackShow
                             <span className={styles.calendarText}>From:</span>
                             <DropdownCalendarComponent
                                 show={showInitialCalendar} 
-                                data={initialDate}
+                                data={initialDateFilter}
                                 disabled={resetIsLoading || applyIsLoading}
                                 callbackShow={(value) => setShowInitialCalendar(current => value ?? !current)} 
-                                callback={(value) => {setInitialDate(value);setRangeIsActive(true)}}
+                                callback={(value) => setInitialDateFilter(value)}
                             />
                         </div>
                         <div className={styles.calendarContainer}>
                             <span className={styles.calendarText}>To:</span>
                             <DropdownCalendarComponent 
                                 show={showFinalCalendar} 
-                                data={finalDate}
+                                data={finalDateFilter}
                                 disabled={resetIsLoading || applyIsLoading}
                                 callbackShow={(value) => setShowFinalCalendar(current => value ?? !current)} 
-                                callback={(value) => {setFinalDate(value);setRangeIsActive(true)}}
+                                callback={(value) => setFinalDateFilter(value)}
                             />
                         </div>
                     </div>
@@ -115,8 +118,8 @@ const DropdownFilterRecordsComponent = ({show, isLoading, callback, callbackShow
                     <div className={styles.containerCheck}>
                         <div className={styles.checkText}>Show favorites</div>
                         <CheckBoxSwitchComponent 
-                            checked={showFavorites} 
-                            callback={() => setShowFavorites(current => !current)}
+                            checked={showFavoritesFilter} 
+                            callback={() => setShowFavoritesFilter(current => !current)}
                             size={3}
                             disabled={resetIsLoading || applyIsLoading}
                         />
