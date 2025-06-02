@@ -10,6 +10,7 @@ def register_error_handlers(app):
         if isinstance(error, ValidationError):
             return generate_error_message("validation", error.messages, 400)
         elif isinstance(error, AppException):
+            print("aaaa")
             return generate_error_message(error.error, error.message, error.status_code)
         elif isinstance(error, MethodNotAllowed):
             return generate_error_message(

@@ -16,11 +16,11 @@ def validate_date_param(date_str):
     try:
         date = datetime.strptime(date_str, "%Y-%m-%d")
         return date
-    except ValueError:
+    except:
         return False
 
 
-def validate_date_range(initial_date_param: str | None, final_date_param: str | None):
+def validate_date_range(initial_date_param, final_date_param):
     if (initial_date_param and not final_date_param) or (
         final_date_param and not initial_date_param
     ):

@@ -277,3 +277,4 @@ def filter_record(
         log.write(
             log.GENERAL, level="error", message=f"func: filter_record error: {str(e)}"
         )
+        raise
