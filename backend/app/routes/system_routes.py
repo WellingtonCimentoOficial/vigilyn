@@ -37,7 +37,7 @@ def get_monthly():
     monthly = get_monthly_storage()
     schema = StorageMonthlySchema(many=True)
     data = schema.load(monthly)
-    
+
     return jsonify(data)
 
 
