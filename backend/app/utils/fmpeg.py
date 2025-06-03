@@ -116,3 +116,28 @@ class Fmpeg:
                 level="error",
                 message=f"func: generate_thumbnail error: {str(e)}",
             )
+
+    @staticmethod
+    def transcode_video_to_stream(filepath):
+        command = [
+            "ffmpeg",
+            "-i",
+            filepath,
+            "-vcodec",
+            "libx264",
+            "-acodec",
+            "aac",
+            "-b:a",
+            "128k",
+            "-f",
+            "mp4",
+            "-movflags",
+            "frag_keyframe+empty_moov",
+            "pipe:1",
+        ]
+
+        process = subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL
+        )
+
+        return process

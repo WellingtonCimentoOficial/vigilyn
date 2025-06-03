@@ -1,4 +1,12 @@
-from flask import Blueprint, jsonify, request, send_file, current_app
+from flask import (
+    Blueprint,
+    jsonify,
+    request,
+    send_file,
+    current_app,
+    Response,
+    stream_with_context,
+)
 from app.models.record_models import Record
 from app.schemas.record_schemas import RecordSchema, RecordIdsSchema, RecordUpdateSchema
 from app.services.record_services import delete_records, filter_record, update_record
@@ -11,6 +19,7 @@ from app.exceptions.record_exceptions import (
 )
 from app.models.user_models import User
 from flask_jwt_extended import get_jwt_identity
+from app.utils.fmpeg import Fmpeg
 import os
 
 record_bp = Blueprint("records", __name__, url_prefix="/api/records/")
@@ -78,7 +87,9 @@ def play_video(record_pk):
     if not os.path.isfile(record.path):
         raise RecordNotFoundException()
 
-    return send_file(record.path)
+    process = Fmpeg.transcode_video_to_stream(record.path)
+
+    return Response(stream_with_context(process.stdout), content_type="video/mp4")
 
 
 @record_bp.route("<int:record_pk>/video/download/", methods=["GET"])
