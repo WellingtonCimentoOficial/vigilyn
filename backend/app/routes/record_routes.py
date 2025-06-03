@@ -88,8 +88,9 @@ def play_video(record_pk):
         raise RecordNotFoundException()
 
     process = Fmpeg.transcode_video_to_stream(record.path)
+    stream = Fmpeg.generate_stream(process)
 
-    return Response(stream_with_context(process.stdout), content_type="video/mp4")
+    return Response(stream_with_context(stream), content_type="video/mp4")
 
 
 @record_bp.route("<int:record_pk>/video/download/", methods=["GET"])

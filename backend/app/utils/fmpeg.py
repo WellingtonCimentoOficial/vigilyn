@@ -125,6 +125,8 @@ class Fmpeg:
             filepath,
             "-vcodec",
             "libx264",
+            "-tune",
+            "zerolatency",
             "-acodec",
             "aac",
             "-b:a",
@@ -141,3 +143,11 @@ class Fmpeg:
         )
 
         return process
+
+    @staticmethod
+    def generate_stream(process):
+        while True:
+            chunk = process.stdout.read(1024 * 1024)
+            if not chunk:
+                break
+            yield chunk
