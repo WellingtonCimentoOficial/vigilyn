@@ -9,6 +9,7 @@ import { ToastContext } from '../../../contexts/ToastContext';
 import ModalConfirmationComponent from '../../Modals/ModalConfirmationComponent/ModalConfirmationComponent';
 import { ModalConfirmationData } from '../../../types/FrontendTypes';
 import { UserContext } from '../../../contexts/UserContext';
+import ModalRecordComponent from '../../Modals/ModalRecordComponent/ModalRecordComponent';
 
 type Props = {
     record: RecordType
@@ -17,11 +18,13 @@ type Props = {
 
 
 const CardThumbnailComponent = ({record, callback}: Props) => {
+    const [recordLocal, setRecordLocal] = useState<RecordType>(record)
     const [showOptions, setShowOptions] = useState<boolean>(false)
     const [modalConfirmationData, setModalConfirmationData] = useState<ModalConfirmationData|null>(null)
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const [thumbnailUrl, setThumbnailUrl] = useState<string|null>(null)
     const [isFavorite, setIsFavorite] = useState<boolean>(false)
+    const [showModal, setShowModal] = useState<boolean>(false)
 
     const { getRecordThumbnail, downloadRecord, deleteRecord, updateFavorite } = useBackendRequests()
     const { setToastMessage } = useContext(ToastContext)
@@ -29,11 +32,11 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
 
     const handleDownload = async () => {
         try {
-            const url = await downloadRecord(record.id)
+            const url = await downloadRecord(recordLocal.id)
             const link = document.createElement("a")
             
             link.href = url
-            link.setAttribute("download", record.name)
+            link.setAttribute("download", recordLocal.name)
             
             document.body.appendChild(link)
             link.click()
@@ -57,8 +60,8 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
 
     const handleDelete = async () => {
         try {
-            await deleteRecord(record.id)
-            callback(record.id)
+            await deleteRecord(recordLocal.id)
+            callback(recordLocal.id)
             setToastMessage({
                 "title": "Record deleted successfully!", 
                 "description": "The record has been removed from your list.", 
@@ -84,9 +87,9 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
 
     const handleFavorite = useCallback(async () => {
         if(currentUser){
-            if(currentUser.favorite.records.some(recordId => recordId === record.id)){
+            if(currentUser.favorite.records.some(recordId => recordId === recordLocal.id)){
                 try {
-                    const data = await updateFavorite(currentUser.favorite.records.filter(record_id => record_id !== record.id))
+                    const data = await updateFavorite(currentUser.favorite.records.filter(record_id => record_id !== recordLocal.id))
                     setCurrentUser(data)
                     setToastMessage({
                         title: "Removed from favorites",
@@ -102,7 +105,7 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
                 }
             }else{
                 try {
-                    const data = await updateFavorite([...currentUser.favorite.records, record.id])
+                    const data = await updateFavorite([...currentUser.favorite.records, recordLocal.id])
                     setCurrentUser(data)
                     setToastMessage({
                         title: "Added to favorites",
@@ -118,47 +121,49 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
                 }
             }
         }
-    }, [currentUser, record, setCurrentUser, setToastMessage, updateFavorite])
+    }, [currentUser, recordLocal, setCurrentUser, setToastMessage, updateFavorite])
 
     useEffect(() => {
         (async () => {
             try {
-                const data = await getRecordThumbnail(record.id)
+                const data = await getRecordThumbnail(recordLocal.id)
                 setThumbnailUrl(data)
             } catch (error) {
                 
             }
         })()
-    }, [record, getRecordThumbnail, setToastMessage])
+    }, [recordLocal, getRecordThumbnail, setToastMessage])
 
     useEffect(() => {
         if(currentUser){
-            setIsFavorite(currentUser.favorite.records.some(recordId => recordId === record.id))
+            setIsFavorite(currentUser.favorite.records.some(recordId => recordId === recordLocal.id))
         }
-    }, [currentUser, record])
+    }, [currentUser, recordLocal])
+
+    useEffect(() => setRecordLocal(record), [record])
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.containerImage}>
-                {thumbnailUrl && <img className={styles.image} src={thumbnailUrl} alt={record.name} />}
+                {thumbnailUrl && <img className={styles.image} src={thumbnailUrl} alt={recordLocal.name} />}
                 <div className={styles.containerIcon}>
                     <div className={styles.subContainerIcon}>
                         <PiPlay className={styles.icon} />
                     </div>
                 </div>
-                <div className={styles.duration}>{formatDuration(record.duration_seconds)}</div>
+                <div className={styles.duration}>{formatDuration(recordLocal.duration_seconds)}</div>
             </div>
             <div className={styles.body}>
                 <div className={styles.containerData}>
-                    <span className={styles.title}>{record.name}</span>
+                    <span className={styles.title}>{recordLocal.name}</span>
                     <div className={styles.containerInfo}>
                         <div className={styles.infoItem}>
                             <span className={styles.descriptionBold}>Format:</span>
-                            <span className={styles.description}>{record.format}</span>
+                            <span className={styles.description}>{recordLocal.format}</span>
                         </div>
                         <div className={styles.infoItem}>
                             <span className={styles.descriptionBold}>Recorded at:</span>
-                            <span className={styles.description}>{formatDateTime(record.created_at)}</span>
+                            <span className={styles.description}>{formatDateTime(recordLocal.created_at)}</span>
                         </div>
                     </div>
                 </div>
@@ -172,7 +177,7 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
                                 callback: handleFavorite
                             },
                             {name: "Download recording", icon: <PiArrowDown />, disabled: false, callback: handleDownload},
-                            {name: "Edit name", icon: <PiPencil />, disabled: false, callback: () => console.log("aaaa")},
+                            {name: "Edit recording name", icon: <PiPencil />, disabled: false, callback: () => setShowModal(true)},
                             {name: "Delete recording", icon: <PiTrash />, disabled: false, callback: handleDeleteConfirmation},
                         ]}
                         show={showOptions}
@@ -181,6 +186,12 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
                     />
                 </div>
             </div>
+            <ModalRecordComponent 
+                setShowModal={setShowModal}
+                showModal={showModal} 
+                data={recordLocal}
+                callback={(record) => setRecordLocal(record)}
+            />
             {modalConfirmationData &&
                 <ModalConfirmationComponent 
                     title={modalConfirmationData.title}

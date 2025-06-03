@@ -146,3 +146,6 @@ export type SettingsType = {
     segment_time: number
     requires_restart: boolean
 }
+export type RecordUpdateType = {
+    name: string
+}

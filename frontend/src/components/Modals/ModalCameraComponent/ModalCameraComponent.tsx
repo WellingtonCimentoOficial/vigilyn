@@ -7,9 +7,8 @@ import ButtonComponent from '../../Buttons/ButtonComponent/ButtonComponent'
 import { ToastContext } from '../../../contexts/ToastContext'
 import { useBackendRequests } from '../../../hooks/useBackRequests'
 import { ipRegex, pathRegex } from '../../../utils/regex'
-import { PiFloppyDisk, PiCaretDown } from "react-icons/pi";
+import { PiFloppyDisk } from "react-icons/pi";
 import { HexColorPicker } from 'react-colorful'
-import { motion, AnimatePresence } from "framer-motion"
 
 type Props = {
     showModal: boolean
@@ -39,7 +38,6 @@ const ModalCameraComponent = ({showModal, data, setShowModal, callback}: Props) 
     const [pathIsValid, setPathIsValid] = useState<boolean>(false)
 
     const [profileColor, setProfileColor] = useState<string>("#ff5100")
-    const [showColorPicker, setShowColorPicker] = useState<boolean>(false)
 
     const [wasSubmitted, setWasSubmitted] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)

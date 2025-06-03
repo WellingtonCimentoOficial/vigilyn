@@ -1,5 +1,5 @@
 import { useAxios } from "./useAxios"
-import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordPaginationType, RoleType, SettingsType, SettingsUpdateType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserExtendedType, UserPaginationType, UserUpdateType } from "../types/BackendTypes"
+import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordPaginationType, RecordType, RecordUpdateType, RoleType, SettingsType, SettingsUpdateType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserExtendedType, UserPaginationType, UserUpdateType } from "../types/BackendTypes"
 import { useCallback } from "react"
 
 type GetCameraProps = {
@@ -178,6 +178,12 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
+    const updateRecord = useCallback(async (recordId: number, recordData: RecordUpdateType) => {
+        const response = await axiosPrivate.patch(`/records/${recordId}/`, {...recordData})
+        const data: RecordType = response.data
+        return data
+    }, [axiosPrivate])
+
     const deleteRecord = useCallback(async (recordId: number) => {
         const response = await axiosPrivate.delete(`/records/${recordId}/`)
         const data: SuccessMessageType = await response.data
@@ -255,6 +261,7 @@ export const useBackendRequests = () => {
         getRecordThumbnail,
         downloadRecord,
         deleteRecord,
+        updateRecord,
         deleteRecords,
         getUsers,
         getRoles,
