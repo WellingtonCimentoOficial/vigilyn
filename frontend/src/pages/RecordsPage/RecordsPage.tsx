@@ -225,6 +225,8 @@ const RecordsPage = (props: Props) => {
         return () => clearTimeout(timeout)
     }, [search])
 
+    useEffect(() => setRecord(current => showVideoModal ? current : null), [showVideoModal])
+
     return (
         <PageLayout
             title='Records'

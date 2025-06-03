@@ -37,6 +37,7 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
             <ReactPlayer 
                 url={videoUrl} 
                 controls
+                playing
             />
         </ModalBaseComponent>
     )
