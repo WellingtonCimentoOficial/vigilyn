@@ -10,7 +10,11 @@ from app.exceptions.url_exceptions import (
     UrlLimitParamException,
     UrlPageParamException,
 )
-from app.exceptions.record_exceptions import RecordShowFavoritesParamException
+from app.exceptions.record_exceptions import (
+    RecordShowFavoritesParamException,
+    RecordAlreadyExistsException,
+    RecordWasNotUpdatedException,
+)
 from app.utils.settings import get_settings
 import os
 import subprocess
@@ -80,6 +84,25 @@ def create_record(
         log.write(
             log.GENERAL, level="error", message=f"func: create_record error: {str(e)}"
         )
+
+
+def update_record(record, **kwargs):
+    try:
+        record_by_name = Record.query.filter_by(name=kwargs["name"]).first()
+
+        if record_by_name and record_by_name.id != record.id:
+            raise RecordAlreadyExistsException()
+
+        for key, value in kwargs.items():
+            setattr(record, key, value)
+
+        db.session.commit()
+
+        return record
+    except RecordAlreadyExistsException as error:
+        raise error
+    except:
+        raise RecordWasNotUpdatedException()
 
 
 def delete_records(records):

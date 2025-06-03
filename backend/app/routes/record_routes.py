@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, send_file, current_app
 from app.models.record_models import Record
-from app.schemas.record_schemas import RecordSchema, RecordIdsSchema
-from app.services.record_services import delete_records, filter_record
+from app.schemas.record_schemas import RecordSchema, RecordIdsSchema, RecordUpdateSchema
+from app.services.record_services import delete_records, filter_record, update_record
 from app.decorators.auth_decorators import authentication_required
 from app.decorators.permission_decorators import permission_required
 from app.utils.utils import generate_pagination_response
@@ -103,6 +103,21 @@ def get_thumbnail(record_pk):
         raise RecordThumbnailNotFoundException()
 
     return send_file(record.thumbnail_path)
+
+
+@record_bp.route("<int:record_pk>/", methods=["PATCH"])
+@authentication_required()
+@permission_required("edit_record")
+def update(record_pk):
+    record = Record.query.filter_by(id=record_pk).first_or_404()
+    schema = RecordUpdateSchema()
+    data = schema.load(request.json)
+
+    record_updated = update_record(record, **data)
+    record_updated_schema = RecordSchema()
+    record_updated_data = record_updated_schema.dump(record_updated)
+
+    return jsonify(record_updated_data)
 
 
 @record_bp.route("<int:record_pk>/", methods=["DELETE"])
