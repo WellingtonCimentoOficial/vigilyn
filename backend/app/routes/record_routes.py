@@ -70,8 +70,8 @@ def get(record_pk):
 
 
 @record_bp.route("<int:record_pk>/video/", methods=["GET"])
-# @authentication_required()
-# @permission_required("view_record")
+@authentication_required()
+@permission_required("view_record")
 def play_video(record_pk):
     record = Record.query.filter_by(id=record_pk).first_or_404()
 

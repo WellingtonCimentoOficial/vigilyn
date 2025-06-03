@@ -13,7 +13,7 @@ class Fmpeg:
     def __init__(
         self,
         rtsp_transport="tcp",
-        vcodec="copy",
+        vcodec="libx264",
         acodec="aac",
         audio_bitrate="128k",
         video_format=".mp4",
