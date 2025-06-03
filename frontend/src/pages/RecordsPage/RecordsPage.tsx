@@ -21,6 +21,7 @@ const RecordsPage = (props: Props) => {
     const [page, setPage] = useState<number>(1)
     const [records, setRecords] = useState<RecordType[]>([])
     const [search, setSearch] = useState<string>("")
+    const [debouncedSearch, setDebouncedSearch] = useState("")
     const [checkedItems, setCheckedItems] = useState<{id: number, checked: boolean}[]>([])
     const [showActions, setShowActions] = useState<boolean>(false)
     const [showFilters, setShowFilters] = useState<boolean>(false)
@@ -85,7 +86,7 @@ const RecordsPage = (props: Props) => {
                 const data = await getRecords({
                     limit: 16, 
                     page,
-                    search,
+                    search: debouncedSearch,
                     show_favorites: showFavoritesFilter,
                     initial_date: handleFormatDateFilter(initialDateFilter),
                     final_date: handleFormatDateFilter(finalDateFilter),
@@ -161,7 +162,7 @@ const RecordsPage = (props: Props) => {
                 }
             }
         })()
-    }, [page, showFavoritesFilter, initialDateFilter, finalDateFilter, search, initialHourFilter, finalHourFilter, getRecords, setToastMessage])
+    }, [page, showFavoritesFilter, initialDateFilter, finalDateFilter, debouncedSearch, initialHourFilter, finalHourFilter, getRecords, setToastMessage])
 
     useEffect(() => {
         setPage(1)
@@ -215,6 +216,11 @@ const RecordsPage = (props: Props) => {
             return merged
         })
     }, [records])
+
+    useEffect(() => {
+        const timeout = setTimeout(() => setDebouncedSearch(search), 800)
+        return () => clearTimeout(timeout)
+    }, [search])
 
     return (
         <PageLayout
