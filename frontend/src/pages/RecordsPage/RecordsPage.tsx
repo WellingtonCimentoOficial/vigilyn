@@ -11,6 +11,7 @@ import DropdownBasicComponent from '../../components/Dropdowns/DropdownBasicComp
 import { PiTrash } from "react-icons/pi";
 import DropdownFilterRecordsComponent from '../../components/Dropdowns/DropdownFilterRecordsComponent/DropdownFilterRecordsComponent'
 import ModalConfirmationComponent from '../../components/Modals/ModalConfirmationComponent/ModalConfirmationComponent'
+import ModalVideoComponent from '../../components/Modals/ModalVideoComponent/ModalVideoComponent'
 
 
 type Props = {}
@@ -32,6 +33,8 @@ const RecordsPage = (props: Props) => {
     const [finalDateFilter, setFinalDateFilter] = useState<Date>(new Date())
     const [initialHourFilter, setInitialHourFilter] = useState<string>("00:00:00")
     const [finalHourFilter, setFinalHourFilter] = useState<string>("23:59:59")
+    const [record, setRecord] = useState<RecordType|null>(null)
+    const [showVideoModal, setShowVideoModal] = useState<boolean>(false)
 
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const hasLoadedOnce = useRef(false)
@@ -279,7 +282,11 @@ const RecordsPage = (props: Props) => {
                         <>
                             {records.map(record => (
                                 <div key={record.id} className={styles.containerThumb}>
-                                    <CardThumbnailComponent record={record} callback={handleRemove} />
+                                    <CardThumbnailComponent 
+                                        record={record} 
+                                        callback={handleRemove} 
+                                        onClick={() => {setRecord(record);setShowVideoModal(true)}}
+                                    />
                                     <div className={styles.containerCheckbox}>
                                         <CheckBoxComponent 
                                             checked={checkedItems.find(item => item.id === record.id)?.checked ?? false}
@@ -298,6 +305,13 @@ const RecordsPage = (props: Props) => {
                     setShowModal={setShowConfirmation}
                     callback={handleDeleteRecords}
                 />
+                {record &&
+                    <ModalVideoComponent
+                        data={record}
+                        showModal={showVideoModal}
+                        setShowModal={setShowVideoModal}
+                    />
+                }
                 <div ref={bottomRef} style={{height: 1}}></div>
             </div>
         </PageLayout>

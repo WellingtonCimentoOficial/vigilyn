@@ -14,10 +14,11 @@ import ModalRecordComponent from '../../Modals/ModalRecordComponent/ModalRecordC
 type Props = {
     record: RecordType
     callback: (recordId: number) => void
+    onClick: () => void
 }
 
 
-const CardThumbnailComponent = ({record, callback}: Props) => {
+const CardThumbnailComponent = ({record, callback, onClick}: Props) => {
     const [recordLocal, setRecordLocal] = useState<RecordType>(record)
     const [showOptions, setShowOptions] = useState<boolean>(false)
     const [modalConfirmationData, setModalConfirmationData] = useState<ModalConfirmationData|null>(null)
@@ -132,7 +133,7 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
                 
             }
         })()
-    }, [recordLocal, getRecordThumbnail, setToastMessage])
+    }, [recordLocal, getRecordThumbnail])
 
     useEffect(() => {
         if(currentUser){
@@ -144,7 +145,7 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
 
     return (
         <div className={styles.wrapper}>
-            <div className={styles.containerImage}>
+            <div className={styles.containerImage} onClick={onClick}>
                 {thumbnailUrl && <img className={styles.image} src={thumbnailUrl} alt={recordLocal.name} />}
                 <div className={styles.containerIcon}>
                     <div className={styles.subContainerIcon}>
@@ -154,7 +155,7 @@ const CardThumbnailComponent = ({record, callback}: Props) => {
                 <div className={styles.duration}>{formatDuration(recordLocal.duration_seconds)}</div>
             </div>
             <div className={styles.body}>
-                <div className={styles.containerData}>
+                <div className={styles.containerData} onClick={onClick}>
                     <span className={styles.title}>{recordLocal.name}</span>
                     <div className={styles.containerInfo}>
                         <div className={styles.infoItem}>

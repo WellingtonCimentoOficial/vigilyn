@@ -169,6 +169,15 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
+    const getRecordVideo = useCallback(async (recordId: number) => {
+        const response = await axiosPrivate.get(`/records/${recordId}/video/`,{
+            responseType: "blob"
+        })
+        const blob = await response.data
+        const data: string = URL.createObjectURL(blob)
+        return data
+    }, [axiosPrivate])
+
     const downloadRecord = useCallback(async (recordId: number) => {
         const response = await axiosPrivate.get(`/records/${recordId}/video/download/`,{
             responseType: "blob"
@@ -259,6 +268,7 @@ export const useBackendRequests = () => {
         getStorage, 
         getRecords,
         getRecordThumbnail,
+        getRecordVideo,
         downloadRecord,
         deleteRecord,
         updateRecord,
