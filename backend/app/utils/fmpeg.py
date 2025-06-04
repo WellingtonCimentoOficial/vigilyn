@@ -31,8 +31,9 @@ class Fmpeg:
         email = Email()
         log = Log()
 
-        title = "%H-%M-%S"
-        filename = "_".join([str(camera.id), "%Y-%m-%d", title]) + self.video_format
+        filename = (
+            "_".join([str(camera.id), "%Y-%m-%d", "%H-%M-%S"]) + self.video_format
+        )
 
         tmp_dir = get_settings().tmp_directory_path
         output_path = f"{tmp_dir}/{filename}"
@@ -63,7 +64,7 @@ class Fmpeg:
             "-strftime",
             "1",
             "-metadata",
-            f"title={title}",
+            f"title={camera.name}",
             "-loglevel",
             "error",
             output_path,
@@ -116,38 +117,3 @@ class Fmpeg:
                 level="error",
                 message=f"func: generate_thumbnail error: {str(e)}",
             )
-
-    @staticmethod
-    def transcode_video_to_stream(filepath):
-        command = [
-            "ffmpeg",
-            "-i",
-            filepath,
-            "-vcodec",
-            "libx264",
-            "-tune",
-            "zerolatency",
-            "-acodec",
-            "aac",
-            "-b:a",
-            "128k",
-            "-f",
-            "mp4",
-            "-movflags",
-            "frag_keyframe+empty_moov",
-            "pipe:1",
-        ]
-
-        process = subprocess.Popen(
-            command, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL
-        )
-
-        return process
-
-    @staticmethod
-    def generate_stream(process):
-        while True:
-            chunk = process.stdout.read(1024 * 1024)
-            if not chunk:
-                break
-            yield chunk
