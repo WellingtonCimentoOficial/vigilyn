@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styles from './MenuComponent.module.css'
 import { NavLink, useNavigate } from 'react-router'
-import { PiHouse, PiCamera, PiRecord, PiUser, PiDoorOpen, PiLifebuoy, PiGear, PiLock } from "react-icons/pi";
+import { PiHouse, PiCamera, PiRecord, PiUser, PiDoorOpen, PiLifebuoy, PiGear, PiLock, PiArrowCircleLeft, PiArrowCircleRight } from "react-icons/pi";
 import { useBackendRequests } from '../../../hooks/useBackRequests';
 import { AuthContext } from '../../../contexts/AuthContext';
 import LogoFullComponent from '../../Logos/LogoFullComponent/LogoFullComponent';
+import LogoSimbolComponent from '../../Logos/LogoSimbolComponent/LogoSimbolComponent';
 
 
 type Props = {}
@@ -23,6 +24,7 @@ type Data = Section[]
 const MenuComponent = (props: Props) => {
     const { signOut } = useBackendRequests()
     const { tokens, clearSession } = useContext(AuthContext)
+    const [isOpen, setIsOpen] = useState<boolean>(true)
 
     const navigate = useNavigate()
 
@@ -83,33 +85,63 @@ const MenuComponent = (props: Props) => {
         }
     }
 
+    const handleOpenClose = (value: string) => {
+        if(value === "open"){
+            setIsOpen(true)
+        }else{
+            setIsOpen(false)
+        }
+        localStorage.setItem("menu", value)
+    }
+
+    useEffect(() => {
+        const menu = localStorage.getItem("menu")
+        if(menu){
+            if(menu === "open"){
+                setIsOpen(true)
+            }else{
+                setIsOpen(false)
+            }
+        }
+    }, [])
+
     return (
-        <div className={styles.wrapper}>
-            <NavLink className={styles.header} to="/">
-                <LogoFullComponent />
-            </NavLink>
+        <div className={`${styles.wrapper} ${!isOpen ? styles.wrapperClosed : ""}`}>
+            <div className={`${styles.header} ${!isOpen ? styles.headerClosed : ""}`}>
+                <NavLink className={styles.containerLogo} to="/">
+                    {isOpen ? <LogoFullComponent /> : <LogoSimbolComponent className={styles.logo} />}
+                </NavLink>
+                {isOpen && <PiArrowCircleLeft className={styles.toggleIcon} onClick={() => handleOpenClose("close")} />}
+            </div>
             <div className={styles.body}>
-                <ul className={styles.listSection}>
+                <ul className={`${styles.listSection} ${!isOpen ? styles.listSectionClosed : ""}`}>
                     {data.map((section, sectionIndex) => (
-                        <li key={sectionIndex} className={styles.liSection}>
+                        <li key={sectionIndex} className={`${styles.liSection} ${!isOpen ? styles.liSectionClosed : ""}`}>
                             <div className={styles.liSectionHeader}>
-                                <span className={styles.liSectionHeaderTitle}>{section.name.toUpperCase()}</span>
+                                <span className={`${styles.liSectionHeaderTitle} ${!isOpen ? styles.liSectionHeaderTitleClosed : ""}`}>{section.name.toUpperCase()}</span>
                             </div>
                             <div className={styles.liSectionBody}>
                                 <ul className={styles.listItem}>
+                                    {sectionIndex === 0 && !isOpen &&
+                                        <li className={styles.liItem} onClick={() => handleOpenClose("open")}>
+                                            <div className={`${styles.aItem} ${!isOpen ? styles.aItemClosed : ""}`}>
+                                                <PiArrowCircleRight className={`${styles.icon} ${!isOpen ? styles.iconClosed : ""}`} />
+                                            </div>
+                                        </li>
+                                    }
                                     {section.items.map((item, itemIndex) => (
                                         <li key={itemIndex} className={styles.liItem}>
                                             <NavLink 
                                                 to={item.href} 
                                                 end={item.href === "/dashboard/"}
-                                                className={({isActive}) => isActive ? `${styles.aItem} ${styles.active}` : styles.aItem}
+                                                className={({isActive}) => `${styles.aItem } ${!isOpen ? styles.aItemClosed : ""} ${isActive ? styles.active : ""}`}
                                             >
                                                 {({ isActive }) => (
                                                     <>
                                                         {React.cloneElement(item.icon, {
-                                                            className: `${styles.icon} ${isActive ? styles.active : ""}`,
+                                                            className: `${styles.icon} ${!isOpen ? styles.iconClosed : ""} ${isActive ? styles.active : ""}`,
                                                         })}
-                                                        <span className={`${styles.text} ${isActive ? styles.active : ""}`}>{item.name}</span>
+                                                        <span className={`${styles.text} ${!isOpen ? styles.textClosed : ""} ${isActive ? styles.active : ""}`}>{item.name}</span>
                                                     </>
                                                 )}
                                             </NavLink>
@@ -117,9 +149,9 @@ const MenuComponent = (props: Props) => {
                                     ))}
                                     {sectionIndex === 1 &&
                                         <li className={styles.liItem} onClick={handleLogout}>
-                                            <div className={styles.aItem}>
-                                                <PiDoorOpen className={styles.icon} />
-                                                <span className={styles.text}>Logout</span>
+                                            <div className={`${styles.aItem} ${!isOpen ? styles.aItemClosed : ""}`}>
+                                                <PiDoorOpen className={`${styles.icon} ${!isOpen ? styles.iconClosed : ""}`} />
+                                                <span className={`${styles.text} ${!isOpen ? styles.textClosed : ""}`}>Logout</span>
                                             </div>
                                         </li>
                                     }
