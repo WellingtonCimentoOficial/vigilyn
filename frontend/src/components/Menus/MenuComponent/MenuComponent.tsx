@@ -94,15 +94,27 @@ const MenuComponent = (props: Props) => {
         localStorage.setItem("menu", value)
     }
 
-    useEffect(() => {
-        const menu = localStorage.getItem("menu")
-        if(menu){
-            if(menu === "open"){
-                setIsOpen(true)
-            }else{
-                setIsOpen(false)
+    const handleResize = () => {
+        if(window.innerWidth <= 1460){
+            setIsOpen(false)
+        }else{
+            const menu = localStorage.getItem("menu")
+            if(menu){
+                if(menu === "open"){
+                    setIsOpen(true)
+                }else{
+                    setIsOpen(false)
+                }
             }
         }
+    }
+
+    useEffect(() => handleResize(), [])
+
+    useEffect(() => {
+        window.addEventListener("resize", handleResize)
+
+        return () => window.removeEventListener("resize", handleResize)
     }, [])
 
     return (

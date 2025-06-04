@@ -18,6 +18,9 @@
     gap: 10px;
     justify-content: space-between;
 }
+/* .section1 > * {
+    flex: 1;
+} */
 .sectionContainer {
     display: flex;
     gap: 10px;
@@ -40,4 +43,40 @@
 }
 .section2Body {
     height: 150px;
+}
+@media (max-width: 1751px) {
+    .wrapper {
+        /* background-color: red; */
+    }
+    .sectionContainer {
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+    }
+    .aside {
+        width: 100%;
+    }
+    .sectionWrapper {
+        width: 100%;
+    }
+}
+@media (max-width: 1460px) {
+    .wrapper {
+        /* background-color: blue; */
+    }
+    .sectionLayout {
+        flex-wrap: wrap;
+    }
+}
+@media (max-width: 935px) {
+    .wrapper {
+        /* background-color: green; */
+    }
+    .section1 {
+        width: 100px;
+        overflow-x: auto;
+    }
+    .section2Body {
+        width: 100%;
+        flex-shrink: 0;
+    }
 }

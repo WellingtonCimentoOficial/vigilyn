@@ -26,5 +26,12 @@
     font-weight: 300;
 }
 .body {
-
+}
+@media (max-width: 935px) {
+    .header {
+        flex-wrap: wrap;
+    }
+    .headerContent {
+        width: 100%;
+    }
 }

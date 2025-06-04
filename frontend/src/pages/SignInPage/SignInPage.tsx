@@ -59,7 +59,7 @@ const SignInPage = (props: Props) => {
                     setTokens(data)
                     setIsAuthenticated(true)
                 }
-                navigate("/dashboard")
+                navigate("/dashboard/")
             } catch (error: any) {
                 const status = error.response?.status
                 const data = error.response?.data
@@ -80,7 +80,7 @@ const SignInPage = (props: Props) => {
 
     useEffect(() => {
         if(isAuthenticated){
-            navigate("/dashboard")
+            navigate("/dashboard/")
         }
     }, [isAuthenticated, navigate])
 

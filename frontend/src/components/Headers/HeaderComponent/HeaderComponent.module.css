@@ -90,3 +90,11 @@
     font-size: 0.85rem;
     color: var(--black-color-light);
 }
+@media (max-width: 935px) {
+    .container {
+        width: 100%;
+    }
+    .input {
+        width: 100%;
+    }
+}

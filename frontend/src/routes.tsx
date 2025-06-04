@@ -17,7 +17,7 @@ function Routes(){
                 <Route path="/auth/sign-in/" element={<SignInPage />} />
             </Route>
 
-            <Route path="/" element={<Navigate to="/dashboard" />}/>
+            <Route path="/" element={<Navigate to="/dashboard/" />}/>
 
             <Route element={<PrivateRoute />}>
                 <Route path="/dashboard" element={<MainLayout />}>
