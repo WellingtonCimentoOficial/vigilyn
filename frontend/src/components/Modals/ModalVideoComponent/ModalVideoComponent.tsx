@@ -3,7 +3,6 @@ import styles from "./ModalVideoComponent.module.css"
 import ModalBaseComponent from '../ModalBaseComponent/ModalBaseComponent'
 import { RecordType } from '../../../types/BackendTypes'
 import { useBackendRequests } from '../../../hooks/useBackRequests'
-import ReactPlayer from 'react-player'
 
 type Props = {
     showModal: boolean
@@ -34,11 +33,10 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
             description="View the full recording captured by the security system below."
             showModal={showModal} 
             setShowModal={setShowModal}>
-            <ReactPlayer 
-                url={videoUrl} 
-                controls
-                playing
-            />
+            <video controls width="640" height="360">
+                <source src={videoUrl} type={`video/${data.format}`} />
+                Your browser does not support HTML5 video with H.265.
+            </video>
         </ModalBaseComponent>
     )
 }
