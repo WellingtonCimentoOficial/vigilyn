@@ -8,11 +8,6 @@ from app.extensions import db
 from app.utils.logger import Log
 
 
-def create_tmp_dir():
-    tmp_dir = get_settings().tmp_directory_path
-    os.makedirs(tmp_dir, exist_ok=True)
-
-
 def is_idle(file_path: str, idle_seconds: float):
     last_modified = os.path.getmtime(file_path)
     return (time.time() - last_modified) > idle_seconds
