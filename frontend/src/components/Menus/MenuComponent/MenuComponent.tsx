@@ -7,7 +7,6 @@ import { AuthContext } from '../../../contexts/AuthContext';
 import LogoFullComponent from '../../Logos/LogoFullComponent/LogoFullComponent';
 import LogoSimbolComponent from '../../Logos/LogoSimbolComponent/LogoSimbolComponent';
 
-
 type Props = {
     setOpenMenu: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -122,6 +121,7 @@ const MenuComponent = ({setOpenMenu}: Props) => {
     }, [])
 
     return (
+
         <div className={`${styles.wrapper} ${!isOpen ? styles.wrapperClosed : ""}`}>
             <div className={`${styles.header} ${!isOpen ? styles.headerClosed : ""}`}>
                 <NavLink className={styles.containerLogo} to="/">

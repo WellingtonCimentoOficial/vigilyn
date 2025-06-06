@@ -28,14 +28,15 @@ const HeaderComponent = ({setOpenMenu}: Props) => {
                         </div>
                     </form>
                 </div>
+                <span className={styles.helloText}>Hello, {currentUser?.name}</span>
                 <div className={styles.containerFunc}>
-                    <div className={styles.containerIcon}>
+                    <div className={`${styles.containerIcon} ${styles.noMobile}`}>
                         <PiEnvelopeSimple className={styles.icon} />
                     </div>
                     <div className={styles.containerIcon}>
                         <PiBell className={styles.icon} />
                     </div>
-                    <NavLink className={styles.containerAccount} to="/dashboard/profile/">
+                    <NavLink className={`${styles.containerAccount} ${styles.noMobile}`} to="/dashboard/profile/">
                         <div className={styles.containerAccountHeader}>
                             <div className={`${styles.containerIcon} ${styles.containerAccountHeaderIcon}`}>
                                 <PiUser className={styles.icon} />

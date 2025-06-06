@@ -54,6 +54,7 @@
 }
 .sectionBody {
     display: flex;
+    /* flex-wrap: wrap; */
     gap: 200px;
 }
 .sectionBodyColumn {
@@ -79,4 +80,14 @@
 }
 .sectionBody, .sectionHeader {
     padding: 20px 0px;
+}
+@media (max-width: 870px) {
+    .sectionBody {
+        gap: 20px;
+    }
+}
+@media (max-width: 555px) {
+    .sectionBody {
+        flex-direction: column;
+    }
 }

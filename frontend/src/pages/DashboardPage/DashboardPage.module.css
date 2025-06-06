@@ -18,6 +18,7 @@
     gap: 10px;
     justify-content: space-between;
     overflow-x: auto; 
+    scroll-behavior: smooth;
 }
 /* .section1 > * {
     flex: 1;
@@ -87,6 +88,7 @@
     }
     .section2Body {
         overflow-x: auto;
+        scroll-behavior: smooth;
         /* background-color: red; */
     }
 }

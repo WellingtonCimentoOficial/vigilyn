@@ -124,6 +124,9 @@
     }
 }
 @media (max-width: 870px) {
+    .wrapper {
+        height: auto;
+    }
     .toggleIconMobile {
         display: block;
     }
