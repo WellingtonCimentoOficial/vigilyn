@@ -79,3 +79,29 @@
     color: var(--black-color-light);
     font-weight: 300;
 }
+@media (max-width: 1230px){
+    .container {
+        justify-content: center;
+        /* background-color: red; */
+    }
+    .container {
+        height: 100%;
+    }
+    .container1 { 
+        width: 80%;
+        justify-content: space-between;
+    }
+    .container2 {
+        display: none;
+    }
+}
+@media (max-width: 950px){
+    .container1 {
+        width: 100%;
+    }
+}
+@media (max-width: 700px){
+    .container {
+        width: 100%;
+    }
+}

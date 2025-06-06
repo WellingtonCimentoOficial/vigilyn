@@ -23,6 +23,12 @@
     fill: var(--black-color-light);
     cursor: pointer;
 }
+.toggleIconMobile {
+    display: none;
+    width: var(--icon-size);
+    height: var(--icon-size);
+    cursor: pointer;
+}
 .body {
     /* background-color:burlywood; */
 }
@@ -111,4 +117,17 @@
 }
 .aItemClosed {
     border: 0;
+}
+@media (max-width: 1460px){
+    .toggleIcon, .toggleIconOpen {
+        display: none;
+    }
+}
+@media (max-width: 870px) {
+    .toggleIconMobile {
+        display: block;
+    }
+    .wrapper {
+        background-color: white;
+    }
 }

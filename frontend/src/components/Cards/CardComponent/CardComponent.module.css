@@ -3,6 +3,7 @@
     padding: var(--padding);
     border-radius: var(--principal-border-radius);
     width: 100%;
+    /* min-width: 250px; */
     text-decoration: none;
 }
 .header {

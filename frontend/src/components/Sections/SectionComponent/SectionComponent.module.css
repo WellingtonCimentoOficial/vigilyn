@@ -6,6 +6,7 @@
     flex-direction: column;
     gap: 20px;
     flex-grow: 1;
+    max-width: 100%;
 }
 .header {
     display: flex;

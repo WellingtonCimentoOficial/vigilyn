@@ -5,7 +5,7 @@ import ax, { AxiosRequestConfig, AxiosResponse } from "axios";
 export const useAxios = () => {
     const { tokens, isLoading } = useContext(AuthContext)
 
-    const BASE_URL = process.env.NODE_ENV === "development" ? "http://127.0.0.1:5000/api" : "/api"
+    const BASE_URL = process.env.NODE_ENV === "development" ? "http://127.0.0.1:80/api" : "/api"
 
     const axios = useMemo(() => {
         return ax.create({

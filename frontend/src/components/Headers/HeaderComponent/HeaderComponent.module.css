@@ -61,6 +61,9 @@
     padding: 15px;
     cursor: pointer;
 }
+.menuContainerIcon {
+    display: none;
+}
 .icon {
     font-size: var(--icon-size);
 }
@@ -96,5 +99,31 @@
     }
     .input {
         width: 100%;
+    }
+}
+@media (max-width: 870px) {
+    .menuContainerIcon {
+        display: flex;
+    }
+}
+@media (max-width: 590px){
+    .container {
+        display: none;
+    }
+    .wrapper {
+        justify-content: flex-start;
+    }
+}
+@media (max-width: 465px){
+    .containerAccountBody {
+        display: none;
+    }
+    .header {
+        background-color: white;
+        width: max-content;
+        padding: 0;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.150);
+        padding: 5px;
+        border-radius: 35px;
     }
 }

@@ -16,9 +16,7 @@ const SectionComponent = ({title, children, content}: Props) => {
                     {content}
                 </div>
             }
-            <div className={styles.body}>
-                {children}
-            </div>
+            {children}
         </div>
     )
 }

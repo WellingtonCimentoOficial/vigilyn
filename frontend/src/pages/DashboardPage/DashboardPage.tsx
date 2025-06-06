@@ -124,12 +124,14 @@ const DashboardPage = (props: Props) => {
             content={
                 <div className={styles.header}>
                     <ButtonComponent 
+                        className={styles.button}
                         icon={<PiCamera />} 
                         text="Manage cameras" 
                         filled 
                         path='/dashboard/cameras/'
                     />
                     <ButtonComponent 
+                        className={styles.button}
                         text="Manage records"
                         path='/dashboard/records/'
                     />

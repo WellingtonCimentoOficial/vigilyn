@@ -1,18 +1,23 @@
 import React, { useContext } from 'react'
 import styles from "./HeaderComponent.module.css"
-import { PiMagnifyingGlass, PiBell, PiEnvelopeSimple, PiUser } from "react-icons/pi";
+import { PiMagnifyingGlass, PiBell, PiEnvelopeSimple, PiUser, PiList } from "react-icons/pi";
 import { UserContext } from '../../../contexts/UserContext';
 import { NavLink } from 'react-router';
 
 
-type Props = {}
+type Props = {
+    setOpenMenu: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-const HeaderComponent = (props: Props) => {
+const HeaderComponent = ({setOpenMenu}: Props) => {
     const { currentUser } = useContext(UserContext)
 
     return (
         <header className={styles.header}>
             <div className={styles.wrapper}>
+                <div className={`${styles.containerIcon} ${styles.menuContainerIcon}`} onClick={() => setOpenMenu(true)}>
+                    <PiList className={styles.icon} />
+                </div>
                 <div className={styles.container}>
                     <form className={styles.form}>
                         <div className={styles.inputContainer}>

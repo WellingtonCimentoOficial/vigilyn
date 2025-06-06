@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styles from './MenuComponent.module.css'
 import { NavLink, useNavigate } from 'react-router'
-import { PiHouse, PiCamera, PiRecord, PiUser, PiDoorOpen, PiLifebuoy, PiGear, PiLock, PiArrowCircleLeft, PiArrowCircleRight } from "react-icons/pi";
+import { PiHouse, PiCamera, PiRecord, PiUser, PiDoorOpen, PiLifebuoy, PiGear, PiLock, PiArrowCircleLeft, PiArrowCircleRight, PiX } from "react-icons/pi";
 import { useBackendRequests } from '../../../hooks/useBackRequests';
 import { AuthContext } from '../../../contexts/AuthContext';
 import LogoFullComponent from '../../Logos/LogoFullComponent/LogoFullComponent';
 import LogoSimbolComponent from '../../Logos/LogoSimbolComponent/LogoSimbolComponent';
 
 
-type Props = {}
+type Props = {
+    setOpenMenu: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 type Item = {
     name: string,
@@ -21,7 +23,7 @@ type Section = {
 }
 type Data = Section[]
 
-const MenuComponent = (props: Props) => {
+const MenuComponent = ({setOpenMenu}: Props) => {
     const { signOut } = useBackendRequests()
     const { tokens, clearSession } = useContext(AuthContext)
     const [isOpen, setIsOpen] = useState<boolean>(true)
@@ -95,7 +97,9 @@ const MenuComponent = (props: Props) => {
     }
 
     const handleResize = () => {
-        if(window.innerWidth <= 1460){
+        if(window.innerWidth <= 870){
+            setIsOpen(true)
+        }else if(window.innerWidth <= 1460){
             setIsOpen(false)
         }else{
             const menu = localStorage.getItem("menu")
@@ -124,6 +128,7 @@ const MenuComponent = (props: Props) => {
                     {isOpen ? <LogoFullComponent /> : <LogoSimbolComponent className={styles.logo} />}
                 </NavLink>
                 {isOpen && <PiArrowCircleLeft className={styles.toggleIcon} onClick={() => handleOpenClose("close")} />}
+                {isOpen && <PiX className={styles.toggleIconMobile} onClick={() => setOpenMenu(false)} />}
             </div>
             <div className={styles.body}>
                 <ul className={`${styles.listSection} ${!isOpen ? styles.listSectionClosed : ""}`}>
@@ -135,7 +140,7 @@ const MenuComponent = (props: Props) => {
                             <div className={styles.liSectionBody}>
                                 <ul className={styles.listItem}>
                                     {sectionIndex === 0 && !isOpen &&
-                                        <li className={styles.liItem} onClick={() => handleOpenClose("open")}>
+                                        <li className={`${styles.liItem} ${styles.toggleIconOpen}`} onClick={() => handleOpenClose("open")}>
                                             <div className={`${styles.aItem} ${!isOpen ? styles.aItemClosed : ""}`}>
                                                 <PiArrowCircleRight className={`${styles.icon} ${!isOpen ? styles.iconClosed : ""}`} />
                                             </div>
