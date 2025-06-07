@@ -1,3 +1,7 @@
+.calendar{
+    border: 0;
+    border-radius: var(--principal-border-radius);
+}
 .calendar :global(.react-calendar__tile:disabled) {
     background-color: #f0f0f0;
     color: #ababab;
@@ -10,12 +14,12 @@
 }
 
 .calendar :global(.react-calendar__tile--now) {
-    background: var(--second-color);
+    background: rgba(0, 0, 0, 0.050);
 }
 
 .calendar :global(.react-calendar__tile--now:enabled:hover),
 .calendar :global(.react-calendar__tile--now:enabled:focus) {
-    background: var(--second-color);
+    background: rgba(0, 0, 0, 0.080);
 }
 
 .calendar :global(.react-calendar__tile--hasActive) {
@@ -29,6 +33,8 @@
 
 .calendar :global(.react-calendar__tile--active) {
     background: var(--principal-color);
+}
+.calendar :global(.react-calendar__tile--active) > * {
     color: white;
 }
 

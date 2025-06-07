@@ -30,7 +30,6 @@
 }
 .containerTable {
     overflow-x: auto;
-    overflow-y: hidden;
 }
 .table {
     width: 100%;
