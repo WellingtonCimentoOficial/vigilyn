@@ -63,6 +63,7 @@
         /* background-color: red; */
         align-items: flex-end;
         height: 100%;
+        z-index: 3;
     }
     .container {
         max-height: 100%;

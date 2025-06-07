@@ -46,3 +46,8 @@
 .optionText {
     color: var(--black-color-light);
 }
+@media (max-width: 465px){
+    .subContainerOptions {
+        z-index: 2;
+    }
+}

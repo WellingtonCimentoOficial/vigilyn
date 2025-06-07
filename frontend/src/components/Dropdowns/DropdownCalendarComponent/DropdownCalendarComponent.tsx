@@ -44,7 +44,7 @@ const DropdownCalendarComponent = ({show, data, disabled, callback, callbackShow
             </div>
             <div className={`${styles.body} ${show ? styles.bodyShow : ""}`}>
                 <Calendar
-                allowPartialRange
+                    allowPartialRange
                     className={calendarStyles.calendar} 
                     value={data}
                     onChange={(value) => {

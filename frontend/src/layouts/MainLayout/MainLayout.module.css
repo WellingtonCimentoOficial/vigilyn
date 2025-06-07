@@ -27,6 +27,7 @@
     position: fixed;
     bottom: 20px;
     width: 100%;
+    z-index: 1;
 }
 @media (max-width: 870px) {
     .sideNav {
@@ -52,7 +53,7 @@
         position: sticky;
         top: 0;
         left: 0;
-        z-index: 1;
+        z-index: 3;
     }
     .footer {
         display: flex;

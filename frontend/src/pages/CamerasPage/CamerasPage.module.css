@@ -30,6 +30,7 @@
 }
 .containerTable {
     overflow-x: auto;
+    overflow-y: hidden;
 }
 .table {
     width: 100%;
@@ -53,8 +54,6 @@
 }
 .td {
     color: var(--black-color-light);
-    /* font-weight: 300; */
-    /* background-color: blue; */
 }
 .profile {
     display: flex;

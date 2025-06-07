@@ -14,8 +14,8 @@
     gap: 20px;
 }
 .headerContainerIcon {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 100%;
     background-color: var(--principal-color);
     display: flex;
@@ -23,8 +23,8 @@
     justify-content: center;
 }
 .icon {
-    width: 3em;
-    height: 3em;
+    width: 2.3em;
+    height: 2.3em;
 }
 .headerContainerBody {
     display: flex;
@@ -54,7 +54,7 @@
 }
 .sectionBody {
     display: flex;
-    /* flex-wrap: wrap; */
+    flex-wrap: wrap;
     gap: 200px;
 }
 .sectionBodyColumn {
@@ -73,7 +73,7 @@
     font-size: 0.9rem;
 }
 .sectionBodyItemText {
-
+    white-space: nowrap;
 }
 .button {
     font-size: 0.9rem;
@@ -85,9 +85,23 @@
     .sectionBody {
         gap: 20px;
     }
-}
-@media (max-width: 555px) {
     .sectionBody {
         flex-direction: column;
+    }
+}
+@media (max-width: 590px){
+    .headerContainerIcon {
+        width: 60px;
+        height: 60px;
+    }
+    .icon {
+        width: var(--icon-size);
+        height: var(--icon-size);
+    }
+    .headerContainerBodyTitle {
+        font-size: 1rem;
+    }
+    .headerContainerBodyText {
+        font-size: 0.9rem;
     }
 }
