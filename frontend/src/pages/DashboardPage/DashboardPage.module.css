@@ -92,7 +92,7 @@
         /* background-color: red; */
     }
 }
-@media (max-width: 440px){
+@media (max-width: 465px){
     .button {
         width: 100%;
     }

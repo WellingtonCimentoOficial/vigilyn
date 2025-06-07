@@ -11,6 +11,7 @@
     gap: 40px;
     justify-content: space-between;
     padding: 0px 20px;
+    flex-wrap: wrap;
 }
 .column {
     flex: 1;

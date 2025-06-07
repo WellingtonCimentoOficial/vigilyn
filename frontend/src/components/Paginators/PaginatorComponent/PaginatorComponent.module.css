@@ -51,3 +51,25 @@
     align-items: center;
     gap: 10px;
 }
+@media (max-width: 1751px) {
+
+}
+@media (max-width: 1460px) {
+
+}
+@media (max-width: 935px) {
+
+}
+@media (max-width: 465px){
+    .wrapper {
+        flex-direction: column-reverse;
+    }
+    .text {
+        display: none;
+    }
+    .items {
+        display: none;
+    }
+}
+@media (max-width: 440px){
+}

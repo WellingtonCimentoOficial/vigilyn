@@ -6,9 +6,9 @@ type Props = React.InputHTMLAttributes<HTMLInputElement>
 
 const SearchBarComponent = ({type, placeholder, className, ...rest}: Props) => {
     return (
-        <div className={styles.wrapper}>
+        <div className={`${styles.wrapper} ${className}`}>
             <input 
-                className={`${styles.input} ${className}`} 
+                className={styles.input} 
                 type="text" 
                 placeholder={placeholder ?? "Search for something..."} 
                 {...rest} 

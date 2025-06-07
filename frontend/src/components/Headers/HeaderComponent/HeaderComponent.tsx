@@ -15,7 +15,7 @@ const HeaderComponent = ({setOpenMenu}: Props) => {
     return (
         <header className={styles.header}>
             <div className={styles.wrapper}>
-                <div className={`${styles.containerIcon} ${styles.menuContainerIcon}`} onClick={() => setOpenMenu(true)}>
+                <div className={`${styles.containerIcon} ${styles.menuContainerIcon}`} onClick={() => setOpenMenu(current => !current)}>
                     <PiList className={styles.icon} />
                 </div>
                 <div className={styles.container}>

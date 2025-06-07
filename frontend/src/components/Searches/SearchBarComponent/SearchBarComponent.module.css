@@ -1,9 +1,9 @@
 .wrapper {
     position: relative;
-    width: max-content;
+    min-width: 300px;
 }
 .input {
-    min-width: 300px;
+    width: 100%;
     padding: 13px 40px 13px 20px;
     border-radius: var(--principal-border-radius);
     color: var(--black-color-light);

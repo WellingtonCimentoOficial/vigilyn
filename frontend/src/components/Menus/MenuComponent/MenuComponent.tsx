@@ -86,6 +86,12 @@ const MenuComponent = ({setOpenMenu}: Props) => {
         }
     }
 
+    const handleOpenMenu = (value: boolean) => {
+        if(window.innerWidth <= 870){
+            setOpenMenu(value)
+        }
+    }
+
     const handleOpenClose = (value: string) => {
         if(value === "open"){
             setIsOpen(true)
@@ -152,6 +158,7 @@ const MenuComponent = ({setOpenMenu}: Props) => {
                                                 to={item.href} 
                                                 end={item.href === "/dashboard/"}
                                                 className={({isActive}) => `${styles.aItem } ${!isOpen ? styles.aItemClosed : ""} ${isActive ? styles.active : ""}`}
+                                                onClick={() => handleOpenMenu(false)}
                                             >
                                                 {({ isActive }) => (
                                                     <>

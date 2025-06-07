@@ -65,7 +65,8 @@
     display: none;
 }
 .icon {
-    font-size: var(--icon-size);
+    width: var(--icon-size);
+    height: var(--icon-size);
 }
 
 .containerAccount {

@@ -7,6 +7,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
+    flex-wrap: wrap;
 }
 .searchBar {
     width: 450px;
@@ -27,10 +28,12 @@
     flex-direction: column;
     gap: 20px;
 }
+.containerTable {
+    overflow-x: auto;
+}
 .table {
     width: 100%;
     border-collapse: collapse;
-    /* border-spacing: 10px; */
 }
 .thead {
     /* background-color: red; */
@@ -43,7 +46,7 @@
 }
 .th, .td {
     text-align: left;
-    padding: 10px 0px;
+    padding: 10px;
 }
 .th {
     font-weight: 450;
@@ -66,7 +69,30 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 .textCenter {
     text-align: center;
+}
+@media (max-width: 920px){
+    .searchBar {
+        min-width: auto;
+        width: auto;
+    }
+}
+@media (max-width: 700px) {
+    .searchBar {
+        width: 100%;
+
+    }
+    .containerFilters {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+}
+@media (max-width: 465px){
+    .button {
+        width: 100%;
+    }
 }
