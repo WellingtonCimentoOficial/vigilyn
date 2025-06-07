@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from "./ModalBaseComponent.module.css"
 import { PiX } from "react-icons/pi";
 import { AnimatePresence, motion } from "framer-motion"
@@ -13,21 +13,35 @@ type Props = {
 }
 
 const ModalBaseComponent = ({title, description, children, footer, showModal, setShowModal}: Props) => {
+    const [isMobile, setIsMobile] = useState<boolean>(false)
+
+        const handleResize = () => {
+        if(window.innerWidth <= 465){
+            setIsMobile(true)
+        }else{
+            setIsMobile(false)
+        }
+    }
 
     useEffect(() => {
         if(showModal){
-            document.body.style.overflow = "hidden"
             document.documentElement.style.overflow = "hidden"
         }else{
-            document.body.style.overflow = "auto"
             document.documentElement.style.overflow = "auto"
         }
 
         return () => {
-            document.body.style.overflow = "auto"
             document.documentElement.style.overflow = "auto"
         }
     }, [showModal])
+
+    useEffect(handleResize, [])
+
+    useEffect(() => {
+        window.addEventListener("resize", handleResize)
+
+        return () => window.removeEventListener("resize", handleResize)
+    }, [])
 
     return (
         <AnimatePresence>
@@ -41,9 +55,9 @@ const ModalBaseComponent = ({title, description, children, footer, showModal, se
                 >
                     <motion.div 
                         className={styles.container}
-                        initial={{y: -20, opacity: 0}}
+                        initial={{y: isMobile ? "100%" : -20, opacity: 0}}
                         animate={{y: 0, opacity: 1}}
-                        exit={{y: -20, opacity: 0}}
+                        exit={{y: isMobile ? "100%" : -20, opacity: 0}}
                         transition={{duration: 0.3}}
                     >
                         <div className={styles.header}>

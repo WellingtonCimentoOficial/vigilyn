@@ -50,7 +50,6 @@
     height: 1.3rem;
 }
 .body {
-
 }
 .footer {
     border-top: 1px solid rgb(225, 225, 225);
@@ -58,4 +57,15 @@
 
 .header, .body, .footer {
     padding: 20px;
+}
+@media (max-width: 465px){
+    .wrapper {
+        /* background-color: red; */
+        align-items: flex-end;
+        height: 100%;
+    }
+    .container {
+        max-height: 100%;
+        overflow-y: auto;
+    }
 }

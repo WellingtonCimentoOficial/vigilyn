@@ -1,34 +1,56 @@
 import React from 'react'
 import styles from "./MenuMobileFloatingComponent.module.css"
-import { PiMagnifyingGlass, PiBell, PiEnvelopeSimple, PiUser, PiList } from "react-icons/pi";
+import { PiUser, PiHouse, PiRecord, PiCamera } from "react-icons/pi";
 import { NavLink } from 'react-router';
 
 type Props = {}
+type Data = {
+    name: string
+    href: string
+    icon: React.ReactElement<any>
+}[]
 
 const MenuMobileFloatingComponent = (props: Props) => {
+    const data: Data = [
+        {
+            name: "Dashboard",
+            href: "/dashboard/",
+            icon: <PiHouse />
+        },
+        {
+            name: "Cameras",
+            href: "/dashboard/cameras/",
+            icon: <PiCamera />
+        },
+        {
+            name: "Records",
+            href: "/dashboard/records/",
+            icon: <PiRecord />
+        },
+        {
+            name: "Profile",
+            href: "/dashboard/profile/",
+            icon: <PiUser />
+        },
+    ]
     return (
         <div className={styles.wrapper}>
             <ul className={styles.list}>
-                <li className={styles.listLi}>
-                    <div className={styles.containerIcon}>
-                        <PiMagnifyingGlass className={styles.icon} />
-                    </div>
-                </li>
-                <li className={styles.listLi}>
-                    <div className={styles.containerIcon}>
-                        <PiBell className={styles.icon} />
-                    </div>
-                </li>
-                <li className={styles.listLi}>
-                    <div className={styles.containerIcon}>
-                        <PiEnvelopeSimple className={styles.icon} />
-                    </div>
-                </li>
-                <li className={styles.listLi}>
-                    <NavLink className={`${styles.containerIcon} ${styles.containerUser}`} to="/dashboard/profile/">
-                        <PiUser className={styles.icon} />
-                    </NavLink>
-                </li>
+                {data.map((item, index) => (
+                    <li key={index} className={styles.listLi}>
+                        <NavLink 
+                            className={({isActive}) => `${styles.containerIcon} ${isActive ? styles.active : ""}`} 
+                            to={item.href} 
+                            end={item.href === "/dashboard/"}
+                        >
+                            {({ isActive }) => (
+                                <>
+                                    {React.cloneElement(item.icon, {className: `${styles.icon} ${isActive ? styles.active : ""}`})}
+                                </>
+                            )}
+                        </NavLink>
+                    </li>
+                ))}
             </ul>
         </div>
     )
