@@ -31,7 +31,7 @@ const UsersPage = (props: Props) => {
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const [userIdsToDelete, setUserIdsToDelete] = useState<number[]>([]);
     const [userToUpdate, setUserToUpdate] = useState<UserType | null>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [showModal, setShowModal] = useState<boolean>(false)
 
     const [limit, setLimit] = useState<number>(10)

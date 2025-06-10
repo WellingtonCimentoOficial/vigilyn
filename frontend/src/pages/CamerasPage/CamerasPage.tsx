@@ -30,7 +30,7 @@ const CamerasPage = (props: Props) => {
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const [cameraIdsToDelete, setCameraIdsToDelete] = useState<number[]>([]);
     const [cameraToUpdate, setCameraToUpdate] = useState<CameraType | null>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [showModal, setShowModal] = useState<boolean>(false)
 
     const [limit, setLimit] = useState<number>(10)

@@ -27,7 +27,7 @@ const RecordsPage = (props: Props) => {
     const [checkedItems, setCheckedItems] = useState<{id: number, checked: boolean}[]>([])
     const [showActions, setShowActions] = useState<boolean>(false)
     const [showFilters, setShowFilters] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const [showFavoritesFilter, setShowFavoritesFilter] = useState<boolean>(false)
     const [initialDateFilter, setInitialDateFilter] = useState<Date>(new Date())
