@@ -104,7 +104,7 @@ const MenuComponent = ({setOpenMenu}: Props) => {
     const handleResize = () => {
         if(window.innerWidth <= 870){
             setIsOpen(true)
-        }else if(window.innerWidth <= 1460){
+        }else if(window.innerWidth <= 1115){
             setIsOpen(false)
         }else{
             const menu = localStorage.getItem("menu")

@@ -3,7 +3,6 @@
     padding: var(--padding);
     border-radius: var(--principal-border-radius);
     width: 100%;
-    /* min-width: 250px; */
     text-decoration: none;
 }
 .header {
@@ -52,7 +51,6 @@
     font-size: 0.95rem;
 }
 .focusBackground {
-    /* background: linear-gradient(to bottom right, var(--principal-color), #ff5100); */
     background: linear-gradient(
         to bottom right,
         var(--principal-color-lightest),

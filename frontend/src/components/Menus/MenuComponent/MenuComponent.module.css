@@ -30,7 +30,6 @@
     cursor: pointer;
 }
 .body {
-    /* background-color:burlywood; */
 }
 .listSection {
     display: flex;
@@ -64,7 +63,6 @@
 .aItem {
     display: flex;
     align-items: center;
-    /* background-color: aqua; */
     width: 100%;
     gap: 10px;
     font-size: 0.97rem;
@@ -103,7 +101,6 @@
     
 }
 .liSectionClosed {
-    /* padding: 0; */
 }
 .liSectionHeaderTitleClosed {
     display: none;
@@ -112,13 +109,11 @@
     display: none;
 }
 .iconClosed {
-    /* width: 2em;
-    height: 2em; */
 }
 .aItemClosed {
     border: 0;
 }
-@media (max-width: 1460px){
+@media (max-width: 1115px){
     .toggleIcon, .toggleIconOpen {
         display: none;
     }

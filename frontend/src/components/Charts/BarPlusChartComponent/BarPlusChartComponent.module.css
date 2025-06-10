@@ -8,14 +8,12 @@
     align-items: flex-end;
     gap: 10px;
     height: 100%;
-    /* background-color: gray; */
 }
 .listLi {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    /* background-color: aqua; */
     height: 100%;
     justify-content: flex-end;
 }
@@ -56,10 +54,9 @@
     background-color: var(--second-color);
 }
 .nodata {
-    /* background-color: var(--principal-color-lightest); */
     background-image: repeating-linear-gradient(
-        -22.5deg,                   /* ângulo da listra: 90° = vertical */
-        var(--second-color),  /* cor da listra */
+        -22.5deg,
+        var(--second-color),
         var(--second-color) 2px,
         transparent 2px,
         transparent 4px

@@ -85,6 +85,9 @@
     .sectionBody {
         gap: 20px;
     }
+    .sectionBodyColumn {
+        gap: 20px;
+    }
     .sectionBody {
         flex-direction: column;
     }

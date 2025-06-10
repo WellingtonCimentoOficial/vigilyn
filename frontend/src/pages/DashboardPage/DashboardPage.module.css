@@ -1,5 +1,4 @@
 .wrapper {
-    /* background-color: palegoldenrod; */
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -20,21 +19,16 @@
     overflow-x: auto; 
     scroll-behavior: smooth;
 }
-/* .section1 > * {
-    flex: 1;
-} */
 .sectionContainer {
     display: flex;
     gap: 10px;
     flex-direction: row-reverse;
     align-items: flex-start;
-    /* background-color: blue; */
 }
 .aside {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    /* background-color: red; */
     height: 100%;
 }
 .sectionWrapper {
@@ -48,7 +42,6 @@
 }
 @media (max-width: 1751px) {
     .wrapper {
-        /* background-color: red; */
     }
     .sectionContainer {
         flex-wrap: wrap;
@@ -67,7 +60,6 @@
 }
 @media (max-width: 1460px) {
     .wrapper {
-        /* background-color: blue; */
     }
     .sectionLayout {
         flex-wrap: wrap;
@@ -75,7 +67,6 @@
 }
 @media (max-width: 935px) {
     .wrapper {
-        /* background-color: green; */
     }
     .header {
         flex-wrap: wrap;
@@ -89,7 +80,6 @@
     .section2Body {
         overflow-x: auto;
         scroll-behavior: smooth;
-        /* background-color: red; */
     }
 }
 @media (max-width: 465px){
