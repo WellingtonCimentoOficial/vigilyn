@@ -86,7 +86,6 @@ const RecordsPage = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            setIsLoading(true)
             try {
                 const data = await getRecords({
                     limit: 16, 
@@ -274,6 +273,7 @@ const RecordsPage = (props: Props) => {
                                 setInitialHourFilter(props.initialHour)
                                 setFinalHourFilter(props.finalHour)
                                 setPage(1)
+                                setIsLoading(true)
                             }}
                             callbackShow={(value) => setShowFilters(current => value ?? !current)}
                         />
