@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from "./DropdownFilterComponent.module.css"
 import ButtonFilterComponent from '../../Buttons/ButtonFilterComponent/ButtonFilterComponent'
 import CheckBoxSwitchComponent from '../../Checkboxes/CheckBoxSwitchComponent/CheckBoxSwitchComponent'
-import { CameraFilterType } from '../../../types/FrontendTypes'
+import { CheckBoxFilterType } from '../../../types/FrontendTypes'
 
 type Props = {
     show: boolean
-    data: CameraFilterType[]
+    data: CheckBoxFilterType[]
     callbackShow: (value?: boolean) => void
     callback: (id: number, checked: boolean) => void
 }
@@ -32,12 +32,11 @@ const DropdownFilterComponent = ({show, data, callback, callbackShow}: Props) =>
     }
     
     useEffect(() => {
-        if(checkedItems.length === 0){
-            for(let i=0; i < data.length; i++){
-                setCheckedItems(prev => [...prev, {id: data[i].id, checked: data[i].value}])
-            }
-        }
-    }, [data, checkedItems])
+        setCheckedItems(data.map(item => ({
+            id: item.id,
+            checked: item.value
+        })))
+    }, [data])
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {

@@ -218,6 +218,12 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
+    const deleteUser = useCallback(async (userId: number) => {
+        const response = await axiosPrivate.delete(`/users/${userId}/`)
+        const data: SuccessMessageType = await response.data
+        return data
+    }, [axiosPrivate])
+
     const getRoles = useCallback(async (userId: number) => {
         const response = await axiosPrivate.get(`/users/${userId}/roles/`)
         const data: RoleType[] = await response.data
@@ -274,6 +280,7 @@ export const useBackendRequests = () => {
         updateRecord,
         deleteRecords,
         getUsers,
+        deleteUser,
         getRoles,
         updateMe,
         getSettings,

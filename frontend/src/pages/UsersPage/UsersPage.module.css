@@ -1,0 +1,96 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.containerHeader {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.searchBar {
+    width: 450px;
+}
+.containerFilters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.checkboxFilter {
+    pointer-events: none;
+}
+.container {
+    padding: 20px;
+    background-color: white;
+    border-radius: var(--principal-border-radius);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.containerTable {
+    overflow-x: auto;
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.thead {
+}
+.th {
+}
+.tr {
+}
+.tbody {
+}
+.th, .td {
+    text-align: left;
+    padding: 10px;
+    white-space: nowrap;
+}
+.th {
+    font-weight: 450;
+}
+.td {
+    color: var(--black-color-light);
+}
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profileContainerIcon {
+    background-color: var(--principal-color);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.textCenter {
+    text-align: center;
+}
+@media (max-width: 920px){
+    .searchBar {
+        min-width: auto;
+        width: auto;
+    }
+}
+@media (max-width: 700px) {
+    .searchBar {
+        width: 100%;
+
+    }
+    .containerFilters {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+}
+@media (max-width: 465px){
+    .button {
+        width: 100%;
+    }
+}

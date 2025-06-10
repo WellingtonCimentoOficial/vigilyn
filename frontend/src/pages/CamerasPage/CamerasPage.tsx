@@ -13,9 +13,10 @@ import DropdownBasicComponent from '../../components/Dropdowns/DropdownBasicComp
 import ModalCameraComponent from '../../components/Modals/ModalCameraComponent/ModalCameraComponent';
 import PaginatorComponent from '../../components/Paginators/PaginatorComponent/PaginatorComponent';
 import DropdownFilterComponent from '../../components/Dropdowns/DropdownFilterComponent/DropdownFilterComponent';
-import { CameraFilterType } from '../../types/FrontendTypes';
+import { CheckBoxFilterType } from '../../types/FrontendTypes';
 import TagStatusComponent from '../../components/Tags/TagStatusComponent/TagStatusComponent';
 import { SettingsContext } from '../../contexts/SettingsContext';
+import LoaderThreePointsComponent from '../../components/Loaders/LoaderThreePointsComponent/LoaderThreePointsComponent';
 
 type Props = {}
 
@@ -36,7 +37,7 @@ const CamerasPage = (props: Props) => {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [totalCount, setTotalCount] = useState<number>(0)
 
-    const filterData: CameraFilterType[] = [
+    const filterData: CheckBoxFilterType[] = [
         {id: 0, title: "Recording now", value: false},
         {id: 1, title: "Not recording", value: false},
         {id: 2, title: "Applied settings", value: false},
@@ -46,7 +47,7 @@ const CamerasPage = (props: Props) => {
     ]
 
     const [showFilters, setShowFilters] = useState<boolean>(false)
-    const [filters, setFilters] = useState<CameraFilterType[]>(filterData)
+    const [filters, setFilters] = useState<CheckBoxFilterType[]>(filterData)
 
     const { 
         getCameras, 
@@ -83,7 +84,6 @@ const CamerasPage = (props: Props) => {
     }
 
     const handleDeleteCamera = async () => {
-        setIsLoading(true)
         for(let i=0; i < cameraIdsToDelete.length; i++){
             try {
                 await deleteCamera(cameraIdsToDelete[i])
@@ -103,11 +103,9 @@ const CamerasPage = (props: Props) => {
                 })
             }
         }
-        setIsLoading(false)
     }
 
     const handleStartCamera = async (cameraIds: number[]) => {
-        setIsLoading(true)
         for(let i=0; i < cameraIds.length; i++){
             try {
                 const data = await startCamera(cameraIds[i])
@@ -125,10 +123,8 @@ const CamerasPage = (props: Props) => {
                 })
             }
         }
-        setIsLoading(false)
     }
     const handleStopCamera = async (cameraIds: number[]) => {
-        setIsLoading(true)
         for(let i=0; i < cameraIds.length; i++){
             let success = false
             try {
@@ -160,10 +156,8 @@ const CamerasPage = (props: Props) => {
                 })
             }
         }
-        setIsLoading(false)
     }
     const handleRestartCamera = async (cameraIds: number[]) => {
-        setIsLoading(true)
         for(let i=0; i < cameraIds.length; i++){
             try {
                 await restartCamera(cameraIds[i])
@@ -182,7 +176,6 @@ const CamerasPage = (props: Props) => {
                 })
             }
         }
-        setIsLoading(false)
     }
 
     const handlePagination = useCallback((limit: number, currentPage: number) => {
@@ -201,6 +194,7 @@ const CamerasPage = (props: Props) => {
 
     useEffect(() => {
         (async () => {
+            setIsLoading(true)
             try {
                 const recordingNowFilter = filters.find(item => item.id === 0)
                 const notRecordingFilter = filters.find(item => item.id === 1)
@@ -211,7 +205,7 @@ const CamerasPage = (props: Props) => {
                 const params = {
                     limit, 
                     page: currentPage, 
-                    search: debouncedSearch,
+                    ...(debouncedSearch && { search: debouncedSearch }),
                     ...(processRunningFilter?.value && {pid: true}),
                     ...(processStoppedFilter?.value && {pid: false}),
                     ...(recordingNowFilter?.value && {is_recording: true}),
@@ -229,6 +223,7 @@ const CamerasPage = (props: Props) => {
                     success: false
                 })
             }
+            setIsLoading(false)
         })()
     }, [limit, currentPage, debouncedSearch, filters, getCameras, setToastMessage])
 
@@ -266,7 +261,7 @@ const CamerasPage = (props: Props) => {
                         value={search} 
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder='Search by name, ip address, port, username, password, pid'
-                        disabled={cameras.length <= 0}
+                        disabled={isLoading}
                     />
                     <div className={styles.containerFilters}>
                         <CheckBoxComponent 
@@ -293,7 +288,7 @@ const CamerasPage = (props: Props) => {
                         {(() => {
                             return (
                                 <DropdownFilterComponent 
-                                    data={filterData} 
+                                    data={filters} 
                                     show={showFilters} 
                                     callbackShow={(value) => setShowFilters(current => value ?? !current)}
                                     callback={(id, checked) => setFilters(filter => filter.map(item => item.id === id ? {...item, value: checked} : item))} 
@@ -303,92 +298,96 @@ const CamerasPage = (props: Props) => {
                     </div>
                 </div>
                 <div className={styles.container}>
-                    {cameras.length > 0 ? (
-                        <>
-                            <div className={styles.containerTable}>
-                                <table className={styles.table}>
-                                    <thead className={styles.thead}>
-                                        <tr className={styles.tr}>
-                                            <th className={styles.th}>
-                                                <CheckBoxComponent 
-                                                    checked={checkedItems.find(item => item.id === 999999999)?.checked ?? false} 
-                                                    callback={(checked) => handleCheckAll(checked)} 
-                                                />
-                                            </th>
-                                            <th className={styles.th}>Name</th>
-                                            <th className={styles.th}>Ip Address</th>
-                                            <th className={styles.th}>Port</th>
-                                            <th className={styles.th}>Username</th>
-                                            <th className={styles.th}>Password</th>
-                                            <th className={styles.th}>Path</th>
-                                            <th className={`${styles.th} ${styles.textCenter}`}>Process</th>
-                                            <th className={`${styles.th} ${styles.textCenter}`}>Recording</th>
-                                            <th className={`${styles.th} ${styles.textCenter}`}>Settings</th>
-                                            <th className={`${styles.th} ${styles.textCenter}`}>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className={styles.tbody}>
-                                        {cameras.map(camera => (
-                                            <tr key={camera.id} className={styles.tr}>
+                    {!isLoading ? (
+                        cameras.length > 0 ? (
+                            <>
+                                <div className={styles.containerTable}>
+                                    <table className={styles.table}>
+                                        <thead className={styles.thead}>
+                                            <tr className={styles.tr}>
                                                 <th className={styles.th}>
                                                     <CheckBoxComponent 
-                                                        checked={checkedItems.find(item => item.id === camera.id)?.checked ?? false} 
-                                                        callback={(checked) => handleCheck(camera.id, checked)} 
+                                                        checked={checkedItems.find(item => item.id === 999999999)?.checked ?? false} 
+                                                        callback={(checked) => handleCheckAll(checked)} 
                                                     />
                                                 </th>
-                                                <td className={`${styles.td} ${styles.profile}`}>
-                                                    <div className={styles.profileContainerIcon} style={{backgroundColor: camera.profile_color}}>{camera.name[0]}</div>
-                                                    {camera.name}
-                                                </td>
-                                                <td className={styles.td}>{camera.ip_address}</td>
-                                                <td className={styles.td}>{camera.port}</td>
-                                                <td className={styles.td}>{camera.username !== "" ? camera.username : "-"}</td>
-                                                <td className={styles.td}>{camera.password !== "" ? camera.password : "-"}</td>
-                                                <td className={styles.td}>{camera.path}</td>
-                                                <td className={`${styles.td} ${styles.textCenter}`}>
-                                                    <TagStatusComponent 
-                                                        text={camera.pid ? "Running" : "Stopped"} 
-                                                        success={camera.pid ? true : false} 
-                                                    />
-                                                </td>
-                                                <td className={`${styles.td} ${styles.textCenter}`}>
-                                                    <TagStatusComponent 
-                                                        text={(!camera.is_recording || !camera.pid) ? "Not Recording" : "Recording"} 
-                                                        success={camera.is_recording} 
-                                                    />
-                                                </td>
-                                                <td className={`${styles.td} ${styles.textCenter}`}>
-                                                    <TagStatusComponent 
-                                                        text={(camera.requires_restart || settings?.requires_restart) ? "Pending" : "Applied"} 
-                                                        success={!camera.requires_restart && !settings?.requires_restart} 
-                                                    />
-                                                </td>
-                                                <td className={`${styles.td}`}>
-                                                    <DropdownBasicComponent
-                                                        data={[
-                                                            {name: "Start", icon: <PiPlay />, disabled: camera.pid ? true : false, callback: () => handleStartCamera([camera.id])},
-                                                            {name: "Stop", icon: <PiStop />, disabled: !camera.pid ? true : false, callback: () => handleStopCamera([camera.id])},
-                                                            {name: "Restart", icon: <PiArrowCounterClockwise />, disabled: !camera.pid ? true : false, callback: () => handleRestartCamera([camera.id])},
-                                                            {name: "Edit", icon: <PiPencilSimple />, callback: () => {setCameraToUpdate(camera);setShowModal(true)}},
-                                                            {name: "Delete", icon: <PiTrash />, callback: () => {setCameraIdsToDelete([camera.id]);setShowConfirmation(true)}},
-                                                        ]}
-                                                        show={showOptions.find(item => item.id === camera.id)?.show ?? false}
-                                                        callbackShow={(value) => handleShowOptions(camera.id, value)}
-                                                    />
-                                                </td>
+                                                <th className={styles.th}>Name</th>
+                                                <th className={styles.th}>Ip Address</th>
+                                                <th className={styles.th}>Port</th>
+                                                <th className={styles.th}>Username</th>
+                                                <th className={styles.th}>Password</th>
+                                                <th className={styles.th}>Path</th>
+                                                <th className={`${styles.th} ${styles.textCenter}`}>Process</th>
+                                                <th className={`${styles.th} ${styles.textCenter}`}>Recording</th>
+                                                <th className={`${styles.th} ${styles.textCenter}`}>Settings</th>
+                                                <th className={`${styles.th} ${styles.textCenter}`}>Actions</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <PaginatorComponent 
-                                currentPage={currentPage} 
-                                totalCount={totalCount} 
-                                callback={handlePagination} 
-                            />
-                        </>
+                                        </thead>
+                                        <tbody className={styles.tbody}>
+                                            {cameras.map(camera => (
+                                                <tr key={camera.id} className={styles.tr}>
+                                                    <th className={styles.th}>
+                                                        <CheckBoxComponent 
+                                                            checked={checkedItems.find(item => item.id === camera.id)?.checked ?? false} 
+                                                            callback={(checked) => handleCheck(camera.id, checked)} 
+                                                        />
+                                                    </th>
+                                                    <td className={`${styles.td} ${styles.profile}`}>
+                                                        <div className={styles.profileContainerIcon} style={{backgroundColor: camera.profile_color}}>{camera.name[0]}</div>
+                                                        {camera.name}
+                                                    </td>
+                                                    <td className={styles.td}>{camera.ip_address}</td>
+                                                    <td className={styles.td}>{camera.port}</td>
+                                                    <td className={styles.td}>{camera.username !== "" ? camera.username : "-"}</td>
+                                                    <td className={styles.td}>{camera.password !== "" ? camera.password : "-"}</td>
+                                                    <td className={styles.td}>{camera.path}</td>
+                                                    <td className={`${styles.td} ${styles.textCenter}`}>
+                                                        <TagStatusComponent 
+                                                            text={camera.pid ? "Running" : "Stopped"} 
+                                                            success={camera.pid ? true : false} 
+                                                        />
+                                                    </td>
+                                                    <td className={`${styles.td} ${styles.textCenter}`}>
+                                                        <TagStatusComponent 
+                                                            text={(!camera.is_recording || !camera.pid) ? "Not Recording" : "Recording"} 
+                                                            success={camera.is_recording} 
+                                                        />
+                                                    </td>
+                                                    <td className={`${styles.td} ${styles.textCenter}`}>
+                                                        <TagStatusComponent 
+                                                            text={(camera.requires_restart || settings?.requires_restart) ? "Pending" : "Applied"} 
+                                                            success={!camera.requires_restart && !settings?.requires_restart} 
+                                                        />
+                                                    </td>
+                                                    <td className={`${styles.td}`}>
+                                                        <DropdownBasicComponent
+                                                            data={[
+                                                                {name: "Start", icon: <PiPlay />, disabled: camera.pid ? true : false, callback: () => handleStartCamera([camera.id])},
+                                                                {name: "Stop", icon: <PiStop />, disabled: !camera.pid ? true : false, callback: () => handleStopCamera([camera.id])},
+                                                                {name: "Restart", icon: <PiArrowCounterClockwise />, disabled: !camera.pid ? true : false, callback: () => handleRestartCamera([camera.id])},
+                                                                {name: "Edit", icon: <PiPencilSimple />, callback: () => {setCameraToUpdate(camera);setShowModal(true)}},
+                                                                {name: "Delete", icon: <PiTrash />, callback: () => {setCameraIdsToDelete([camera.id]);setShowConfirmation(true)}},
+                                                            ]}
+                                                            show={showOptions.find(item => item.id === camera.id)?.show ?? false}
+                                                            callbackShow={(value) => handleShowOptions(camera.id, value)}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <PaginatorComponent 
+                                    currentPage={currentPage} 
+                                    totalCount={totalCount} 
+                                    callback={handlePagination} 
+                                />
+                            </>
+                        ):(
+                            <span style={{textAlign: "center", color: "var(--black-color-light)"}}>nothing to see around here...</span>
+                        )
                     ):(
-                        <span style={{textAlign: "center", color: "var(--black-color-light)"}}>nothing to see around here...</span>
+                        <LoaderThreePointsComponent />
                     )}
                 </div>
             </div>

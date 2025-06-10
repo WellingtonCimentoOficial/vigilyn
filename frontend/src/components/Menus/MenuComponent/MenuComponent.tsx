@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styles from './MenuComponent.module.css'
 import { NavLink, useNavigate } from 'react-router'
-import { PiHouse, PiCamera, PiRecord, PiUser, PiDoorOpen, PiLifebuoy, PiGear, PiLock, PiArrowCircleLeft, PiArrowCircleRight, PiX } from "react-icons/pi";
+import { PiHouse, PiCamera, PiRecord, PiUsers, PiDoorOpen, PiLifebuoy, PiGear, PiChartLineUpLight, PiArrowCircleLeft, PiArrowCircleRight, PiX } from "react-icons/pi";
 import { useBackendRequests } from '../../../hooks/useBackRequests';
 import { AuthContext } from '../../../contexts/AuthContext';
 import LogoFullComponent from '../../Logos/LogoFullComponent/LogoFullComponent';
@@ -51,12 +51,12 @@ const MenuComponent = ({setOpenMenu}: Props) => {
                 {
                     name: "Users",
                     href: "/dashboard/users/",
-                    icon: <PiUser />
+                    icon: <PiUsers />
                 },
                 {
-                    name: "Roles",
-                    href: "/dashboard/roles/",
-                    icon: <PiLock />
+                    name: "Analytics",
+                    href: "/dashboard/analytics/",
+                    icon: <PiChartLineUpLight />
                 },
             ]
         },

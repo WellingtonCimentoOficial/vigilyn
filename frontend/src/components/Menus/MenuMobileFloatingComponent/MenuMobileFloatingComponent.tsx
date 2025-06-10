@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from "./MenuMobileFloatingComponent.module.css"
-import { PiUser, PiHouse, PiRecord, PiCamera } from "react-icons/pi";
+import { PiUsers, PiHouse, PiRecord, PiCamera } from "react-icons/pi";
 import { NavLink } from 'react-router';
 
 type Props = {}
@@ -29,8 +29,8 @@ const MenuMobileFloatingComponent = (props: Props) => {
         },
         {
             name: "Profile",
-            href: "/dashboard/profile/",
-            icon: <PiUser />
+            href: "/dashboard/users/",
+            icon: <PiUsers />
         },
     ]
     return (

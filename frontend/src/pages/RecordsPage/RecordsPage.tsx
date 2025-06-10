@@ -237,7 +237,7 @@ const RecordsPage = (props: Props) => {
                         value={search} 
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder='Search by record name'
-                        disabled={false}
+                        disabled={isLoading}
                     />
                     <div className={styles.containerFilters}>
                         <CheckBoxComponent 
