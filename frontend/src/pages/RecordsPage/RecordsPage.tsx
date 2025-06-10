@@ -35,6 +35,7 @@ const RecordsPage = (props: Props) => {
     const [finalHourFilter, setFinalHourFilter] = useState<string>("23:59:59")
     const [record, setRecord] = useState<RecordType|null>(null)
     const [showVideoModal, setShowVideoModal] = useState<boolean>(false)
+    const [makeRequest, setMakeRequest] = useState<boolean>(true)
 
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const hasLoadedOnce = useRef(false)
@@ -167,10 +168,6 @@ const RecordsPage = (props: Props) => {
         })()
     }, [page, showFavoritesFilter, initialDateFilter, finalDateFilter, debouncedSearch, initialHourFilter, finalHourFilter, getRecords, setToastMessage])
 
-    useEffect(() => {
-        setPage(1)
-    }, [showFavoritesFilter, initialDateFilter, finalDateFilter, search])
-
     const observer = useMemo(() => {
         const obs = new IntersectionObserver((entries) => {
             if(entries[0].isIntersecting){
@@ -274,6 +271,7 @@ const RecordsPage = (props: Props) => {
                                 setFinalDateFilter(props.finalDate)
                                 setInitialHourFilter(props.initialHour)
                                 setFinalHourFilter(props.finalHour)
+                                setPage(1)
                             }}
                             callbackShow={(value) => setShowFilters(current => value ?? !current)}
                         />
