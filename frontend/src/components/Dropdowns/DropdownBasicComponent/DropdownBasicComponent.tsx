@@ -69,7 +69,7 @@ const DropdownBasicComponent = ({ data, show, icon, callbackShow }: Props) => {
                             exit={{ opacity: 0, scaleY: 0 }}
                             transition={{ duration: 0.3 }}
                             style={{
-                                position: "absolute",
+                                position: "fixed",
                                 top: coords.top,
                                 right: coords.right,
                                 zIndex: 9999,
