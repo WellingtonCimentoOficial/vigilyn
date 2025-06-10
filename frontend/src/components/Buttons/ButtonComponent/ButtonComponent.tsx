@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './ButtonComponent.module.css'
 import { useNavigate } from 'react-router'
+import LoaderThreePointsComponent from '../../Loaders/LoaderThreePointsComponent/LoaderThreePointsComponent'
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     text: string
@@ -32,11 +33,7 @@ const ButtonComponent = ({icon, text, filled, className, disabled, isLoading, pa
                 </>
 
             ):(
-                <div className={styles.containerLoader}>
-                    <div className={`${styles.loader} ${filled ? styles.loaderFilled : ""}`}></div>
-                    <div className={`${styles.loader} ${filled ? styles.loaderFilled : ""}`}></div>
-                    <div className={`${styles.loader} ${filled ? styles.loaderFilled : ""}`}></div>
-                </div>
+                <LoaderThreePointsComponent filled={filled} />
             )}
         </button>
     )

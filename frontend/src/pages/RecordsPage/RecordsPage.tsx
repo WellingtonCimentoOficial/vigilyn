@@ -12,6 +12,7 @@ import { PiTrash } from "react-icons/pi";
 import DropdownFilterRecordsComponent from '../../components/Dropdowns/DropdownFilterRecordsComponent/DropdownFilterRecordsComponent'
 import ModalConfirmationComponent from '../../components/Modals/ModalConfirmationComponent/ModalConfirmationComponent'
 import ModalVideoComponent from '../../components/Modals/ModalVideoComponent/ModalVideoComponent'
+import LoaderThreePointsComponent from '../../components/Loaders/LoaderThreePointsComponent/LoaderThreePointsComponent'
 
 
 type Props = {}
@@ -35,7 +36,6 @@ const RecordsPage = (props: Props) => {
     const [finalHourFilter, setFinalHourFilter] = useState<string>("23:59:59")
     const [record, setRecord] = useState<RecordType|null>(null)
     const [showVideoModal, setShowVideoModal] = useState<boolean>(false)
-    const [makeRequest, setMakeRequest] = useState<boolean>(true)
 
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const hasLoadedOnce = useRef(false)
@@ -86,6 +86,7 @@ const RecordsPage = (props: Props) => {
 
     useEffect(() => {
         (async () => {
+            setIsLoading(true)
             try {
                 const data = await getRecords({
                     limit: 16, 
@@ -165,6 +166,7 @@ const RecordsPage = (props: Props) => {
                     })
                 }
             }
+            setIsLoading(false)
         })()
     }, [page, showFavoritesFilter, initialDateFilter, finalDateFilter, debouncedSearch, initialHourFilter, finalHourFilter, getRecords, setToastMessage])
 
@@ -278,26 +280,30 @@ const RecordsPage = (props: Props) => {
                     </div>
                 </div>
                 <div className={styles.section1}>
-                    {records.length > 0 ? (
-                        <>
-                            {records.map(record => (
-                                <div key={record.id} className={styles.containerThumb}>
-                                    <CardThumbnailComponent 
-                                        record={record} 
-                                        callback={handleRemove} 
-                                        onClick={() => {setRecord(record);setShowVideoModal(true)}}
-                                    />
-                                    <div className={styles.containerCheckbox}>
-                                        <CheckBoxComponent 
-                                            checked={checkedItems.find(item => item.id === record.id)?.checked ?? false}
-                                            callback={(checked) => handleCheck(record.id, checked)}
+                    {!isLoading ? (
+                        records.length > 0 ? (
+                            <>
+                                {records.map(record => (
+                                    <div key={record.id} className={styles.containerThumb}>
+                                        <CardThumbnailComponent 
+                                            record={record} 
+                                            callback={handleRemove} 
+                                            onClick={() => {setRecord(record);setShowVideoModal(true)}}
                                         />
+                                        <div className={styles.containerCheckbox}>
+                                            <CheckBoxComponent 
+                                                checked={checkedItems.find(item => item.id === record.id)?.checked ?? false}
+                                                callback={(checked) => handleCheck(record.id, checked)}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </>
+                                ))}
+                            </>
+                        ):(
+                            <span style={{textAlign: "center", color: "var(--black-color-light)", width: "100%"}}>Oops! We couldn’t find anything that matches your filters and date range.</span>
+                        )
                     ):(
-                        <span style={{textAlign: "center", color: "var(--black-color-light)", width: "100%"}}>Oops! We couldn’t find anything that matches your filters and date range.</span>
+                        <LoaderThreePointsComponent />
                     )}
                 </div>
                 <ModalConfirmationComponent

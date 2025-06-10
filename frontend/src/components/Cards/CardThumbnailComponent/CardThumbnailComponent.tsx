@@ -10,6 +10,7 @@ import ModalConfirmationComponent from '../../Modals/ModalConfirmationComponent/
 import { ModalConfirmationData } from '../../../types/FrontendTypes';
 import { UserContext } from '../../../contexts/UserContext';
 import ModalRecordComponent from '../../Modals/ModalRecordComponent/ModalRecordComponent';
+import LoaderThreePointsComponent from '../../Loaders/LoaderThreePointsComponent/LoaderThreePointsComponent';
 
 type Props = {
     record: RecordType
@@ -146,13 +147,19 @@ const CardThumbnailComponent = ({record, callback, onClick}: Props) => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.containerImage} onClick={onClick}>
-                {thumbnailUrl && <img className={styles.image} src={thumbnailUrl} alt={recordLocal.name} />}
-                <div className={styles.containerIcon}>
-                    <div className={styles.subContainerIcon}>
-                        <PiPlay className={styles.icon} />
-                    </div>
-                </div>
-                <div className={styles.duration}>{formatDuration(recordLocal.duration_seconds)}</div>
+                {thumbnailUrl ? (
+                    <>
+                        <img className={styles.image} src={thumbnailUrl} alt={recordLocal.name} />
+                        <div className={styles.containerIcon}>
+                            <div className={styles.subContainerIcon}>
+                                <PiPlay className={styles.icon} />
+                            </div>
+                        </div>
+                        <div className={styles.duration}>{formatDuration(recordLocal.duration_seconds)}</div>
+                    </>
+                ):(
+                    <LoaderThreePointsComponent filled />
+                )}
             </div>
             <div className={styles.body}>
                 <div className={styles.containerData} onClick={onClick}>
