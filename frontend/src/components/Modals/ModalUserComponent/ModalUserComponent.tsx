@@ -276,10 +276,10 @@ const ModalUserComponent = ({data, showModal, isCreating, callback, setShowModal
     }, [data, currentUser, isCreating, getUserRoles, setToastMessage])
 
     useEffect(() => {
-        if(roles){
+        if(showModal && roles){
             setCheckedRoles(roles.map(role => ({id: role.id, checked: (!isCreating && user) ? user.roles.some(userRole => userRole.id === role.id) : false})))
         }
-    }, [user, roles, isCreating])
+    }, [user, roles, isCreating, showModal])
 
 
     useEffect(() => {
