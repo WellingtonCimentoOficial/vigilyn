@@ -49,3 +49,7 @@ Thumbs.db
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+
+# locks
+initialize_camera.lock
+initialize_organize_records.lock
