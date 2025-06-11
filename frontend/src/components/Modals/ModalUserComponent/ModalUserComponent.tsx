@@ -175,8 +175,8 @@ const ModalUserComponent = ({data, showModal, isCreating, callback, setShowModal
                     callback(updatedUser)
                 }
                 setToastMessage({
-                    "title": "User updated successfully!", 
-                    "description": "The user was updated successfully", 
+                    "title": `User ${isCreating ? "created": "updated"} successfully!`, 
+                    "description": `The user was ${isCreating ? "created" : "updated"} successfully`, 
                     success: true
                 })
                 setShowModal(false)
