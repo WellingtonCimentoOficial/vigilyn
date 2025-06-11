@@ -26,6 +26,8 @@ def update_roles(user, role_ids):
 
         user.roles = valid_roles
         db.session.commit()
+
+        return user.roles
     except InvalidRoleIdsException as error:
         raise error
     except:

@@ -13,6 +13,12 @@ class UserWasNotCreatedException(AppException):
     status_code = 400
 
 
+class UserAlreadyExistsException(AppException):
+    default_error = "user_already_exists"
+    default_message = "The user already exists."
+    status_code = 400
+
+
 class UserWasNotUpdatedException(AppException):
     default_error = "user_was_not_updated"
     default_message = "The user was not updated."

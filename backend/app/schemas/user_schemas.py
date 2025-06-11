@@ -2,10 +2,6 @@ from marshmallow import Schema, fields, validate, validates_schema, ValidationEr
 from .role_schemas import RoleSchema
 from .record_schemas import RecordSchema
 
-name_validate = [
-    validate.Length(min=5),
-    validate.Regexp(r"^[a-zA-Z\s]+$", error="The name must be only letters."),
-]
 email_validate = [
     validate.Regexp(
         r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
@@ -18,6 +14,14 @@ password_validate = [
         error="The password must be at least 8 characters long, including one uppercase letter, one lowercase letter, one number, and one special character.",
     )
 ]
+
+
+def validate_name(value):
+    if not value or value.strip() == "" or len(value.strip()) < 5:
+        raise ValidationError(
+            "The name must have at least 5 characters and cannot be empty or contain only spaces.",
+            field_name="name",
+        )
 
 
 def validate_passwords_match(password, confirm_password):
@@ -40,7 +44,7 @@ class UserSchema(Schema):
 class UserCreateSchema(Schema):
     name = fields.Str(
         required=True,
-        validate=name_validate,
+        validate=validate_name,
     )
     profile_color = fields.Str(
         required=False,
@@ -60,6 +64,7 @@ class UserCreateSchema(Schema):
         validate=password_validate,
     )
     confirm_password = fields.Str(required=True)
+    is_active = fields.Bool(required=True)
 
     @validates_schema
     def check_passwords_match(self, data, **kwargs):
@@ -82,7 +87,7 @@ class UserLoginSchema(Schema):
 class UserUpdateSchema(Schema):
     name = fields.Str(
         required=False,
-        validate=name_validate,
+        validate=validate_name,
     )
     profile_color = fields.Str(
         required=False,

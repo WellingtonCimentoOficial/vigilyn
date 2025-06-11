@@ -6,6 +6,7 @@ from app.exceptions.user_exceptions import (
     UserWasNotDeletedException,
     UserIsActiveParamException,
     UserFavoriteInvalidIDsException,
+    UserAlreadyExistsException,
 )
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
 from sqlalchemy import or_, desc
@@ -21,7 +22,7 @@ def create_user(**kwargs):
         ).scalar()
 
         if exists:
-            raise UserWasNotCreatedException()
+            raise UserAlreadyExistsException()
 
         hashed_password = bcrypt.generate_password_hash(kwargs["password"]).decode(
             "utf-8"
@@ -36,6 +37,8 @@ def create_user(**kwargs):
         db.session.commit()
 
         return user
+    except UserAlreadyExistsException:
+        raise
     except:
         raise UserWasNotCreatedException()
 
@@ -45,12 +48,20 @@ def update_user(user, **kwargs):
         for key, value in kwargs.items():
             if key == "password":
                 setattr(user, key, bcrypt.generate_password_hash(value).decode("utf-8"))
-            else:
-                setattr(user, key, value)
+
+            if key == "email":
+                user_by_email = User.query.filter_by(email=value).first()
+
+                if user_by_email is not None and user_by_email.id != user.id:
+                    raise UserAlreadyExistsException()
+
+            setattr(user, key, value)
 
         db.session.commit()
 
         return user
+    except UserAlreadyExistsException:
+        raise
     except:
         raise UserWasNotUpdatedException()
 
@@ -64,8 +75,9 @@ def delete_user(user):
 
 
 def filter_user(search_param, role_param, is_active_param, page, limit):
-    if is_active_param != "false" and is_active_param != "true":
-        raise UserIsActiveParamException()
+    if is_active_param is not None:
+        if is_active_param != "false" and is_active_param != "true":
+            raise UserIsActiveParamException()
 
     if not str(page).isdigit():
         raise UrlPageParamException()
@@ -97,7 +109,8 @@ def filter_user(search_param, role_param, is_active_param, page, limit):
             )
         )
 
-    query = query.filter(User.is_active == is_active_param)
+    if is_active_param:
+        query = query.filter(User.is_active == is_active_param)
 
     total = query.count()
     paginated_query = (

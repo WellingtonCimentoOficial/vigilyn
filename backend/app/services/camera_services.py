@@ -16,7 +16,6 @@ from app.exceptions.camera_exceptions import (
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
 from sqlalchemy import or_, desc
 from datetime import datetime
-from app.utils.settings import get_settings
 import threading
 import subprocess
 import os
@@ -249,8 +248,8 @@ def filter_camera(
 
 
 def initialize_camera_processes():
-    settings = get_settings()
-    lock_file = os.path.join(settings.tmp_directory_path, "initialize_camera.lock")
+    base_dir = current_app.config["BASE_DIR"]
+    lock_file = os.path.join(base_dir, "initialize_camera.lock")
 
     with open(lock_file, "w") as lockfile:
         try:

@@ -30,9 +30,16 @@ user_bp = Blueprint("user", __name__, url_prefix="/api/users/")
 @permission_required("create_user")
 def create():
     data = UserCreateSchema().load(request.json)
-    create_user(name=data["name"], email=data["email"], password=data["password"])
+    user_created = create_user(
+        name=data["name"],
+        email=data["email"],
+        password=data["password"],
+        is_active=data["is_active"],
+    )
+    schema = UserSchema()
+    data_created = schema.dump(user_created)
 
-    return jsonify({"message": "The user was created successfully."}), 201
+    return jsonify(data_created), 201
 
 
 @user_bp.route("", methods=["GET"])
@@ -41,7 +48,7 @@ def create():
 def get_all():
     search_param = request.args.get("search", default="")
     role_param = request.args.get("role", default="")
-    is_active_param = request.args.get("is_active", default="true")
+    is_active_param = request.args.get("is_active")
     page_param = request.args.get("page", default=1, type=int)
     limit_param = request.args.get(
         "limit", default=current_app.config["DEFAULT_PAGINATION_LIMIT"], type=int
@@ -164,6 +171,8 @@ def update_user_roles(pk):
     data = schema.load(request.json)
     role_ids = data["role_ids"]
 
-    update_roles(user, role_ids)
+    roles_updated = update_roles(user, role_ids)
+    schemaRoles = RoleSchema(many=True)
+    data_updated = schemaRoles.dump(roles_updated)
 
-    return jsonify({"message": "The roles was updated successfully!"}), 200
+    return jsonify(data_updated), 200

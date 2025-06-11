@@ -20,7 +20,9 @@ class User(db.Model):
         secondary="user_role_table", back_populates="users"
     )
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
-    favorite: Mapped["UserFavorite"] = relationship(back_populates="user")
+    favorite: Mapped["UserFavorite"] = relationship(
+        back_populates="user", cascade="all, delete-orphan"
+    )
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), onupdate=func.now()

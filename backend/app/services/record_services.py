@@ -15,7 +15,6 @@ from app.exceptions.record_exceptions import (
     RecordAlreadyExistsException,
     RecordWasNotUpdatedException,
 )
-from app.utils.settings import get_settings
 import os
 import subprocess
 import threading
@@ -230,10 +229,8 @@ def restart_organize_records_async():
 
 
 def initialize_organize_records():
-    settings = get_settings()
-    lock_file = os.path.join(
-        settings.tmp_directory_path, "initialize_organize_records.lock"
-    )
+    base_dir = current_app.config["BASE_DIR"]
+    lock_file = os.path.join(base_dir, "initialize_organize_records.lock")
 
     with open(lock_file, "w") as lockfile:
         try:
