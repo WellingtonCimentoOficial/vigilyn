@@ -9,6 +9,10 @@ export type RoleType = {
     permissions: PermissionType[]
 }
 
+export type RoleUpdateType = {
+    role_ids: number[]
+}
+
 export type UserType = {
     id: number
     name: string
@@ -19,11 +23,15 @@ export type UserType = {
     updated_at: string
 }
 
-export type UserUpdateType = {
+export type UserProfileUpdateType = {
     name: string
     profile_color?: string
     password?: string
     confirm_password?: string
+}
+
+export type UserUpdateType = UserProfileUpdateType & {
+    is_active: boolean
 }
 
 export type UserFavoriteType = {
@@ -33,7 +41,18 @@ export type UserFavoriteType = {
 
 export type UserExtendedType = UserType & {
     roles: RoleType[]
+}
+
+export type UserProfileType = UserExtendedType & {
     favorite: UserFavoriteType
+}
+
+export type UserCreateType = {
+    name: string
+    email: string
+    password: string
+    confirm_password: string
+    is_active: boolean
 }
 
 export type TokensType = {

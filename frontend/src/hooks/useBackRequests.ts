@@ -1,5 +1,5 @@
 import { useAxios } from "./useAxios"
-import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordPaginationType, RecordType, RecordUpdateType, RoleType, SettingsType, SettingsUpdateType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserExtendedType, UserPaginationType, UserUpdateType } from "../types/BackendTypes"
+import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordPaginationType, RecordType, RecordUpdateType, RoleType, SettingsType, SettingsUpdateType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserProfileType, UserPaginationType, UserProfileUpdateType, UserUpdateType, UserType, RoleUpdateType, UserCreateType } from "../types/BackendTypes"
 import { useCallback } from "react"
 
 type GetCameraProps = {
@@ -60,15 +60,15 @@ export const useBackendRequests = () => {
         return response
     }, [axios])
 
-    const getMe = useCallback(async (): Promise<UserExtendedType> => {
+    const getMe = useCallback(async (): Promise<UserProfileType> => {
         const response = await axiosPrivate.get("/users/me/")
-        const data: UserExtendedType = await response.data
+        const data: UserProfileType = await response.data
         return data
     }, [axiosPrivate])
 
-    const updateMe = useCallback(async (userUpdateData: UserUpdateType) => {
+    const updateMe = useCallback(async (userUpdateData: UserProfileUpdateType) => {
         const response = await axiosPrivate.patch("/users/me/", {...userUpdateData})
-        const data: UserExtendedType = await response.data
+        const data: UserProfileType = await response.data
         return data
     }, [axiosPrivate])
 
@@ -76,7 +76,7 @@ export const useBackendRequests = () => {
         const response = await axiosPrivate.put("/users/me/favorites/", {
             record_ids: recordIds
         })
-        const data: UserExtendedType = await response.data
+        const data: UserProfileType = await response.data
         return data
     }, [axiosPrivate])
 
@@ -207,6 +207,12 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
+    const createUser = useCallback(async (user: UserCreateType) => {
+        const response = await axiosPrivate.post("/users/", {...user})
+        const data: UserType = await response.data
+        return data
+    }, [axiosPrivate])
+
     const getUsers = useCallback(async ({search, role, is_active, page, limit}: GetUsersProps = {}) => {
         const params = Object.fromEntries(
             Object.entries({ search, role, is_active, page, limit })
@@ -224,8 +230,26 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
-    const getRoles = useCallback(async (userId: number) => {
+    const updateUser = useCallback(async (userId: number, userData: UserUpdateType) => {
+        const response = await axiosPrivate.patch(`/users/${userId}/`, {...userData})
+        const data: UserType = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const getUserRoles = useCallback(async (userId: number) => {
         const response = await axiosPrivate.get(`/users/${userId}/roles/`)
+        const data: RoleType[] = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const updateUserRoles = useCallback(async (userId: number, userRolesData: RoleUpdateType) => {
+        const response = await axiosPrivate.put(`/users/${userId}/roles/`, {...userRolesData})
+        const data: RoleType[] = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const getRoles = useCallback(async () => {
+        const response = await axiosPrivate.get("/roles/")
         const data: RoleType[] = await response.data
         return data
     }, [axiosPrivate])
@@ -280,10 +304,14 @@ export const useBackendRequests = () => {
         updateRecord,
         deleteRecords,
         getUsers,
+        createUser,
+        updateUser,
         deleteUser,
-        getRoles,
+        getUserRoles,
+        updateUserRoles,
         updateMe,
         getSettings,
-        updateSettings
+        updateSettings,
+        getRoles
     }
 }

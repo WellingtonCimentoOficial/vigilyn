@@ -3,7 +3,7 @@ import styles from './UserBasicListComponent.module.css'
 import ButtonComponent from '../../Buttons/ButtonComponent/ButtonComponent'
 import { PiPlus } from "react-icons/pi";
 import { NavLink } from 'react-router';
-import { UserExtendedType, UserType } from '../../../types/BackendTypes';
+import { UserProfileType, UserType } from '../../../types/BackendTypes';
 import { useBackendRequests } from '../../../hooks/useBackRequests';
 import { ToastContext } from '../../../contexts/ToastContext';
 import SectionComponent from '../../Sections/SectionComponent/SectionComponent';
@@ -13,9 +13,9 @@ type Props = {
 }
 
 const UserBasicListComponent = ({data}: Props) => {
-    const [users, setUsers] = useState<UserExtendedType[]>([])
+    const [users, setUsers] = useState<UserProfileType[]>([])
 
-    const { getRoles } = useBackendRequests()
+    const { getUserRoles } = useBackendRequests()
 
     const { setToastMessage } = useContext(ToastContext)
 
@@ -25,7 +25,7 @@ const UserBasicListComponent = ({data}: Props) => {
             for(let i=0;i < data.length;i++){
                 try {
                     const user = data[i]
-                    const roles = await getRoles(user.id)
+                    const roles = await getUserRoles(user.id)
                     setUsers(currentValue => [...currentValue, {...user, roles: roles, favorite: {id: user.id, records: []}}])
                 } catch (error) {
                     setToastMessage({
@@ -36,7 +36,7 @@ const UserBasicListComponent = ({data}: Props) => {
                 }
             }
         })()
-    }, [data, getRoles, setToastMessage])
+    }, [data, getUserRoles, setToastMessage])
 
     return (
         <SectionComponent 

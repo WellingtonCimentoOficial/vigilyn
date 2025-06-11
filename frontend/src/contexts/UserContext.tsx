@@ -2,11 +2,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
 import { useBackendRequests } from "../hooks/useBackRequests";
 import { ToastContext } from "./ToastContext";
-import { UserExtendedType } from "../types/BackendTypes";
+import { UserProfileType } from "../types/BackendTypes";
 
 type UserContextType = {
-    currentUser: UserExtendedType | null
-    setCurrentUser: React.Dispatch<React.SetStateAction<UserExtendedType | null>>
+    currentUser: UserProfileType | null
+    setCurrentUser: React.Dispatch<React.SetStateAction<UserProfileType | null>>
 }
 
 type Props = {
@@ -22,7 +22,7 @@ const initialData: UserContextType = {
 export const UserContext = createContext<UserContextType>(initialData)
 
 export const UserContextProvider = ({children}: Props) => {
-    const [currentUser, setCurrentUser] = useState<UserExtendedType|null>(null)
+    const [currentUser, setCurrentUser] = useState<UserProfileType|null>(null)
 
     const { isAuthenticated } = useContext(AuthContext)
     const { setToastMessage } = useContext(ToastContext)

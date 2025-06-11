@@ -2,22 +2,21 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import styles from "./UsersPage.module.css"
 import PageLayout from '../../layouts/PageLayout/PageLayout'
 import ButtonComponent from '../../components/Buttons/ButtonComponent/ButtonComponent'
-import { PiPlus, PiTrash, PiPencilSimple, PiPlay, PiStop, PiArrowCounterClockwise } from "react-icons/pi";
+import { PiPlus, PiTrash, PiPencilSimple } from "react-icons/pi";
 import CheckBoxComponent from '../../components/Checkboxes/CheckBoxComponent/CheckBoxComponent';
-import { CameraType, ErrorType, UserType } from '../../types/BackendTypes';
+import { UserType } from '../../types/BackendTypes';
 import { useBackendRequests } from '../../hooks/useBackRequests';
 import { ToastContext } from '../../contexts/ToastContext';
 import SearchBarComponent from '../../components/Searches/SearchBarComponent/SearchBarComponent';
 import ModalConfirmationComponent from '../../components/Modals/ModalConfirmationComponent/ModalConfirmationComponent';
 import DropdownBasicComponent from '../../components/Dropdowns/DropdownBasicComponent/DropdownBasicComponent';
-import ModalCameraComponent from '../../components/Modals/ModalCameraComponent/ModalCameraComponent';
 import PaginatorComponent from '../../components/Paginators/PaginatorComponent/PaginatorComponent';
 import DropdownFilterComponent from '../../components/Dropdowns/DropdownFilterComponent/DropdownFilterComponent';
 import { CheckBoxFilterType } from '../../types/FrontendTypes';
 import TagStatusComponent from '../../components/Tags/TagStatusComponent/TagStatusComponent';
-import { SettingsContext } from '../../contexts/SettingsContext';
 import { formatDateTime } from '../../utils/utils';
 import LoaderThreePointsComponent from '../../components/Loaders/LoaderThreePointsComponent/LoaderThreePointsComponent';
+import ModalUserComponent from '../../components/Modals/ModalUserComponent/ModalUserComponent';
 
 type Props = {}
 
@@ -52,7 +51,6 @@ const UsersPage = (props: Props) => {
     } = useBackendRequests()
 
     const { setToastMessage } = useContext(ToastContext)
-    const { settings } = useContext(SettingsContext)
 
     const handleCheckAll = (checked: boolean) => {
         setCheckedItems(prev => 
@@ -105,7 +103,9 @@ const UsersPage = (props: Props) => {
     }, [])
 
     const handleAddUser = (user: UserType) => {
-        if(users.length >= 10){
+        if(users.some(item => item.id === user.id)){
+            setUsers(prev => prev.map(item => item.id === user.id ? user : item))
+        }else if(users.length >= 10){
             setUsers(prev => [user, ...prev.filter(item => item.id !== user.id).slice(0, -1)])
         }else{
             setUsers(prev => [user, ...prev.filter(item => item.id !== user.id)])
@@ -286,12 +286,13 @@ const UsersPage = (props: Props) => {
                 setShowModal={setShowConfirmation}
                 callback={handleDeleteUser}
             />
-            {/* <ModalCameraComponent 
+            <ModalUserComponent 
                 setShowModal={setShowModal}
                 showModal={showModal} 
+                isCreating={userToUpdate === null}
                 data={userToUpdate || undefined}
                 callback={handleAddUser}
-            /> */}
+            />
         </PageLayout>
     )
 }

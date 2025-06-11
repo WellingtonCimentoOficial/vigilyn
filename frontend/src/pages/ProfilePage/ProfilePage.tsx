@@ -7,12 +7,17 @@ import { PiNotePencil } from "react-icons/pi";
 import { formatDateTime } from '../../utils/utils';
 import { UserContext } from '../../contexts/UserContext';
 import ModalUserComponent from '../../components/Modals/ModalUserComponent/ModalUserComponent';
+import { UserType } from '../../types/BackendTypes';
 
 type Props = {}
 
 const ProfilePage = (props: Props) => {
-    const { currentUser } = useContext(UserContext)
+    const { currentUser, setCurrentUser } = useContext(UserContext)
     const [showModal, setShowModal] = useState<boolean>(false)
+
+    const handleUpdateCurrentUser = (user: UserType) => {
+        setCurrentUser(current => (current ? {...user, roles: current.roles, favorite: current.favorite} : current))
+    }
 
     return (
         <PageLayout title='Profile' description='Manage personal information, account settings, and security preferences.'>
@@ -77,7 +82,11 @@ const ProfilePage = (props: Props) => {
                     </div>
                 </div>
             </div>
-            <ModalUserComponent showModal={showModal} setShowModal={setShowModal} />
+            <ModalUserComponent 
+                showModal={showModal} 
+                setShowModal={setShowModal}
+                callback={handleUpdateCurrentUser}
+            />
         </PageLayout>
     )
 }

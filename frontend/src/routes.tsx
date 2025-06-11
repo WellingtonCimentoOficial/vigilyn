@@ -6,9 +6,9 @@ import PrivateRoute from "./components/Routes/PrivateRouteComponent/PrivateRoute
 import CamerasPage from "./pages/CamerasPage/CamerasPage"
 import RecordsPage from "./pages/RecordsPage/RecordsPage"
 import UsersPage from "./pages/UsersPage/UsersPage"
-import RolesPage from "./pages/RolesPage/RolesPage"
 import SettingsPage from "./pages/SettingsPage/SettingsPage"
 import ProfilePage from "./pages/ProfilePage/ProfilePage"
+import AnalyticsPage from "./pages/AnalyticsPage/AnalyticsPage"
 
 function Routes(){
     return (
@@ -26,7 +26,7 @@ function Routes(){
                     <Route path="/dashboard/cameras/" element={<CamerasPage />} />
                     <Route path="/dashboard/records/" element={<RecordsPage />} />
                     <Route path="/dashboard/users/" element={<UsersPage />} />
-                    <Route path="/dashboard/roles/" element={<RolesPage />} />
+                    <Route path="/dashboard/analytics/" element={<AnalyticsPage />} />
                     <Route path="/dashboard/settings/" element={<SettingsPage />} />
                 </Route>
             </Route>
