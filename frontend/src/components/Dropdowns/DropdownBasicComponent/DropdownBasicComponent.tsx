@@ -80,7 +80,7 @@ const DropdownBasicComponent = ({ data, show, icon, callbackShow }: Props) => {
                                 <div
                                     key={index}
                                     className={`${styles.option} ${item.disabled ? styles.optionDisabled : ""}`}
-                                    onClick={() => { item.callback(); callbackShow() }}
+                                    onClick={() => item.callback()}
                                 >
                                     {React.cloneElement(item.icon, {
                                         className: `${styles.optionIcon} ${item.icon.props.className}`,
