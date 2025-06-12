@@ -86,7 +86,6 @@ def filter_user(search_param, role_param, is_active_param, page, limit):
         raise UrlLimitParamException()
 
     role_param = int(role_param) if role_param.isdigit() else role_param
-    is_active_param = True if is_active_param == "true" else False
     page = int(page)
     limit = int(limit)
     query = db.session.query(User).options(joinedload(User.roles))
@@ -109,8 +108,8 @@ def filter_user(search_param, role_param, is_active_param, page, limit):
             )
         )
 
-    if is_active_param:
-        query = query.filter(User.is_active == is_active_param)
+    if is_active_param is not None:
+        query = query.filter(User.is_active == (is_active_param == "true"))
 
     total = query.count()
     paginated_query = (
