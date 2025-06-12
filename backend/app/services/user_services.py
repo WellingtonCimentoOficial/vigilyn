@@ -48,15 +48,13 @@ def update_user(user, **kwargs):
         for key, value in kwargs.items():
             if key == "password":
                 setattr(user, key, bcrypt.generate_password_hash(value).decode("utf-8"))
-
-            if key == "email":
+            elif key == "email":
                 user_by_email = User.query.filter_by(email=value).first()
 
                 if user_by_email is not None and user_by_email.id != user.id:
                     raise UserAlreadyExistsException()
-
-            setattr(user, key, value)
-
+            else:
+                setattr(user, key, value)
         db.session.commit()
 
         return user
