@@ -11,6 +11,8 @@
     z-index: 2;
 }
 .container {
+    max-height: 95%;
+    overflow-y: auto;
     background-color: white;
     border-radius: var(--principal-border-radius);
 }

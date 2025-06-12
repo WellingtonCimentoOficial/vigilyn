@@ -17,6 +17,7 @@ import TagStatusComponent from '../../components/Tags/TagStatusComponent/TagStat
 import { formatDateTime } from '../../utils/utils';
 import LoaderThreePointsComponent from '../../components/Loaders/LoaderThreePointsComponent/LoaderThreePointsComponent';
 import ModalUserComponent from '../../components/Modals/ModalUserComponent/ModalUserComponent';
+import { UserContext } from '../../contexts/UserContext';
 
 type Props = {}
 
@@ -51,6 +52,7 @@ const UsersPage = (props: Props) => {
     } = useBackendRequests()
 
     const { setToastMessage } = useContext(ToastContext)
+    const { currentUser, setCurrentUser } = useContext(UserContext)
 
     const handleCheckAll = (checked: boolean) => {
         setCheckedItems(prev => 
@@ -105,6 +107,10 @@ const UsersPage = (props: Props) => {
     const handleAddUser = (user: UserType) => {
         if(users.some(item => item.id === user.id)){
             setUsers(prev => prev.map(item => item.id === user.id ? user : item))
+
+            if(currentUser?.id === user.id){
+                setCurrentUser(prev => (prev ? {...user, roles: prev.roles, favorite: prev.favorite} : prev))
+            }
         }else if(users.length >= 10){
             setUsers(prev => [user, ...prev.filter(item => item.id !== user.id).slice(0, -1)])
         }else{
@@ -124,7 +130,7 @@ const UsersPage = (props: Props) => {
                     limit, 
                     page: currentPage, 
                     ...(debouncedSearch && { search: debouncedSearch }),
-                    ...(debouncedSearch && { role: debouncedSearch }),
+                    // ...(debouncedSearch && { role: debouncedSearch }),
                     ...(active !== undefined && { is_active: active }),
                 }
                 const data = await getUsers(params)

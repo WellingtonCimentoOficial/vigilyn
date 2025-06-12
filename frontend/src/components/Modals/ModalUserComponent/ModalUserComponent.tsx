@@ -365,8 +365,6 @@ const ModalUserComponent = ({data, showModal, isCreating, callback, setShowModal
                                 setShowPassword={setShowPassword}
                                 showPassword={showPassword}
                             />
-                        </div>
-                        <div className={styles.formContainer}>
                             <InputComponent 
                                 type={showConfirmPassword ? "text" : "password"} 
                                 name='confirm_password'
