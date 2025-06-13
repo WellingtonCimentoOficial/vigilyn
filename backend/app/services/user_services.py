@@ -53,6 +53,8 @@ def update_user(user, **kwargs):
 
                 if user_by_email is not None and user_by_email.id != user.id:
                     raise UserAlreadyExistsException()
+
+                setattr(user, key, value)
             else:
                 setattr(user, key, value)
         db.session.commit()
