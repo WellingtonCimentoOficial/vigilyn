@@ -28,14 +28,15 @@ class Fmpeg:
         self.segment_time = segment_time
 
     def start(self, camera):
-        email = Email()
+        settings = get_settings()
+        email = Email(notifications_enabled=settings.allow_notifications)
         log = Log()
 
         filename = (
             "_".join([str(camera.id), "%Y-%m-%d", "%H-%M-%S"]) + self.video_format
         )
 
-        tmp_dir = get_settings().tmp_directory_path
+        tmp_dir = settings.tmp_directory_path
         output_path = f"{tmp_dir}/{filename}"
 
         url = generate_rtsp_url(camera)

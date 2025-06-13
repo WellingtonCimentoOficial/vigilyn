@@ -14,12 +14,12 @@ def start_record(camera):
     fmpeg = Fmpeg(
         video_format=settings.video_format, segment_time=settings.segment_time
     )
-    email = Email()
+    email = Email(notifications_enabled=settings.allow_notifications)
 
     last_email_sent = datetime.now() - timedelta(hours=1)
 
     process = fmpeg.start(camera)
-    
+
     while True:
         if process.poll() is not None:
             if (datetime.now() - last_email_sent).total_seconds() >= current_app.config[

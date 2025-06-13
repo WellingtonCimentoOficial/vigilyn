@@ -3,11 +3,13 @@ from .email import Email
 from .logger import Log
 import time
 from app.services.system_services import get_storage
+from .settings import get_settings
 
 
 def storage_checker():
     done_event = threading.Event()
-    email = Email()
+    settings = get_settings()
+    email = Email(notifications_enabled=settings.allow_notifications)
     log = Log()
 
     while True:
