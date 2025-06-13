@@ -27,6 +27,7 @@ const CardThumbnailComponent = ({record, callback, onClick}: Props) => {
     const [thumbnailUrl, setThumbnailUrl] = useState<string|null>(null)
     const [isFavorite, setIsFavorite] = useState<boolean>(false)
     const [showModal, setShowModal] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const { getRecordThumbnail, downloadRecord, deleteRecord, updateFavorite } = useBackendRequests()
     const { setToastMessage } = useContext(ToastContext)
@@ -127,12 +128,14 @@ const CardThumbnailComponent = ({record, callback, onClick}: Props) => {
 
     useEffect(() => {
         (async () => {
+            setIsLoading(true)
             try {
                 const data = await getRecordThumbnail(recordLocal.id)
                 setThumbnailUrl(data)
             } catch (error) {
                 
             }
+            setIsLoading(false)
         })()
     }, [recordLocal, getRecordThumbnail])
 
@@ -147,9 +150,9 @@ const CardThumbnailComponent = ({record, callback, onClick}: Props) => {
     return (
         <div className={styles.wrapper}>
             <div className={styles.containerImage} onClick={onClick}>
-                {thumbnailUrl ? (
+                {!isLoading ? (
                     <>
-                        <img className={styles.image} src={thumbnailUrl} alt={recordLocal.name} />
+                        {thumbnailUrl && <img className={styles.image} src={thumbnailUrl} alt={recordLocal.name} />}
                         <div className={styles.containerIcon}>
                             <div className={styles.subContainerIcon}>
                                 <PiPlay className={styles.icon} />

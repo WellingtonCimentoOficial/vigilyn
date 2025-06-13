@@ -68,6 +68,8 @@ const SignInPage = (props: Props) => {
                     setPasswordIsValid(false)
                     setWasSubmitted(true)
                     setToastMessage({title: "Incorrect credentials", description: "The username or password is incorrect.", success: false})
+                }else if(status === 403 && data.error === "user_inactive"){
+                    setToastMessage({title: "Login Not Allowed", description: "You cannot log in because your account is inactive.", success: false})
                 }else{
                     setToastMessage({title: "An error occurred", description: "Try refreshing the page and try again.", success: false})
                 }
