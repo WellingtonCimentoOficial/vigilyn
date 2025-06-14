@@ -232,7 +232,7 @@ const UsersPage = (props: Props) => {
                                                 <th className={styles.th}>Email</th>
                                                 <th className={styles.th}>Created at</th>
                                                 <th className={styles.th}>Updated at</th>
-                                                <th className={`${styles.th} ${styles.textCenter}`}>Is Active</th>
+                                                <th className={`${styles.th} ${styles.textCenter}`}>Status</th>
                                                 <th className={`${styles.th} ${styles.textCenter}`}>Actions</th>
                                             </tr>
                                         </thead>
