@@ -1,11 +1,10 @@
 import os
 import time
 import psutil
-from .settings import get_settings
 from flask import jsonify
 from sqlalchemy import inspect
 from app.extensions import db
-from app.utils.logger import Log
+from app.utils.logger_utils import Log
 
 
 def is_idle(file_path: str, idle_seconds: float):

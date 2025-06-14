@@ -1,9 +1,9 @@
 import threading
-from .email import Email
-from .logger import Log
+from .email_utils import Email
+from .logger_utils import Log
 import time
 from app.services.system_services import get_storage
-from .settings import get_settings
+from .settings_utils import get_settings
 
 
 def storage_checker():

@@ -2,7 +2,8 @@ from app.extensions import mail
 from flask_mail import Message
 import threading
 import time
-from .logger import Log
+from .logger_utils import Log
+from .user_utils import get_all_emails
 from config import Config
 from flask import current_app
 
@@ -14,7 +15,7 @@ class Email:
         smtp_port=Config.MAIL_PORT,
         smtp_interval=Config.MAIL_INTERVAL,
         smtp_email_from=Config.MAIL_DEFAULT_SENDER,
-        smtp_email_to=Config.MAIL_DEFAULT_RECEIVER,
+        smtp_email_to=None,
         notifications_enabled=True,
     ):
         self.smtp_host = smtp_host
@@ -27,10 +28,13 @@ class Email:
         self.notifications_enabled = notifications_enabled
 
     def send(self, subject, body, category):
+        user_emails = get_all_emails()
         msg = Message(
             subject=subject,
             sender=self.smtp_email_from,
-            recipients=[self.smtp_email_to],
+            recipients=(
+                [self.smtp_email_to] if self.smtp_email_to is not None else user_emails
+            ),
             body=body,
         )
         log = Log()

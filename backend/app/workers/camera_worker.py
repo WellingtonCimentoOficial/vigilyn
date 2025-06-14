@@ -1,5 +1,5 @@
 import sys
-from app.utils.camera import start_record
+from app.utils.camera_utils import start_record
 from app.factory import create_app
 from app.models.camera_models import Camera
 

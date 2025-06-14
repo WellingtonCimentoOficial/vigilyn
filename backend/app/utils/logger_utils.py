@@ -1,6 +1,6 @@
 import logging
 import os
-from .settings import get_settings
+from .settings_utils import get_settings
 
 
 class Log:

@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
-from app.utils.fmpeg import Fmpeg
-from app.utils.logger import Log
-from app.utils.email import Email
-from app.utils.settings import get_settings
+from app.utils.fmpeg_utils import Fmpeg
+from app.utils.logger_utils import Log
+from app.utils.email_utils import Email
+from app.utils.settings_utils import get_settings
 from flask import current_app
 from app.factory import db
 import time

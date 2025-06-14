@@ -2,7 +2,7 @@ from app.extensions import db
 from app.models.record_models import Record, OrganizeRecord
 from app.utils.utils import kill_process
 from app.utils.validators import validate_date_range, validate_hour_range
-from app.utils.logger import Log
+from app.utils.logger_utils import Log
 from flask import current_app
 from sqlalchemy import desc
 from datetime import datetime

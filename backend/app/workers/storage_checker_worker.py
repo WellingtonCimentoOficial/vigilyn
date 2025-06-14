@@ -1,5 +1,5 @@
 from app.factory import create_app
-from app.utils.storage import storage_checker
+from app.utils.storage_utils import storage_checker
 
 app = create_app()
 

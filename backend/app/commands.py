@@ -1,6 +1,6 @@
 import click
 from flask.cli import with_appcontext
-from app.utils.settings import (
+from app.utils.settings_utils import (
     create_default_settings,
     create_permissions,
     create_roles,

@@ -1,10 +1,10 @@
 import time
-from app.utils.logger import Log
-from app.utils.settings import get_settings
+from app.utils.logger_utils import Log
+from app.utils.settings_utils import get_settings
 from app.utils.utils import is_idle
 from app.models.camera_models import Camera
 from app.services.record_services import create_record, get_duration
-from app.utils.fmpeg import Fmpeg
+from app.utils.fmpeg_utils import Fmpeg
 from datetime import datetime, timezone
 import os
 

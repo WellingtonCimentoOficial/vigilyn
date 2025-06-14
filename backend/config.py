@@ -19,7 +19,6 @@ class Config:
     MAIL_USERNAME = os.environ["SMTP_LOGIN_USERNAME"]
     MAIL_PASSWORD = os.environ["SMTP_LOGIN_PASSWORD"]
     MAIL_DEFAULT_SENDER = os.environ["SMTP_DEFAULT_SENDER"]
-    MAIL_DEFAULT_RECEIVER = os.environ["SMTP_DEFAULT_RECEIVER"]
     MAIL_INTERVAL = 300
 
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
