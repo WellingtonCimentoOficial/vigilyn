@@ -38,7 +38,7 @@ const HeaderComponent = ({setOpenMenu}: Props) => {
                     </div>
                     <NavLink className={`${styles.containerAccount} ${styles.noMobile}`} to="/dashboard/profile/">
                         <div className={styles.containerAccountHeader}>
-                            <div className={`${styles.containerIcon} ${styles.containerAccountHeaderIcon}`}>
+                            <div className={`${styles.containerIcon} ${styles.containerAccountHeaderIcon}`} style={{backgroundColor: currentUser?.profile_color}}>
                                 <PiUser className={styles.icon} />
                             </div>
                         </div>

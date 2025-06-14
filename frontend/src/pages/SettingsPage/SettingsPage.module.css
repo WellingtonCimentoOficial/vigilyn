@@ -41,7 +41,7 @@
     flex-direction: column;
     gap: 10px;
 }
-.sectionBodyContainer {
+.sectionBodyItemHeaderContainer {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -63,4 +63,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
+}
+@media (max-width: 590px){
+    .container {
+        flex-direction: column;
+    }
 }

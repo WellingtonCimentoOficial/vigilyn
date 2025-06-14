@@ -272,11 +272,11 @@ const SettingsPage = (props: Props) => {
                             </div>
                             <div className={styles.sectionBody}>
                                 <div className={styles.sectionBodyItem}>
-                                    <div className={styles.sectionBodyContainer}>
-                                        <div className={styles.sectionBodyItemHeader}>
+                                    <div className={styles.sectionBodyItemHeader}>
+                                        <div className={styles.sectionBodyItemHeaderContainer}>
                                             <span className={styles.sectionBodyItemTitle}>Save directory path</span>
-                                            <div className={styles.sectionBodyItemDescription}>You must provide the full directory path. Make sure the path exists and has the correct write permissions.</div>
                                         </div>
+                                        <div className={styles.sectionBodyItemDescription}>You must provide the full directory path. Make sure the path exists and has the correct write permissions.</div>
                                     </div>
                                     <InputComponent
                                         type='text'
@@ -290,11 +290,11 @@ const SettingsPage = (props: Props) => {
                                     />
                                 </div>
                                 <div className={styles.sectionBodyItem}>
-                                    <div className={styles.sectionBodyContainer}>
-                                        <div className={styles.sectionBodyItemHeader}>
+                                    <div className={styles.sectionBodyItemHeader}>
+                                        <div className={styles.sectionBodyItemHeaderContainer}>
                                             <span className={styles.sectionBodyItemTitle}>Temporary directory path</span>
-                                            <div className={styles.sectionBodyItemDescription}>You must provide the full directory path. Make sure the path exists and has the correct write permissions.</div>
                                         </div>
+                                        <div className={styles.sectionBodyItemDescription}>You must provide the full directory path. Make sure the path exists and has the correct write permissions.</div>
                                     </div>
                                     <InputComponent
                                         type='text'
@@ -308,11 +308,11 @@ const SettingsPage = (props: Props) => {
                                     />
                                 </div>
                                 <div className={styles.sectionBodyItem}>
-                                    <div className={styles.sectionBodyContainer}>
-                                        <div className={styles.sectionBodyItemHeader}>
+                                    <div className={styles.sectionBodyItemHeader}>
+                                        <div className={styles.sectionBodyItemHeaderContainer}>
                                             <span className={styles.sectionBodyItemTitle}>Video format</span>
-                                            <div className={styles.sectionBodyItemDescription}>Choose the output format for saved video recordings based on your preferred compatibility or quality needs.</div>
                                         </div>
+                                        <div className={styles.sectionBodyItemDescription}>Choose the output format for saved video recordings based on your preferred compatibility or quality needs.</div>
                                     </div>
                                     <SelectComponent 
                                         fullWidth
@@ -323,11 +323,11 @@ const SettingsPage = (props: Props) => {
                                     />
                                 </div>
                                 <div className={styles.sectionBodyItem}>
-                                    <div className={styles.sectionBodyContainer}>
-                                        <div className={styles.sectionBodyItemHeader}>
+                                    <div className={styles.sectionBodyItemHeader}>
+                                        <div className={styles.sectionBodyItemHeaderContainer}>
                                             <span className={styles.sectionBodyItemTitle}>Segment time</span>
-                                            <div className={styles.sectionBodyItemDescription}>This setting defines how long each video segment should last. The value must be provided in seconds.</div>
                                         </div>
+                                        <div className={styles.sectionBodyItemDescription}>This setting defines how long each video segment should last. The value must be provided in seconds.</div>
                                     </div>
                                     <InputComponent
                                         type='number'
@@ -358,11 +358,11 @@ const SettingsPage = (props: Props) => {
                             </div>
                             <div className={styles.sectionBody}>
                                 <div className={styles.sectionBodyItem}>
-                                    <div className={styles.sectionBodyContainer}>
-                                        <div className={styles.sectionBodyItemHeader}>
+                                    <div className={styles.sectionBodyItemHeader}>
+                                        <div className={styles.sectionBodyItemHeaderContainer}>
                                             <span className={styles.sectionBodyItemTitle}>Email Notification</span>
-                                            <div className={styles.sectionBodyItemDescription}>Receive email notifications whenever a camera starts or stops recording.</div>
                                         </div>
+                                        <div className={styles.sectionBodyItemDescription}>Receive email notifications whenever a camera starts or stops recording.</div>
                                     </div>
                                     <CheckBoxSwitchComponent 
                                         size={3} 
@@ -379,15 +379,15 @@ const SettingsPage = (props: Props) => {
                             </div>
                             <div className={styles.sectionBody}>
                                 <div className={styles.sectionBodyItem}>
-                                    <div className={styles.sectionBodyContainer}>
-                                        <div className={styles.sectionBodyItemHeader}>
+                                    <div className={styles.sectionBodyItemHeader}>
+                                        <div className={styles.sectionBodyItemHeaderContainer}>
                                             <span className={styles.sectionBodyItemTitle}>Requires restart</span>
-                                            <div className={styles.sectionBodyItemDescription}>This status shows if there are pending configuration changes. Restart the system to apply any updates.</div>
+                                            <TagStatusComponent 
+                                                text={requiresRestart ? "Restart required" : "Up to date"} 
+                                                success={!requiresRestart}
+                                            />
                                         </div>
-                                        <TagStatusComponent 
-                                            text={requiresRestart ? "Restart required" : "Up to date"} 
-                                            success={!requiresRestart}
-                                        />
+                                        <div className={styles.sectionBodyItemDescription}>This status shows if there are pending configuration changes. Restart the system to apply any updates.</div>
                                     </div>
                                     <ButtonComponent 
                                         text='Restart' 
@@ -405,11 +405,13 @@ const SettingsPage = (props: Props) => {
                             </div>
                             <div className={styles.sectionBody}>
                                 <div className={styles.sectionBodyItem}>
-                                    <div className={styles.sectionBodyContainer}>
-                                        <div className={styles.sectionBodyItemHeader}>
-                                            <span className={styles.sectionBodyItemTitle}>Stop system</span>
-                                            <div className={styles.sectionBodyItemDescription}>Stops all running processes, including active camera recordings and background services. Use with caution.</div>
+                                    <div className={styles.sectionBodyItemHeader}>
+                                        <div className={styles.sectionBodyItemHeaderContainer}>
+                                            <div className={styles.sectionBodyItemHeaderContainer}>
+                                                <span className={styles.sectionBodyItemTitle}>Stop system</span>
+                                            </div>
                                         </div>
+                                        <div className={styles.sectionBodyItemDescription}>Stops all running processes, including active camera recordings and background services. Use with caution.</div>
                                     </div>
                                     <ButtonComponent 
                                         text='Stop' 

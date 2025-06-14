@@ -8,6 +8,7 @@ import { formatDateTime } from '../../utils/utils';
 import { UserContext } from '../../contexts/UserContext';
 import ModalUserComponent from '../../components/Modals/ModalUserComponent/ModalUserComponent';
 import { UserType } from '../../types/BackendTypes';
+import TagStatusComponent from '../../components/Tags/TagStatusComponent/TagStatusComponent';
 
 type Props = {}
 
@@ -25,7 +26,7 @@ const ProfilePage = (props: Props) => {
                 <div className={styles.container}>
                     {currentUser &&
                         <div className={styles.header}>
-                            <div className={styles.headerContainerIcon}>
+                            <div className={styles.headerContainerIcon} style={{backgroundColor: currentUser.profile_color}}>
                                 <PiUser className={styles.icon} />
                             </div>
                             <div className={styles.headerContainerBody}>
@@ -61,7 +62,12 @@ const ProfilePage = (props: Props) => {
                             <div className={styles.sectionBodyColumn}>
                                 <div className={styles.sectionBodyItem}>
                                     <span className={styles.sectionBodyItemTitle}>Status</span>
-                                    <span className={styles.sectionBodyItemText}>{currentUser ? currentUser.is_active ? "Active" : "Inactive" : ""}</span>
+                                    <span className={styles.sectionBodyItemText}>
+                                        <TagStatusComponent
+                                            text={currentUser ? currentUser.is_active ? "Active" : "Inactive" : ""}
+                                            success={currentUser?.is_active}
+                                        />
+                                    </span>
                                 </div>
                                 <div className={styles.sectionBodyItem}>
                                     <span className={styles.sectionBodyItemTitle}>Roles</span>
