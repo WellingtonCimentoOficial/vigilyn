@@ -7,7 +7,7 @@ import subprocess
 import os
 
 
-class Fmpeg:
+class Ffmpeg:
     TIMEOUT = 5
 
     def __init__(

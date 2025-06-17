@@ -20,9 +20,9 @@ class RecordUpdateSchema(Schema):
         required=True,
         validate=[
             validate.Length(
-                min=10,
+                min=3,
                 max=130,
-                error="The name must contain at least 10 characters and a maximum of 130.",
+                error="The name must contain at least 3 characters and a maximum of 130.",
             )
         ],
     )

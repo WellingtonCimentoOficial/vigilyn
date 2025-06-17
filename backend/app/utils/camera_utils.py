@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from app.utils.fmpeg_utils import Fmpeg
+from app.utils.ffmpeg_utils import Ffmpeg
 from app.utils.logger_utils import Log
 from app.utils.email_utils import Email
 from app.utils.settings_utils import get_settings
@@ -11,14 +11,14 @@ import time
 def start_record(camera):
     settings = get_settings()
 
-    fmpeg = Fmpeg(
+    ffmpeg = Ffmpeg(
         video_format=settings.video_format, segment_time=settings.segment_time
     )
     email = Email(notifications_enabled=settings.allow_notifications)
 
     last_email_sent = datetime.now() - timedelta(hours=1)
 
-    process = fmpeg.start(camera)
+    process = ffmpeg.start(camera)
 
     while True:
         if process.poll() is not None:
@@ -34,7 +34,7 @@ def start_record(camera):
 
             camera.is_recording = False
             time.sleep(5)
-            process = fmpeg.start(camera)
+            process = ffmpeg.start(camera)
         else:
             camera.is_recording = True
 

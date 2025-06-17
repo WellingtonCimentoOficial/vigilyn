@@ -4,7 +4,7 @@ from app.utils.settings_utils import get_settings
 from app.utils.utils import is_idle
 from app.models.camera_models import Camera
 from app.services.record_services import create_record, get_duration
-from app.utils.fmpeg_utils import Fmpeg
+from app.utils.ffmpeg_utils import Ffmpeg
 from datetime import datetime, timezone
 import os
 
@@ -17,7 +17,7 @@ def organize_records():
     records_dir = os.path.join(base_dir, "records")
     thumbnails_dir = os.path.join(base_dir, "thumbnails")
     tmp_dir = settings.tmp_directory_path
-    timeout = Fmpeg.TIMEOUT + 5
+    timeout = Ffmpeg.TIMEOUT + 5
 
     while True:
         for filename in os.listdir(tmp_dir):
@@ -44,7 +44,7 @@ def organize_records():
                 thumbnail_filepath = os.path.join(thumbnails_dir, thumbnail_filename)
                 os.makedirs(thumbnails_dir, exist_ok=True)
 
-                Fmpeg.generate_thumbnail(new_filepath, thumbnail_filepath)
+                Ffmpeg.generate_thumbnail(new_filepath, thumbnail_filepath)
 
                 datetime_obj = datetime.strptime(
                     " ".join(filename_without_ext.split("_")[1:]), "%Y-%m-%d %H-%M-%S"

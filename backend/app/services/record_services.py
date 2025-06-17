@@ -282,9 +282,6 @@ def filter_record(
         limit = int(limit)
         query = db.session.query(Record)
 
-        if search_param:
-            query = query.filter(Record.name.ilike(f"%{search_param}%"))
-
         if show_favorites_param == "true":
             query = query.filter(Record.id.in_(favorite_record_ids))
 
@@ -301,6 +298,9 @@ def filter_record(
             query = query.filter(
                 Record.created_at.between(initial_datetime, final_datetime)
             )
+
+        if search_param:
+            query = query.filter(Record.name.ilike(f"%{search_param}%"))
 
         total = query.count()
         paginated_query = (
