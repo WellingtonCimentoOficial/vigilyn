@@ -62,6 +62,6 @@ In the project directory, you can run:
 
 ### `npm ci`
 
-3.	Start the frontend development server:
+3.	Generate react build:
 
-### `npm start`
+### `npm run build`
