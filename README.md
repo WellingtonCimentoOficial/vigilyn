@@ -5,6 +5,7 @@ To get started with Vigilyn, make sure you have the following installed on your 
 •	Node.js
 •	Python 3.10+
 •	Git
+•	Ffmpeg
 
 ## Cloning the Repository
 
@@ -59,7 +60,7 @@ In the project directory, you can run:
 
 2.	Install dependencies:
 
-### `npm install`
+### `npm ci`
 
 3.	Start the frontend development server:
 
