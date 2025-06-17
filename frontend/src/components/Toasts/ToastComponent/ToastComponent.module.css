@@ -2,6 +2,7 @@
     display: flex;
     position: fixed;
     right: 20px;
+    margin-left: 20px;
     top: 20px;
     background-color: white;
     padding: var(--padding);

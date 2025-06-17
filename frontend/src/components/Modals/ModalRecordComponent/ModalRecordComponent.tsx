@@ -28,7 +28,7 @@ const ModalRecordComponent = ({data, showModal, callback, setShowModal}: Props) 
 
     const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value)
-        setNameIsValid(e.target.value.length >= 10 && e.target.value.length <= 130)
+        setNameIsValid(e.target.value.length >= 3 && e.target.value.length <= 130)
         setWasSubmitted(false)
     }
 

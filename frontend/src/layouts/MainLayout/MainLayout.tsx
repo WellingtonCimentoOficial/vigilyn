@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Outlet } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
 import styles from './MainLayout.module.css'
 import MenuComponent from '../../components/Menus/MenuComponent/MenuComponent'
 import HeaderComponent from '../../components/Headers/HeaderComponent/HeaderComponent'
@@ -10,6 +10,7 @@ type Props = {}
 
 const MainLayout = (props: Props) => {
     const [openMenu, setOpenMenu] = useState<boolean>(false)
+    const { pathname } = useLocation()
 
     const handleResize = () => {
         if(window.innerWidth > 870){
@@ -26,6 +27,10 @@ const MainLayout = (props: Props) => {
 
         return () => window.removeEventListener("resize", handleResize)
     }, [])
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [pathname])
 
     return (
         <div className={styles.wrapper}>
