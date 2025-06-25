@@ -11,7 +11,7 @@ To get started with Vigilyn, make sure you have the following installed on your 
 
 In the project directory, you can run:
 
-### `git clone https://github.com/your-username/vigilyn.git`
+### `git clone https://github.com/WellingtonCimentoOficial/vigilyn.git`
 ### `cd vigilyn`
 
 ## Backend Setup (Flask)
