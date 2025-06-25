@@ -48,10 +48,6 @@ In the project directory, you can run:
 •	Email: admin@admin.com
 •	Password: Admin@123
 
-8.	Start the backend development server:
-
-### `python run.py`
-
 ## Frontend Setup (React)
 
 1.	Navigate to the frontend/ directory:
@@ -65,3 +61,9 @@ In the project directory, you can run:
 3.	Generate react build:
 
 ### `npm run build`
+
+## Finally
+
+1.	Start the backend development server:
+
+### `python run.py`
