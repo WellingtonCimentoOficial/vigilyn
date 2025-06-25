@@ -52,7 +52,7 @@ In the project directory, you can run:
 
 1.	Navigate to the frontend/ directory:
 
-### `cd frontend`
+### `cd ../frontend`
 
 2.	Install dependencies:
 
@@ -64,6 +64,10 @@ In the project directory, you can run:
 
 ## Finally
 
-1.	Start the backend development server:
+1.	Navigate to the backend/ directory:
+
+### `cd ../backend`
+
+2.	Start the backend development server:
 
 ### `python run.py`
