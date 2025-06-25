@@ -10,9 +10,10 @@ import SectionComponent from '../../Sections/SectionComponent/SectionComponent';
 
 type Props = {
     data: UserType[]
+    hidden?: boolean
 }
 
-const UserBasicListComponent = ({data}: Props) => {
+const UserBasicListComponent = ({data, hidden}: Props) => {
     const [users, setUsers] = useState<UserProfileType[]>([])
 
     const { getUserRoles } = useBackendRequests()
@@ -49,6 +50,7 @@ const UserBasicListComponent = ({data}: Props) => {
                     path='/dashboard/users/'
                 />
             }
+            hidden={hidden}
         >
             <ul className={styles.list}>
                 {users.map(user => (

@@ -8,9 +8,10 @@ import SectionComponent from '../../Sections/SectionComponent/SectionComponent';
 
 type Props = {
     data: CameraType[]
+    hidden?: boolean
 }
 
-const CameraBasicListComponent = ({data}: Props) => {
+const CameraBasicListComponent = ({data, hidden}: Props) => {
     return (
         <SectionComponent 
             title='Cameras'
@@ -22,6 +23,7 @@ const CameraBasicListComponent = ({data}: Props) => {
                     path='/dashboard/cameras/'
                 />
             }
+            hidden={hidden}
         >
             <ul className={styles.list}>
                 {data.map(item => (

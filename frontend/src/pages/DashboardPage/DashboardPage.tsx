@@ -15,6 +15,7 @@ import CardTimeComponent from '../../components/Cards/CardTimeComponent/CardTime
 import CardComponent from '../../components/Cards/CardComponent/CardComponent';
 import CameraBasicListComponent from '../../components/Lists/CameraBasicListComponent/CameraBasicListComponent';
 import UserBasicListComponent from '../../components/Lists/UserBasicListComponent/UserBasicListComponent';
+import { UserContext } from '../../contexts/UserContext';
 
 
 type Props = {}
@@ -26,25 +27,31 @@ const DashboardPage = (props: Props) => {
     const [storage, setStorage] = useState<ChartType[]>([])
     const [totalRecords, setTotalRecords] = useState<number>(0)
     const [users, setUsers] = useState<UserType[]>([])
+    const [canViewUsers, setCanViewUsers] = useState<boolean>(false)
+    const [canViewCameras, setCanViewCameras] = useState<boolean>(false)
+    const [canViewRecords, setCanViewRecords] = useState<boolean>(false)
 
     const { getCameras, getSystem, getStorage, getRecords, getUsers } = useBackendRequests()
     const { setToastMessage } = useContext(ToastContext)
 
+    const {userPermissions} = useContext(UserContext)
     
     useEffect(() => {
         (async () => {
-            try {
-                const data = await getCameras()
-                setCameras(data.data)
-            } catch (error) {
-                setToastMessage({
-                    "title": "Failed to load cameras", 
-                    "description": "We couldn't fetch the camera list. Please try again later.", 
-                    success: false
-                })
+            if(canViewCameras){
+                try {
+                    const data = await getCameras()
+                    setCameras(data.data)
+                } catch (error) {
+                    setToastMessage({
+                        "title": "Failed to load cameras", 
+                        "description": "We couldn't fetch the camera list. Please try again later.", 
+                        success: false
+                    })
+                }
             }
         })()
-    }, [getCameras, setToastMessage])
+    }, [canViewCameras, getCameras, setToastMessage])
 
     useEffect(() => {
         (async () => {
@@ -104,18 +111,32 @@ const DashboardPage = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            try {
-                const data = await getUsers({limit: 4})
-                setUsers(data.data)
-            } catch (error) {
-                setToastMessage({
-                    "title": "Failed to load users", 
-                    "description": "We couldn't fetch the users. Please try again later.", 
-                    success: false
-                })
+            if(canViewUsers){
+                try {
+                    const data = await getUsers({limit: 4})
+                    setUsers(data.data)
+                } catch (error) {
+                    setToastMessage({
+                        "title": "Failed to load users", 
+                        "description": "We couldn't fetch the users. Please try again later.", 
+                        success: false
+                    })
+                }
             }
         })()
-    }, [getUsers, setToastMessage])
+    }, [canViewUsers, getUsers, setToastMessage])
+
+    useEffect(() => {
+        if(userPermissions.has("view_all_users")){
+            setCanViewUsers(true)
+        }
+        if(userPermissions.has("view_camera")){
+            setCanViewCameras(true)
+        }
+        if(userPermissions.has("view_record")){
+            setCanViewRecords(true)
+        }
+    }, [userPermissions])
 
     return (
         <PageLayout 
@@ -123,18 +144,22 @@ const DashboardPage = (props: Props) => {
             description='Comprehensive summary and analysis of system monitoring operations and performance activities.'
             content={
                 <div className={styles.header}>
-                    <ButtonComponent 
-                        className={styles.button}
-                        icon={<PiCamera />} 
-                        text="Manage cameras" 
-                        filled 
-                        path='/dashboard/cameras/'
-                    />
-                    <ButtonComponent 
-                        className={styles.button}
-                        text="Manage records"
-                        path='/dashboard/records/'
-                    />
+                    {canViewCameras &&
+                        <ButtonComponent 
+                            className={styles.button}
+                            icon={<PiCamera />} 
+                            text="Manage cameras" 
+                            filled 
+                            path='/dashboard/cameras/'
+                        />
+                    }
+                    {canViewRecords &&
+                        <ButtonComponent 
+                            className={styles.button}
+                            text="Manage records"
+                            path='/dashboard/records/'
+                        />
+                    }
                 </div>
             }
         >
@@ -147,7 +172,7 @@ const DashboardPage = (props: Props) => {
                 </div>
                 <div className={styles.sectionContainer}>
                     <div className={styles.aside}>
-                        <CameraBasicListComponent data={cameras.slice(0, 5)} />
+                        <CameraBasicListComponent data={cameras.slice(0, 5)} hidden={!canViewCameras} />
                         {timeIso && <CardTimeComponent timeIso={timeIso} />}
                     </div>
                     <div className={styles.sectionWrapper}>
@@ -164,7 +189,7 @@ const DashboardPage = (props: Props) => {
                             </SectionComponent>
                         </div>
                         <div className={styles.sectionLayout}>
-                            <UserBasicListComponent data={users} />
+                            <UserBasicListComponent data={users} hidden={!canViewUsers} />
                         </div>
                     </div>
                 </div>

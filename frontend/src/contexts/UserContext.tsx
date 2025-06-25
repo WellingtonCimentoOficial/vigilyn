@@ -6,6 +6,7 @@ import { UserProfileType } from "../types/BackendTypes";
 
 type UserContextType = {
     currentUser: UserProfileType | null
+    userPermissions: Set<string>
     setCurrentUser: React.Dispatch<React.SetStateAction<UserProfileType | null>>
 }
 
@@ -14,6 +15,7 @@ type Props = {
 }
 
 const initialData: UserContextType = {
+    userPermissions: new Set(),
     currentUser: null,
     setCurrentUser: () => {}
 }
@@ -23,6 +25,7 @@ export const UserContext = createContext<UserContextType>(initialData)
 
 export const UserContextProvider = ({children}: Props) => {
     const [currentUser, setCurrentUser] = useState<UserProfileType|null>(null)
+    const [userPermissions, setUserPermissions] = useState<Set<string>>(new Set())
 
     const { isAuthenticated } = useContext(AuthContext)
     const { setToastMessage } = useContext(ToastContext)
@@ -34,6 +37,11 @@ export const UserContextProvider = ({children}: Props) => {
                 try {
                     const data = await getMe()
                     setCurrentUser(data)
+                    setUserPermissions(new Set(
+                        data.roles.flatMap(role =>
+                            role.permissions.map(permission => permission.name)
+                        )
+                    ))
                 } catch (error) {
                     setToastMessage({
                         title: "Failed to load user information", 
@@ -48,7 +56,7 @@ export const UserContextProvider = ({children}: Props) => {
     }, [isAuthenticated, getMe, setToastMessage])
 
     return (
-        <UserContext.Provider value={{currentUser, setCurrentUser}}>
+        <UserContext.Provider value={{currentUser, userPermissions, setCurrentUser}}>
             {children}
         </UserContext.Provider>
     )

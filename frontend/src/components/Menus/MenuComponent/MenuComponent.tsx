@@ -6,6 +6,7 @@ import { useBackendRequests } from '../../../hooks/useBackRequests';
 import { AuthContext } from '../../../contexts/AuthContext';
 import LogoFullComponent from '../../Logos/LogoFullComponent/LogoFullComponent';
 import LogoSimbolComponent from '../../Logos/LogoSimbolComponent/LogoSimbolComponent';
+import { UserContext } from '../../../contexts/UserContext';
 
 type Props = {
     setOpenMenu: React.Dispatch<React.SetStateAction<boolean>>
@@ -15,6 +16,7 @@ type Item = {
     name: string,
     href: string,
     icon: React.ReactElement<any>
+    permission: string | null
 }
 type Section = {
     name: string
@@ -29,6 +31,8 @@ const MenuComponent = ({setOpenMenu}: Props) => {
 
     const navigate = useNavigate()
 
+    const { userPermissions } = useContext(UserContext)
+
     const data: Data = [
         {
             name: "MENU",
@@ -36,27 +40,32 @@ const MenuComponent = ({setOpenMenu}: Props) => {
                 {
                     name: "Dashboard",
                     href: "/dashboard/",
-                    icon: <PiHouse />
+                    icon: <PiHouse />,
+                    permission: null
                 },
                 {
                     name: "Cameras",
                     href: "/dashboard/cameras/",
-                    icon: <PiCamera />
+                    icon: <PiCamera />,
+                    permission: "view_camera"
                 },
                 {
                     name: "Records",
                     href: "/dashboard/records/",
-                    icon: <PiRecord />
+                    icon: <PiRecord />,
+                    permission: "view_record"
                 },
                 {
                     name: "Users",
                     href: "/dashboard/users/",
-                    icon: <PiUsers />
+                    icon: <PiUsers />,
+                    permission: "view_all_users"
                 },
                 {
                     name: "Analytics",
                     href: "/dashboard/analytics/",
-                    icon: <PiChartLineUpLight />
+                    icon: <PiChartLineUpLight />,
+                    permission: null
                 },
             ]
         },
@@ -66,17 +75,20 @@ const MenuComponent = ({setOpenMenu}: Props) => {
                 {
                     name: "Profile",
                     href: "/dashboard/profile/",
-                    icon: <PiUser />
+                    icon: <PiUser />,
+                    permission: "view_user"
                 },
                 {
                     name: "Settings",
                     href: "/dashboard/settings/",
-                    icon: <PiGear />
+                    icon: <PiGear />,
+                    permission: "view_settings"
                 },
                 {
                     name: "Help",
                     href: "/help",
-                    icon: <PiLifebuoy />
+                    icon: <PiLifebuoy />,
+                    permission: null
                 }
             ]
         }
@@ -157,25 +169,30 @@ const MenuComponent = ({setOpenMenu}: Props) => {
                                             </div>
                                         </li>
                                     }
-                                    {section.items.map((item, itemIndex) => (
-                                        <li key={itemIndex} className={styles.liItem}>
-                                            <NavLink 
-                                                to={item.href} 
-                                                end={item.href === "/dashboard/"}
-                                                className={({isActive}) => `${styles.aItem } ${!isOpen ? styles.aItemClosed : ""} ${isActive ? styles.active : ""}`}
-                                                onClick={() => handleOpenMenu(false)}
-                                            >
-                                                {({ isActive }) => (
-                                                    <>
-                                                        {React.cloneElement(item.icon, {
-                                                            className: `${styles.icon} ${!isOpen ? styles.iconClosed : ""} ${isActive ? styles.active : ""}`,
-                                                        })}
-                                                        <span className={`${styles.text} ${!isOpen ? styles.textClosed : ""} ${isActive ? styles.active : ""}`}>{item.name}</span>
-                                                    </>
-                                                )}
-                                            </NavLink>
-                                        </li>
-                                    ))}
+                                    {section.items.map((item, itemIndex) => {
+                                        if(!item.permission || userPermissions.has(item.permission)){
+                                            return (
+                                                <li key={itemIndex} className={styles.liItem}>
+                                                    <NavLink 
+                                                        to={item.href} 
+                                                        end={item.href === "/dashboard/"}
+                                                        className={({isActive}) => `${styles.aItem } ${!isOpen ? styles.aItemClosed : ""} ${isActive ? styles.active : ""}`}
+                                                        onClick={() => handleOpenMenu(false)}
+                                                    >
+                                                        {({ isActive }) => (
+                                                            <>
+                                                                {React.cloneElement(item.icon, {
+                                                                    className: `${styles.icon} ${!isOpen ? styles.iconClosed : ""} ${isActive ? styles.active : ""}`,
+                                                                })}
+                                                                <span className={`${styles.text} ${!isOpen ? styles.textClosed : ""} ${isActive ? styles.active : ""}`}>{item.name}</span>
+                                                            </>
+                                                        )}
+                                                    </NavLink>
+                                                </li>
+                                            )
+                                        }
+                                        return null
+                                    })}
                                     {sectionIndex === 1 &&
                                         <li className={styles.liItem} onClick={handleLogout}>
                                             <div className={`${styles.aItem} ${!isOpen ? styles.aItemClosed : ""}`}>
