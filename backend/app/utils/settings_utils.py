@@ -107,6 +107,7 @@ def create_roles():
             "view_role",
         ],
         "operator": [
+            "view_user",
             "view_camera",
             "view_record",
             "view_all_roles",
