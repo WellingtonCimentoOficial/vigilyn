@@ -127,15 +127,9 @@ const DashboardPage = (props: Props) => {
     }, [canViewUsers, getUsers, setToastMessage])
 
     useEffect(() => {
-        if(userPermissions.has("view_all_users")){
-            setCanViewUsers(true)
-        }
-        if(userPermissions.has("view_camera")){
-            setCanViewCameras(true)
-        }
-        if(userPermissions.has("view_record")){
-            setCanViewRecords(true)
-        }
+        setCanViewUsers(userPermissions.has("view_all_users") ? true : false)
+        setCanViewCameras(userPermissions.has("view_camera") ? true : false)
+        setCanViewRecords(userPermissions.has("view_record") ? true : false)
     }, [userPermissions])
 
     return (
