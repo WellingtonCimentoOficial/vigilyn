@@ -27,7 +27,7 @@ export const SettingsContextProvider = ({children}: Props) => {
     const [canViewSettings, setCanViewSettings] = useState<boolean>(false)
 
     const { isAuthenticated } = useContext(AuthContext)
-    const { currentUser } = useContext(UserContext)
+    const { userPermissions} = useContext(UserContext)
     const { setToastMessage } = useContext(ToastContext)
     const { getSettings } = useBackendRequests()
 
@@ -51,16 +51,8 @@ export const SettingsContextProvider = ({children}: Props) => {
     }, [isAuthenticated, canViewSettings, getSettings, setToastMessage])
 
     useEffect(() => {
-        if(currentUser){
-            setCanViewSettings(
-                currentUser.roles.some(role => 
-                    role.permissions.some(permission => 
-                        permission.name === "view_settings"
-                    )
-                )
-            )
-        }
-    }, [currentUser])
+        setCanViewSettings(userPermissions.has("view_settings") ? true : false)
+    }, [userPermissions])
 
     return (
         <SettingsContext.Provider value={{settings, setSettings}}>
