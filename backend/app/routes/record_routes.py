@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, send_file, current_app
 from app.models.record_models import Record
-from app.schemas.record_schemas import RecordSchema, RecordIdsSchema, RecordUpdateSchema
+from app.schemas.record_schemas import RecordSchema, RecordUpdateSchema
 from app.services.record_services import delete_records, filter_record, update_record
 from app.decorators.auth_decorators import authentication_required
 from app.decorators.permission_decorators import permission_required
@@ -8,10 +8,13 @@ from app.utils.utils import generate_pagination_response
 from app.exceptions.record_exceptions import (
     RecordNotFoundException,
     RecordThumbnailNotFoundException,
+    NoRecordingsFoundException,
 )
 from app.models.user_models import User
 from flask_jwt_extended import get_jwt_identity
 import os
+import zipfile
+import tempfile
 
 record_bp = Blueprint("records", __name__, url_prefix="/api/records/")
 
@@ -85,14 +88,47 @@ def play_video(record_pk):
 
 @record_bp.route("<int:record_pk>/video/download/", methods=["GET"])
 @authentication_required()
-@permission_required("view_record")
-def download_video(record_pk):
+@permission_required("download_record")
+def download(record_pk):
     record = Record.query.filter_by(id=record_pk).first_or_404()
 
     if not os.path.isfile(record.path):
         raise RecordNotFoundException()
 
     return send_file(record.path, as_attachment=True)
+
+
+@record_bp.route("videos/download/", methods=["GET"])
+@authentication_required()
+@permission_required("download_record")
+def download_multiple():
+    ids = request.args.getlist("id", type=int)
+
+    records = Record.query.filter(Record.id.in_(ids)).all()
+
+    if not records:
+        raise NoRecordingsFoundException()
+
+    temp_zip = tempfile.NamedTemporaryFile(delete=False, suffix=".zip")
+    zip_path = temp_zip.name
+
+    with zipfile.ZipFile(zip_path, "w") as zipf:
+        for record in records:
+            if os.path.isfile(record.path):
+                zipf.write(record.path, arcname=os.path.basename(record.path))
+
+    # Retorna o ZIP e deixa você decidir se quer apagar depois
+    response = send_file(zip_path, as_attachment=True, download_name="videos.zip")
+
+    # 💡 Opcional: deletar o arquivo após o envio
+    @response.call_on_close
+    def cleanup():
+        try:
+            os.remove(zip_path)
+        except Exception:
+            pass
+
+    return response
 
 
 @record_bp.route("<int:record_pk>/video/thumbnail/", methods=["GET"])
@@ -136,14 +172,13 @@ def delete(record_pk):
 @record_bp.route("", methods=["DELETE"])
 @authentication_required()
 @permission_required("delete_record")
-def delete_all():
-    schema = RecordIdsSchema()
-    data = schema.load(request.json)
+def delete_multiple():
+    ids = request.args.getlist("id", type=int)
 
-    records = Record.query.filter(Record.id.in_(data["ids"])).all()
+    records = Record.query.filter(Record.id.in_(ids)).all()
 
     if not records:
-        return jsonify({"error": "No records found"}), 404
+        raise NoRecordingsFoundException()
 
     delete_records(records)
 

@@ -11,10 +11,6 @@ class RecordSchema(Schema):
     updated_at = fields.DateTime(dump_only=True)
 
 
-class RecordIdsSchema(Schema):
-    ids = fields.List(fields.Int(), required=True)
-
-
 class RecordUpdateSchema(Schema):
     name = fields.Str(
         required=True,

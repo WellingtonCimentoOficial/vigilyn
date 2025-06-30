@@ -7,6 +7,12 @@ class RecordNotFoundException(AppException):
     status_code = 404
 
 
+class NoRecordingsFoundException(AppException):
+    default_error = "not_recordings_found"
+    default_message = "The requested records do not exist on the server."
+    status_code = 404
+
+
 class RecordThumbnailNotFoundException(AppException):
     default_error = "record_thumbnail_not_found"
     default_message = (
