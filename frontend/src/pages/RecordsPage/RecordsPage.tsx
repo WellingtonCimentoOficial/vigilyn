@@ -8,11 +8,12 @@ import { ToastContext } from '../../contexts/ToastContext'
 import SearchBarComponent from '../../components/Searches/SearchBarComponent/SearchBarComponent'
 import CheckBoxComponent from '../../components/Checkboxes/CheckBoxComponent/CheckBoxComponent'
 import DropdownBasicComponent from '../../components/Dropdowns/DropdownBasicComponent/DropdownBasicComponent'
-import { PiTrash } from "react-icons/pi";
+import { PiTrash, PiArrowDown } from "react-icons/pi";
 import DropdownFilterRecordsComponent from '../../components/Dropdowns/DropdownFilterRecordsComponent/DropdownFilterRecordsComponent'
 import ModalConfirmationComponent from '../../components/Modals/ModalConfirmationComponent/ModalConfirmationComponent'
 import ModalVideoComponent from '../../components/Modals/ModalVideoComponent/ModalVideoComponent'
 import LoaderThreePointsComponent from '../../components/Loaders/LoaderThreePointsComponent/LoaderThreePointsComponent'
+import { UserContext } from '../../contexts/UserContext'
 
 
 type Props = {}
@@ -40,8 +41,54 @@ const RecordsPage = (props: Props) => {
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const hasLoadedOnce = useRef(false)
 
-    const { getRecords, deleteRecords } = useBackendRequests()
+    const { getRecords, deleteRecords, downloadMultipleRecords } = useBackendRequests()
     const { setToastMessage } = useContext(ToastContext)
+    const { userPermissions } = useContext(UserContext)
+
+    const handleDownloadRecords = async () => {
+        setIsLoading(true)
+        try {
+            setToastMessage({
+                title: "Download requested", 
+                description: "Download has been requested. Please wait for it to begin.", 
+                success: true
+            })
+
+            const recordIdsToDownload = checkedItems.filter(item => item.checked).map(item => item.id) 
+            const url = await downloadMultipleRecords(recordIdsToDownload)
+            const link = document.createElement("a")
+            
+            link.href = url
+            link.setAttribute("download", "records.zip")
+            
+            document.body.appendChild(link)
+            link.click()
+
+            document.body.removeChild(link)
+            URL.revokeObjectURL(url)
+
+            setToastMessage({
+                title: "Download started", 
+                description: "The download has started. If it doesn't begin automatically, please try again or check your connection.", 
+                success: true
+            })
+        } catch (error: any) {
+            if(error.response?.status === 403 && error.response?.data.error === "permission_denied"){
+                setToastMessage({
+                    title: "Failed to download selected records",
+                    description: "You do not have permission to download recordings.",
+                    success: false
+                })
+            }else{
+                setToastMessage({
+                    title: "Failed to download selected records",
+                    description: "An error occurred while trying to dowbload the selected items. Please try again.",
+                    success: false
+                })
+            }
+        }
+        setIsLoading(false)
+    }
 
     const handleDeleteRecords = async () => {
         setIsLoading(true)
@@ -54,12 +101,20 @@ const RecordsPage = (props: Props) => {
                 success: true
             })
             setRecords(prev => prev.filter(item => !recordIdsToDelete.includes(item.id)))
-        } catch (error) {
-            setToastMessage({
-                title: "Failed to delete selected records",
-                description: "An error occurred while trying to remove the selected items. Please try again.",
-                success: false
-            })
+        } catch (error: any) {
+            if(error.response?.status === 403 && error.response?.data.error === "permission_denied"){
+                setToastMessage({
+                    title: "Failed to delete selected records",
+                    description: "You do not have permission to delete recordings.",
+                    success: false
+                })
+            }else{
+                setToastMessage({
+                    title: "Failed to delete selected records",
+                    description: "An error occurred while trying to remove the selected items. Please try again.",
+                    success: false
+                })
+            }
         }
         setIsLoading(false)
     }
@@ -246,13 +301,14 @@ const RecordsPage = (props: Props) => {
                             checked
                         />
                         {(() => {
-                            const data = checkedItems.filter(item => item.checked).map(item => item.id)
-                            const disabled = data.length > 0 ? false : true
+                            const dataDropdown = [
+                                {name: "Delete", icon: <PiTrash />, disabled: !userPermissions.has("delete_record"), callback: () => setShowConfirmation(true)},
+                                {name: "Download", icon: <PiArrowDown />, disabled: !userPermissions.has("download_record"), callback: handleDownloadRecords}
+                            ]
                             return (
                                 <DropdownBasicComponent
-                                    data={[
-                                        {name: "Delete", icon: <PiTrash />, disabled: disabled, callback: () => setShowConfirmation(true)},
-                                    ]}
+                                    data={dataDropdown}
+                                    disabled={dataDropdown.length === 0 || isLoading}
                                     show={showActions}
                                     callbackShow={(value) => setShowActions(current => value ?? !current)}
                                 />

@@ -200,10 +200,19 @@ export const useBackendRequests = () => {
     }, [axiosPrivate])
 
     const deleteRecords = useCallback(async (recordIds: number[]) => {
-        const response = await axiosPrivate.delete("/records/", {
-            data: {ids: recordIds},
-        })
+        const params = recordIds.map(recordId => `id=${recordId}`).join("&")
+        const response = await axiosPrivate.delete(`/records/?${params}`)
         const data: SuccessMessageType = await response.data
+        return data
+    }, [axiosPrivate])
+
+    const downloadMultipleRecords = useCallback(async (recordIds: number[]) => {
+        const params = recordIds.map(recordId => `id=${recordId}`).join("&")
+        const response = await axiosPrivate.get(`/records/videos/download/?${params}`, {
+            responseType: "blob"
+        })
+        const blob = await response.data
+        const data: string = URL.createObjectURL(blob)
         return data
     }, [axiosPrivate])
 
@@ -300,6 +309,7 @@ export const useBackendRequests = () => {
         getRecordThumbnail,
         getRecordVideo,
         downloadRecord,
+        downloadMultipleRecords,
         deleteRecord,
         updateRecord,
         deleteRecords,

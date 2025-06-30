@@ -31,10 +31,16 @@ const CardThumbnailComponent = ({record, callback, onClick}: Props) => {
 
     const { getRecordThumbnail, downloadRecord, deleteRecord, updateFavorite } = useBackendRequests()
     const { setToastMessage } = useContext(ToastContext)
-    const { currentUser, setCurrentUser } = useContext(UserContext)
+    const { currentUser, userPermissions, setCurrentUser } = useContext(UserContext)
 
     const handleDownload = async () => {
         try {
+            setToastMessage({
+                title: "Download requested", 
+                description: "Download has been requested. Please wait for it to begin.", 
+                success: true
+            })
+
             const url = await downloadRecord(recordLocal.id)
             const link = document.createElement("a")
             
@@ -70,12 +76,20 @@ const CardThumbnailComponent = ({record, callback, onClick}: Props) => {
                 "description": "The record has been removed from your list.", 
                 success: true
             })
-        } catch (error) {
-            setToastMessage({
-                "title": "Failed to delete record", 
-                "description": "We couldn't delete the record. Please try again later.", 
-                success: false
-            })
+        } catch (error: any) {
+            if(error.response?.status === 403 && error.response?.data.error === "permission_denied"){
+                setToastMessage({
+                    title: "Failed to delete records",
+                    description: "You do not have permission to delete a recording.",
+                    success: false
+                })
+            }else{
+                setToastMessage({
+                    "title": "Failed to delete record", 
+                    "description": "We couldn't delete the record. Please try again later.", 
+                    success: false
+                })
+            }
         }
     }
 
@@ -187,9 +201,9 @@ const CardThumbnailComponent = ({record, callback, onClick}: Props) => {
                                 disabled: false, 
                                 callback: handleFavorite
                             },
-                            {name: "Download recording", icon: <PiArrowDown />, disabled: false, callback: handleDownload},
+                            {name: "Download recording", icon: <PiArrowDown />, disabled: !userPermissions.has("download_record"), callback: handleDownload},
                             {name: "Edit recording name", icon: <PiPencil />, disabled: false, callback: () => setShowModal(true)},
-                            {name: "Delete recording", icon: <PiTrash />, disabled: false, callback: handleDeleteConfirmation},
+                            {name: "Delete recording", icon: <PiTrash />, disabled: !userPermissions.has("delete_record"), callback: handleDeleteConfirmation},
                         ]}
                         show={showOptions}
                         callbackShow={() => setShowOptions(current => !current)}

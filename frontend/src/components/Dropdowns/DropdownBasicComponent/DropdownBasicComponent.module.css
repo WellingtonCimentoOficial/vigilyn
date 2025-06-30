@@ -49,3 +49,7 @@
     color: var(--black-color-light);
     white-space: nowrap;
 }
+.disabled {
+    opacity: 50%;
+    pointer-events: none;
+}

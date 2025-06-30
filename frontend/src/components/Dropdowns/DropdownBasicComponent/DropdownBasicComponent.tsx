@@ -14,11 +14,12 @@ type DataType = {
 type Props = {
     icon?: React.ReactElement<any>
     data: DataType[]
+    disabled?: boolean
     show: boolean
     callbackShow: (value?: boolean) => void
 }
 
-const DropdownBasicComponent = ({ data, show, icon, callbackShow }: Props) => {
+const DropdownBasicComponent = ({ data, show, icon, disabled, callbackShow }: Props) => {
     const iconRef = useRef<HTMLDivElement>(null)
     const [coords, setCoords] = useState({ top: 0, right: 0 })
 
@@ -49,7 +50,7 @@ const DropdownBasicComponent = ({ data, show, icon, callbackShow }: Props) => {
 
     return (
         <>
-            <div className={styles.containerOptions} ref={iconRef}>
+            <div className={`${styles.containerOptions} ${disabled ? styles.disabled : ""}`} ref={iconRef}>
                 {icon ? (
                     React.cloneElement(icon, {
                         className: icon.props.className ?? styles.containerOptionsIcon,
