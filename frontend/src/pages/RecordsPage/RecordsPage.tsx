@@ -301,6 +301,9 @@ const RecordsPage = (props: Props) => {
                             checked
                         />
                         {(() => {
+                            const data = checkedItems.filter(item => item.checked).map(item => item.id)
+                            const disabled = data.length > 0 ? false : true
+
                             const dataDropdown = [
                                 {name: "Delete", icon: <PiTrash />, disabled: !userPermissions.has("delete_record"), callback: () => setShowConfirmation(true)},
                                 {name: "Download", icon: <PiArrowDown />, disabled: !userPermissions.has("download_record"), callback: handleDownloadRecords}
@@ -308,7 +311,7 @@ const RecordsPage = (props: Props) => {
                             return (
                                 <DropdownBasicComponent
                                     data={dataDropdown}
-                                    disabled={dataDropdown.length === 0 || isLoading}
+                                    disabled={disabled || isLoading}
                                     show={showActions}
                                     callbackShow={(value) => setShowActions(current => value ?? !current)}
                                 />

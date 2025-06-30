@@ -281,6 +281,7 @@ const CamerasPage = (props: Props) => {
                                         {name: "Delete", icon: <PiTrash />, disabled: disabled, callback: () => {setCameraIdsToDelete(data);setShowConfirmation(true)}},
                                     ]}
                                     show={showActions}
+                                    disabled={disabled}
                                     callbackShow={(value) => setShowActions(current => value ?? !current)}
                                 />
                             )
