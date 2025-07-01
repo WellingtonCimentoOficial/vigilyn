@@ -51,6 +51,7 @@ export const UserContextProvider = ({children}: Props) => {
                 }
             }else{
                 setCurrentUser(null)
+                setUserPermissions(new Set())
             }
         })()
     }, [isAuthenticated, getMe, setToastMessage])

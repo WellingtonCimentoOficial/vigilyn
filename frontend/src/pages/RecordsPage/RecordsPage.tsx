@@ -280,7 +280,7 @@ const RecordsPage = (props: Props) => {
     }, [records])
 
     useEffect(() => {
-        const timeout = setTimeout(() => setDebouncedSearch(search), 800)
+        const timeout = setTimeout(() =>{ setDebouncedSearch(search);setPage(1)}, 800)
         return () => clearTimeout(timeout)
     }, [search])
 
