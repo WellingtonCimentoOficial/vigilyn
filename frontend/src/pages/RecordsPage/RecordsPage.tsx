@@ -118,13 +118,19 @@ const RecordsPage = (props: Props) => {
         }
         setIsLoading(false)
     }
-
+    
     const handleCheck = (id: number, checked: boolean) => {
         setCheckedItems(prev => 
             prev.map(item =>
                 item.id === id ? {...item, checked: checked} : item
             )
         )
+    }
+
+    const handleCheckAll = (checked: boolean) => {
+        checkedItems.forEach(item => {
+            handleCheck(item.id, checked)
+        })
     }
 
     const handleRemove = (recordId: number) => {
@@ -296,9 +302,10 @@ const RecordsPage = (props: Props) => {
                     />
                     <div className={styles.containerFilters}>
                         <CheckBoxComponent 
-                            className={styles.checkboxFilter} 
+                            className={records.length === 0 ? styles.checkboxFilter : ""} 
                             label={`${checkedItems.filter(item => item.id !== 999999999 && item.checked).length} selected`}
-                            checked
+                            checked={checkedItems.filter(item => item.checked).length === checkedItems.length}
+                            callback={(checked) => handleCheckAll(checked)}
                         />
                         {(() => {
                             const data = checkedItems.filter(item => item.checked).map(item => item.id)
