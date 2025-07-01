@@ -22,12 +22,12 @@ const UserBasicListComponent = ({data, hidden}: Props) => {
 
     useEffect(() => {
         (async () => {
-            setUsers([])
+            let usersWithRoles: UserProfileType[] = []
             for(let i=0;i < data.length;i++){
                 try {
                     const user = data[i]
                     const roles = await getUserRoles(user.id)
-                    setUsers(currentValue => [...currentValue, {...user, roles: roles, favorite: {id: user.id, records: []}}])
+                    usersWithRoles.push({...user, roles: roles, favorite: {id: user.id, records: []}})
                 } catch (error) {
                     setToastMessage({
                         "title": "Failed to load roles", 
@@ -36,6 +36,7 @@ const UserBasicListComponent = ({data, hidden}: Props) => {
                     })
                 }
             }
+            setUsers(usersWithRoles)
         })()
     }, [data, getUserRoles, setToastMessage])
 
