@@ -117,10 +117,8 @@ def download_multiple():
             if os.path.isfile(record.path):
                 zipf.write(record.path, arcname=os.path.basename(record.path))
 
-    # Retorna o ZIP e deixa você decidir se quer apagar depois
     response = send_file(zip_path, as_attachment=True, download_name="videos.zip")
 
-    # 💡 Opcional: deletar o arquivo após o envio
     @response.call_on_close
     def cleanup():
         try:
