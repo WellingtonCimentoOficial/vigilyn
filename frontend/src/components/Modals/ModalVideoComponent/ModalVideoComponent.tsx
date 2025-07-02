@@ -33,7 +33,7 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
             description="View the full recording captured by the security system below."
             showModal={showModal} 
             setShowModal={setShowModal}>
-            <video className={styles.video} controls>
+            <video className={styles.video} controls autoPlay playsInline>
                 <source src={videoUrl} type={`video/${data.format}`} />
                 Your browser does not support HTML5 video with H.265.
             </video>
