@@ -12,7 +12,7 @@ type Props = {
 }
 
 const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
-    const [videoUrl, setVideoUrl] = useState<string>()
+    const [videoUrl, setVideoUrl] = useState<string|null>(null)
     const { getRecordVideo } = useBackendRequests()
 
 
@@ -33,10 +33,19 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
             description="View the full recording captured by the security system below."
             showModal={showModal} 
             setShowModal={setShowModal}>
-            <video className={styles.video} controls autoPlay playsInline>
-                <source src={videoUrl} type={`video/${data.format}`} />
-                Your browser does not support HTML5 video with H.265.
-            </video>
+            {videoUrl &&
+                <video 
+                    className={styles.video} 
+                    controls 
+                    autoPlay 
+                    muted
+                    playsInline 
+                    preload='auto'
+                >
+                    <source src={videoUrl} type={`video/${data.format}`} />
+                    Your browser does not support HTML5 video with H.265.
+                </video>
+            }
         </ModalBaseComponent>
     )
 }
