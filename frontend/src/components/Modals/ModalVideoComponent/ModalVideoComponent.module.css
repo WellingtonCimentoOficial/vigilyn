@@ -1,6 +1,12 @@
 .video {
     width: 1000px;
 }
+.containerLoader {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 @media (max-height: 670px){
     .video {
         width: 950px;

@@ -46,7 +46,9 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
                     Your browser does not support HTML5 video with H.265.
                 </video>
             ):(
-                <LoaderThreePointsComponent />
+                <div className={`${styles.containerLoader} ${styles.video}`}>
+                    <LoaderThreePointsComponent />
+                </div>
             )}
         </ModalBaseComponent>
     )
