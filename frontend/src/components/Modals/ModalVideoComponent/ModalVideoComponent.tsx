@@ -3,12 +3,12 @@ import styles from "./ModalVideoComponent.module.css"
 import ModalBaseComponent from '../ModalBaseComponent/ModalBaseComponent'
 import { RecordType } from '../../../types/BackendTypes'
 import { useBackendRequests } from '../../../hooks/useBackRequests'
+import LoaderThreePointsComponent from '../../Loaders/LoaderThreePointsComponent/LoaderThreePointsComponent'
 
 type Props = {
     showModal: boolean
     data: RecordType
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>
-    // callback: (record: RecordType) => void
 }
 
 const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
@@ -33,7 +33,7 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
             description="View the full recording captured by the security system below."
             showModal={showModal} 
             setShowModal={setShowModal}>
-            {videoUrl &&
+            {videoUrl ? (
                 <video 
                     className={styles.video} 
                     controls 
@@ -45,7 +45,9 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
                     <source src={videoUrl} type={`video/${data.format}`} />
                     Your browser does not support HTML5 video with H.265.
                 </video>
-            }
+            ):(
+                <LoaderThreePointsComponent />
+            )}
         </ModalBaseComponent>
     )
 }
