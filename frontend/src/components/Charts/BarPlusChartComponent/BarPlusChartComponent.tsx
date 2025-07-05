@@ -29,7 +29,7 @@ const BarPlusChartComponent = ({data}: Props) => {
                     return (
                         <li key={index*10} className={styles.listLi}>
                             <div className={`${styles.container1} ${style}`} style={{height: `${item.value}%`}}>
-                                <div className={styles.tooltip}>{data.find(dataItem => dataItem.title === item.title)?.value} mb</div>
+                                <div className={styles.tooltip}>{data.find(dataItem => dataItem.title === item.title)?.value} GB</div>
                             </div>
                             <span className={styles.title}>{item.title}</span>
                         </li>

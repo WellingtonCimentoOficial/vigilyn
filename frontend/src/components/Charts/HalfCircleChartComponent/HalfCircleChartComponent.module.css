@@ -44,8 +44,17 @@
     height: 13px;
     border-radius: 100%;
 }
+.container2ListLiTitle {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px;
+}
 .container2ListLiText {
     font-size: 0.9rem;
+}
+.container2ListLiTextDescription {
+    font-size: 0.85rem;
 }
 .containerInfo {
     position: absolute;

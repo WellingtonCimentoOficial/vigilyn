@@ -18,6 +18,11 @@
     justify-content: space-between;
     overflow-x: auto; 
     scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none; 
+}
+.section1::-webkit-scrollbar {
+  display: none;
 }
 .sectionContainer {
     display: flex;
@@ -80,6 +85,11 @@
     .section2Body {
         overflow-x: auto;
         scroll-behavior: smooth;
+        scrollbar-width: none;
+        -ms-overflow-style: none; 
+    }
+    .section2Body::-webkit-scrollbar {
+        display: none;
     }
 }
 @media (max-width: 465px){

@@ -55,7 +55,10 @@ const HalfCircleChartComponent = ({data}: Props) => {
                         return (
                             <li key={index} className={styles.container2ListLi}>
                                 <div className={`${styles.container2ListLiCircle} ${style}`}></div>
-                                <span className={styles.container2ListLiText}>{item.title}</span>
+                                <div className={styles.container2ListLiTitle}>
+                                    <span className={styles.container2ListLiText}>{item.title}</span>
+                                    <span className={styles.container2ListLiTextDescription}>({item.value.toFixed(0)}%)</span>
+                                </div>
                             </li>
                         )
                     })}
