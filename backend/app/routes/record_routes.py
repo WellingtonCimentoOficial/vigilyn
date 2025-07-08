@@ -33,6 +33,7 @@ def get_all():
     final_date_param = request.args.get("final_date")
     initial_hour_param = request.args.get("initial_hour")
     final_hour_param = request.args.get("final_hour")
+    camera_ids_param = request.args.getlist("camera_id")
 
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
@@ -47,6 +48,7 @@ def get_all():
         initial_hour_param=initial_hour_param,
         final_hour_param=final_hour_param,
         favorite_record_ids=[record.id for record in user.favorite.records],
+        camera_ids_param=camera_ids_param,
     )
     records_schema = RecordSchema(many=True).dump(records)
 

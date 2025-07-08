@@ -1,7 +1,11 @@
 from app.extensions import db
 from app.models.record_models import Record, OrganizeRecord
 from app.utils.utils import kill_process
-from app.utils.validators import validate_date_range, validate_hour_range
+from app.utils.validators import (
+    validate_date_range,
+    validate_hour_range,
+    validate_camera_ids_param,
+)
 from app.utils.logger_utils import Log
 from flask import current_app
 from sqlalchemy import desc
@@ -253,6 +257,7 @@ def filter_record(
     initial_hour_param,
     final_hour_param,
     favorite_record_ids,
+    camera_ids_param,
 ):
     try:
         if not str(page).isdigit():
@@ -278,6 +283,9 @@ def filter_record(
                 initial_hour_param, final_hour_param
             )
 
+        if camera_ids_param:
+            validate_camera_ids_param(camera_ids_param)
+
         page = int(page)
         limit = int(limit)
         query = db.session.query(Record)
@@ -298,6 +306,9 @@ def filter_record(
             query = query.filter(
                 Record.created_at.between(initial_datetime, final_datetime)
             )
+
+        if camera_ids_param:
+            query = query.filter(Record.camera_id.in_(camera_ids_param))
 
         if search_param:
             query = query.filter(Record.name.ilike(f"%{search_param}%"))

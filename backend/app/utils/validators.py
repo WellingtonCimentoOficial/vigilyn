@@ -1,5 +1,5 @@
 import re
-from datetime import datetime, timedelta
+from datetime import datetime
 from app.exceptions.url_exceptions import (
     InvalidInitialDateParamException,
     InvalidFinalDateParamException,
@@ -9,6 +9,7 @@ from app.exceptions.url_exceptions import (
     InvalidFinalHourParamException,
     InvalidHourRangeParamException,
     MissingHourParamException,
+    UrlCameraIdParamException,
 )
 
 
@@ -75,3 +76,9 @@ def validate_hour_range(initial_hour_param, final_hour_param):
             raise InvalidHourRangeParamException()
 
         return initial_hour, final_hour
+
+
+def validate_camera_ids_param(camera_ids):
+    for camera_id in camera_ids:
+        if not str(camera_id).isdigit():
+            raise UrlCameraIdParamException()

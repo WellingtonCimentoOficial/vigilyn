@@ -13,6 +13,12 @@ class UrlLimitParamException(AppException):
     status_code = 400
 
 
+class UrlCameraIdParamException(AppException):
+    default_error = "invalid_url_camera_id"
+    default_message = "The value of the 'camera_id' field is invalid"
+    status_code = 400
+
+
 class InvalidInitialDateParamException(AppException):
     default_error = "invalid_initial_date_param"
     default_message = "The value of the 'initial_date' field is invalid"
