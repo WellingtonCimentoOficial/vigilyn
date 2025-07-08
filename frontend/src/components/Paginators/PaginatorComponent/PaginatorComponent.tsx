@@ -8,14 +8,15 @@ import { SelectDataType } from '../../../types/FrontendTypes';
 type Props = {
     totalCount: number
     currentPage: number
+    limit: number
     callback: (limit: number, currentPage: number) => void
 }
 
-const PaginatorComponent = ({totalCount, currentPage, callback}: Props) => {
-    const [limit, setLimit] = useState<number>(10)
-    const [totalPages, setTotalPages] = useState<number>(Math.ceil(totalCount / limit))
+const PaginatorComponent = ({totalCount, currentPage, limit, callback}: Props) => {
+    const [localLimit, setLocalLimit] = useState<number>(limit)
+    const [totalPages, setTotalPages] = useState<number>(Math.ceil(totalCount / localLimit))
     const [range, setRange] = useState<[number, number]>([0, 0])
-    const [currentPageLocal, setCurrentPageLocal] = useState<number>(currentPage)
+    const [localCurrentPage, setLocalCurrentPage] = useState<number>(currentPage)
 
     const paginatorData: SelectDataType[] = [
         {id: 0, title: "10", value: "10"},
@@ -24,43 +25,44 @@ const PaginatorComponent = ({totalCount, currentPage, callback}: Props) => {
     ]
 
     useEffect(() => {
-        const inital = currentPageLocal - 5 >= 1 ? currentPageLocal - 5 : 0
+        const inital = localCurrentPage - 5 >= 1 ? localCurrentPage - 5 : 0
         const final = inital + 5
         setRange([inital, final])
-    }, [currentPageLocal])
+    }, [localCurrentPage])
 
-    useEffect(() => callback(limit, currentPageLocal), [limit, currentPageLocal, callback])
-    useEffect(() => setCurrentPageLocal(currentPage), [currentPage])
-    useEffect(() => setTotalPages(Math.ceil(totalCount / limit)), [limit, totalCount])
+    useEffect(() => callback(localLimit, localCurrentPage), [localLimit, localCurrentPage, callback])
+    useEffect(() => setLocalCurrentPage(currentPage), [currentPage])
+    useEffect(() => setLocalLimit(limit), [limit])
+    useEffect(() => setTotalPages(Math.ceil(totalCount / localLimit)), [localLimit, totalCount])
 
     return (
         <div className={styles.wrapper}>
-            <span className={styles.text}>Showing {currentPageLocal} to {totalPages} of {totalCount} entries</span>
+            <span className={styles.text}>Showing {localCurrentPage} to {totalPages} of {totalCount} entries</span>
             <div className={styles.paginator}>
-                <div className={styles.paginatorController} onClick={() => setCurrentPageLocal(current => current - 1 >= 1 ? current - 1 : 1)}>
+                <div className={styles.paginatorController} onClick={() => setLocalCurrentPage(current => current - 1 >= 1 ? current - 1 : 1)}>
                     <PiCaretLeft className={styles.controllerIcon} />
                 </div>
                 <ul className={styles.pagesList}>
                     {Array.from({length: totalPages}, (_, i) => i + 1).slice(...range).map(page => (
                         <li 
                             key={page} 
-                            className={`${styles.pagesListLi} ${page === currentPageLocal ? styles.current : ""}`}
-                            onClick={() => setCurrentPageLocal(page)}
+                            className={`${styles.pagesListLi} ${page === localCurrentPage ? styles.current : ""}`}
+                            onClick={() => setLocalCurrentPage(page)}
                         >
                             {page}
                         </li>
                     ))}
                 </ul>
-                <div className={styles.paginatorController} onClick={() => setCurrentPageLocal(current => current + 1 <= totalPages ? current + 1 : totalPages)}>
+                <div className={styles.paginatorController} onClick={() => setLocalCurrentPage(current => current + 1 <= totalPages ? current + 1 : totalPages)}>
                     <PiCaretRight className={styles.controllerIcon} />
                 </div>
             </div>
             <div className={styles.items}>
                 <span className={styles.text}>Items per page:</span>
                 <SelectComponent 
-                    value={String(limit)} 
+                    value={String(localLimit)} 
                     data={paginatorData} 
-                    callback={(data: SelectDataType) => setLimit(Number(data.value))}
+                    callback={(data: SelectDataType) => setLocalLimit(Number(data.value))}
                 />
             </div>
         </div>

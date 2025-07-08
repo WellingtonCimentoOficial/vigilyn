@@ -31,6 +31,10 @@
 .option {
     white-space: nowrap;
     color: var(--black-color-light);
+    transition: 0.2s;
+}
+.option:hover {
+    background-color: var(--principal-background-color);
 }
 .header, .option {
     padding: 10px;

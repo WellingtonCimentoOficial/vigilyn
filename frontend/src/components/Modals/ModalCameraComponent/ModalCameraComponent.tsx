@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import styles from "./ModalCameraComponent.module.css"
 import ModalBaseComponent from '../ModalBaseComponent/ModalBaseComponent'
 import { CameraType, ErrorType, ErrorValidationType } from '../../../types/BackendTypes'
@@ -9,6 +9,8 @@ import { useBackendRequests } from '../../../hooks/useBackRequests'
 import { ipRegex, pathRegex } from '../../../utils/regex'
 import { PiFloppyDisk } from "react-icons/pi";
 import { HexColorPicker } from 'react-colorful'
+import SelectComponent from '../../Selects/SelectComponent/SelectComponent'
+import { SelectDataType } from '../../../types/FrontendTypes'
 
 type Props = {
     showModal: boolean
@@ -41,6 +43,22 @@ const ModalCameraComponent = ({showModal, data, setShowModal, callback}: Props) 
 
     const [wasSubmitted, setWasSubmitted] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const codecData: SelectDataType[] = useMemo(() => [
+        {
+            id: 0, 
+            title: "H264 AVC", 
+            value: "h264"
+        },
+        {
+            id: 1, 
+            title: "H265 HEVEC", 
+            value: "h265"
+        }
+        
+    ], [])
+
+    const [codec, setCodec] = useState<SelectDataType>(codecData[0])
 
     const { setToastMessage } = useContext(ToastContext)
     
@@ -95,6 +113,7 @@ const ModalCameraComponent = ({showModal, data, setShowModal, callback}: Props) 
                     profile_color: profileColor,
                     ip_address: ipAddress,
                     port,
+                    codec: codec.value,
                     ...(username && {username}),
                     ...(password && {password}),
                     ...(path && {path})
@@ -204,8 +223,10 @@ const ModalCameraComponent = ({showModal, data, setShowModal, callback}: Props) 
         setPath(data ? data.path : "")
         setPathIsValid(true)
 
+        setCodec(data ? (codecData.find(item => item.value === data.codec) ?? codecData[0]) : codecData[0])
+
         setWasSubmitted(false)
-    }, [showModal, data])
+    }, [showModal, data, codecData])
 
     return (
         <ModalBaseComponent
@@ -312,6 +333,15 @@ const ModalCameraComponent = ({showModal, data, setShowModal, callback}: Props) 
                         error={!pathIsValid && wasSubmitted}
                         disabled={isLoading}
                     />
+                    <div className={styles.selectContainer}>
+                        <span className={styles.selectLabel}>Codec</span>
+                        <SelectComponent 
+                            data={codecData} 
+                            value={codec.title} 
+                            callback={(data) => setCodec(data)} 
+                            disabled={isLoading}
+                        />
+                    </div>
                 </form>
             </div>
         </ModalBaseComponent>

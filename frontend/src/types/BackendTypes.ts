@@ -72,6 +72,7 @@ export type CameraType = {
     pid: number | null
     requires_restart: boolean
     is_recording: boolean
+    codec: string
 }
 
 export type CameraCreateUpdateType = {
@@ -82,6 +83,7 @@ export type CameraCreateUpdateType = {
     username?: string
     password?: string
     path?: string
+    codec: string
 }
 
 export type CpuType = {

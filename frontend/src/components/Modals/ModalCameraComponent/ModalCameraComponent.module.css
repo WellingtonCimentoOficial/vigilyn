@@ -39,3 +39,13 @@
     height: 100px;
     width: 100%;
 }
+.selectContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;    
+}
+.selectLabel {
+    font-weight: 450;
+    font-size: 0.9rem;
+}

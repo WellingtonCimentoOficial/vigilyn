@@ -276,6 +276,7 @@ const UsersPage = (props: Props) => {
                                 <PaginatorComponent 
                                     currentPage={currentPage} 
                                     totalCount={totalCount} 
+                                    limit={limit}
                                     callback={handlePagination} 
                                 />
                             </>

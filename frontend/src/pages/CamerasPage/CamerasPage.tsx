@@ -318,6 +318,7 @@ const CamerasPage = (props: Props) => {
                                                 <th className={styles.th}>Username</th>
                                                 <th className={styles.th}>Password</th>
                                                 <th className={styles.th}>Path</th>
+                                                <th className={`${styles.th} ${styles.textCenter}`}>Codec</th>
                                                 <th className={`${styles.th} ${styles.textCenter}`}>Process</th>
                                                 <th className={`${styles.th} ${styles.textCenter}`}>Recording</th>
                                                 <th className={`${styles.th} ${styles.textCenter}`}>Settings</th>
@@ -342,6 +343,7 @@ const CamerasPage = (props: Props) => {
                                                     <td className={styles.td}>{camera.username !== "" ? camera.username : "-"}</td>
                                                     <td className={styles.td}>{camera.password !== "" ? camera.password : "-"}</td>
                                                     <td className={styles.td}>{camera.path}</td>
+                                                    <td className={`${styles.td} ${styles.textCenter}`}>{camera.codec}</td>
                                                     <td className={`${styles.td} ${styles.textCenter}`}>
                                                         <TagStatusComponent 
                                                             text={camera.pid ? "Running" : "Stopped"} 
@@ -381,6 +383,7 @@ const CamerasPage = (props: Props) => {
                                 <PaginatorComponent 
                                     currentPage={currentPage} 
                                     totalCount={totalCount} 
+                                    limit={limit}
                                     callback={handlePagination} 
                                 />
                             </>

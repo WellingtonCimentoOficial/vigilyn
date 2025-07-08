@@ -62,10 +62,6 @@ const HalfCircleChartComponent = ({data}: Props) => {
                             </li>
                         )
                     })}
-                    <li className={styles.container2ListLi}>
-                        <div className={`${styles.container2ListLiCircle} ${styles.drawPathBase}`}></div>
-                        <span className={styles.container2ListLiText}>Pending</span>
-                    </li>
                 </ul>
             </div>
         </div>
