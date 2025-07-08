@@ -35,6 +35,7 @@ const RecordsPage = (props: Props) => {
     const [finalDateFilter, setFinalDateFilter] = useState<Date>(new Date())
     const [initialHourFilter, setInitialHourFilter] = useState<string>("00:00:00")
     const [finalHourFilter, setFinalHourFilter] = useState<string>("23:59:59")
+    const [camerasFilter, setCamerasFilter] = useState<number[]>([])
     const [record, setRecord] = useState<RecordType|null>(null)
     const [showVideoModal, setShowVideoModal] = useState<boolean>(false)
 
@@ -156,7 +157,8 @@ const RecordsPage = (props: Props) => {
                     initial_date: handleFormatDateFilter(initialDateFilter),
                     final_date: handleFormatDateFilter(finalDateFilter),
                     initial_hour: initialHourFilter,
-                    final_hour: finalHourFilter
+                    final_hour: finalHourFilter,
+                    cameraIds: camerasFilter
                 })
 
                 if(page === 1){
@@ -228,7 +230,7 @@ const RecordsPage = (props: Props) => {
             }
             setIsLoading(false)
         })()
-    }, [page, showFavoritesFilter, initialDateFilter, finalDateFilter, debouncedSearch, initialHourFilter, finalHourFilter, getRecords, setToastMessage])
+    }, [page, showFavoritesFilter, initialDateFilter, finalDateFilter, debouncedSearch, initialHourFilter, finalHourFilter, camerasFilter, getRecords, setToastMessage])
 
     const observer = useMemo(() => {
         const obs = new IntersectionObserver((entries) => {
@@ -332,12 +334,14 @@ const RecordsPage = (props: Props) => {
                             initialHour={initialHourFilter}
                             finalHour={finalHourFilter}
                             showFavorites={showFavoritesFilter}
+                            camerasSelected={camerasFilter}
                             callback={(props) => {
                                 setShowFavoritesFilter(props.showFavorites)
                                 setInitialDateFilter(props.initialDate)
                                 setFinalDateFilter(props.finalDate)
                                 setInitialHourFilter(props.initialHour)
                                 setFinalHourFilter(props.finalHour)
+                                setCamerasFilter(props.camerasSelected)
                                 setPage(1)
                                 setIsLoading(true)
                             }}

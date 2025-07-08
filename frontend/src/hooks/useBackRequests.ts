@@ -20,6 +20,7 @@ type GetRecordsProps = {
     final_date?: string
     initial_hour?: string
     final_hour?: string
+    cameraIds?: number[]
 }
 
 type GetUsersProps = {
@@ -147,15 +148,27 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
-    const getRecords = useCallback(async ({ search, limit, page, show_favorites, initial_date, final_date, initial_hour, final_hour }: GetRecordsProps = {}) => {
-        const params = Object.fromEntries(
-            Object.entries({ search, page, limit, show_favorites, initial_date, final_date, initial_hour, final_hour })
-            .filter(([_, value]) => value != null)
-        )
+    const getRecords = useCallback(async ({ search, limit, page, show_favorites, initial_date, final_date, initial_hour, final_hour, cameraIds }: GetRecordsProps = {}) => {
+        const rawParams = { 
+            search, page, limit, show_favorites, initial_date, 
+            final_date, initial_hour, final_hour 
+        }
 
-        const response = await axiosPrivate.get(`/records/`, {
-            params
-        })
+        const params = Object.fromEntries(Object.entries(rawParams).filter(([_, value]) => value != null && value !== undefined && value !== ""))
+
+        const urlParams = new URLSearchParams()
+
+        if(cameraIds?.length){
+            for(const id of cameraIds){
+                urlParams.append("camera_id", String(id))
+            }
+        }
+
+        for (const [key, value] of Object.entries(params)){
+            urlParams.append(key, String(value))
+        }
+
+        const response = await axiosPrivate.get(`/records/?${urlParams.toString()}`)
         const data: RecordPaginationType = response.data
         return data
     }, [axiosPrivate])

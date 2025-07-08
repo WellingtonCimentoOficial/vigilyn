@@ -1,10 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import styles from "./DropdownFilterRecordsComponent.module.css"
 import ButtonFilterComponent from '../../Buttons/ButtonFilterComponent/ButtonFilterComponent'
 import DropdownCalendarComponent from '../DropdownCalendarComponent/DropdownCalendarComponent'
 import ButtonComponent from '../../Buttons/ButtonComponent/ButtonComponent'
 import CheckBoxSwitchComponent from '../../Checkboxes/CheckBoxSwitchComponent/CheckBoxSwitchComponent'
 import InputHourFilterComponent from '../../Inputs/InputHourFilterComponent/InputHourFilterComponent'
+import { useBackendRequests } from '../../../hooks/useBackRequests'
+import { ToastContext } from '../../../contexts/ToastContext'
+import { CameraType } from '../../../types/BackendTypes'
+import CheckBoxComponent from '../../Checkboxes/CheckBoxComponent/CheckBoxComponent'
 
 type CallbackProps = {
     showFavorites: boolean
@@ -12,6 +16,7 @@ type CallbackProps = {
     finalDate: Date
     initialHour: string
     finalHour: string
+    camerasSelected: number[]
 }
 type Props = {
     show: boolean
@@ -19,13 +24,14 @@ type Props = {
     finalDate: Date
     initialHour: string
     finalHour: string
+    camerasSelected: number[]
     showFavorites: boolean
     isLoading?: boolean
     callbackShow: (value?: boolean) => void
     callback: ({showFavorites, initialDate, finalDate, initialHour, finalHour}: CallbackProps) => void
 }
 
-const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate, initialHour, finalHour, showFavorites, callback, callbackShow}: Props) => {
+const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate, initialHour, finalHour, showFavorites, camerasSelected, callback, callbackShow}: Props) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const [showInitialCalendar, setShowInitialCalendar] = useState<boolean>(false)
     const [showFinalCalendar, setShowFinalCalendar] = useState<boolean>(false)
@@ -38,6 +44,17 @@ const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate
     const [apply, setApply] = useState<boolean>(false)
     const [applyIsLoading, setApplyIsLoading] = useState<boolean>(false)
     const [resetIsLoading, setResetIsLoading] = useState<boolean>(false)
+    const [cameras, setCameras] = useState<CameraType[]>([])
+    const [camerasFilter, setCamerasFilter] = useState<number[]>(camerasSelected)
+
+    const { getCameras } = useBackendRequests()
+    const { setToastMessage } = useContext(ToastContext)
+
+    const handleCamerasFilter = (cameraId: number, checked: boolean) => {
+        setCamerasFilter(prevIds =>
+            checked ? [...prevIds, cameraId] : prevIds.filter(id => id !== cameraId)
+        )       
+    }
 
     const handleDisableFilters = () => {
         setInitialDateFilter(new Date())
@@ -46,6 +63,7 @@ const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate
         setFinalHourFilter("235959")
         setShowFavoritesFilter(false)
         setResetIsLoading(true)
+        setCamerasFilter([])
         setApply(true)
     }
 
@@ -94,11 +112,12 @@ const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate
                 initialDate: initialDateFilter,
                 finalDate: finalDateFilter,
                 initialHour: handleFormatHour(initialHourFilter),
-                finalHour: handleFormatHour(finalHourFilter)
+                finalHour: handleFormatHour(finalHourFilter),
+                camerasSelected: camerasFilter
             })
             setApply(false)
         }
-    }, [showFavoritesFilter, initialDateFilter, finalDateFilter, initialHourFilter, finalHourFilter, apply, callback])
+    }, [showFavoritesFilter, initialDateFilter, finalDateFilter, initialHourFilter, finalHourFilter, camerasFilter, apply, callback])
 
     useEffect(() => {
         if(!isLoading && (applyIsLoading || resetIsLoading)){
@@ -107,6 +126,21 @@ const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate
             callbackShow(false)
         }
     }, [isLoading, applyIsLoading, resetIsLoading, callbackShow])
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const data = await getCameras()
+                setCameras(data.data)
+            } catch (error) {
+                setToastMessage({
+                    "title": "Failed to load cameras", 
+                    "description": "We couldn't fetch the cameras data. Please try again later.", 
+                    success: false
+                })
+            }
+        })()
+    }, [getCameras, setToastMessage])
 
     return (
         <div className={styles.containerOptions} ref={containerRef}>
@@ -172,6 +206,19 @@ const DropdownFilterRecordsComponent = ({show, isLoading, initialDate, finalDate
                             size={3}
                             disabled={resetIsLoading || applyIsLoading}
                         />
+                    </div>
+                </div>
+                <div className={styles.option}>
+                    <span className={styles.optionText}>Cameras</span>
+                    <div className={styles.containerCameras}>
+                        {cameras?.map(camera => (
+                            <CheckBoxComponent 
+                                key={camera.id}
+                                label={camera.name} 
+                                checked={camerasFilter.includes(camera.id)} 
+                                callback={(checked) => handleCamerasFilter(camera.id, checked)}
+                            />
+                        ))}
                     </div>
                 </div>
                 <div className={styles.option}>

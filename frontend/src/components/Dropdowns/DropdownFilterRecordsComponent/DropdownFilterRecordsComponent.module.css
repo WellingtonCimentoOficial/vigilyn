@@ -78,3 +78,8 @@
     font-size: 0.9rem;
     color: var(--black-color-light);
 }
+.containerCameras {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100px;
+}
