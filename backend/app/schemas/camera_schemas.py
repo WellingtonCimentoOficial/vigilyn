@@ -16,6 +16,12 @@ class CameraSchema(Schema):
     codec = fields.Str()
 
 
+class CameraMinimalSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
+    profile_color = fields.Str()
+
+
 class CameraCreateUpdateSchema(Schema):
     name = fields.Str(
         required=True,

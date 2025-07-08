@@ -1,4 +1,5 @@
 from marshmallow import Schema, fields, validate
+from .camera_schemas import CameraMinimalSchema
 
 
 class RecordSchema(Schema):
@@ -7,6 +8,7 @@ class RecordSchema(Schema):
     path = fields.Str(dump_only=True)
     format = fields.Str(dump_only=True)
     duration_seconds = fields.Float(dump_only=True)
+    camera = fields.Nested(CameraMinimalSchema)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
