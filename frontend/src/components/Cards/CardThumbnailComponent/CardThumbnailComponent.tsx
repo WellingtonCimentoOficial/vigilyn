@@ -179,16 +179,19 @@ const CardThumbnailComponent = ({record, callback, onClick}: Props) => {
                 )}
             </div>
             <div className={styles.body}>
-                <div className={styles.containerData} onClick={onClick}>
-                    <span className={styles.title}>{recordLocal.name}</span>
-                    <div className={styles.containerInfo}>
-                        <div className={styles.infoItem}>
-                            <span className={styles.descriptionBold}>Format:</span>
-                            <span className={styles.description}>{recordLocal.format}</span>
-                        </div>
-                        <div className={styles.infoItem}>
-                            <span className={styles.descriptionBold}>Recorded at:</span>
-                            <span className={styles.description}>{formatDateTime(recordLocal.created_at)}</span>
+                <div className={styles.containerBody}>
+                    <div className={styles.cameraProfile} style={{backgroundColor: record.camera.profile_color}}>{record.camera.name[0]}</div>
+                    <div className={styles.containerData} onClick={onClick}>
+                        <span className={styles.title}>{recordLocal.name}</span>
+                        <div className={styles.containerInfo}>
+                            <div className={styles.infoItem}>
+                                <span className={styles.descriptionBold}>Format:</span>
+                                <span className={styles.description}>{recordLocal.format}</span>
+                            </div>
+                            <div className={styles.infoItem}>
+                                <span className={styles.descriptionBold}>Recorded at:</span>
+                                <span className={styles.description}>{formatDateTime(recordLocal.created_at)}</span>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -63,6 +63,20 @@
     justify-content: space-between;
     padding-top: 10px;
 }
+.containerBody {
+    display: flex;
+    gap: 10px;
+}
+.cameraProfile {
+    background-color: var(--principal-color);
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
 .containerData {
     flex-grow: 1;
     display: flex;

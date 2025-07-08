@@ -75,6 +75,12 @@ export type CameraType = {
     codec: string
 }
 
+export type CameraMinimalType = {
+    id: number
+    name: string
+    profile_color: string
+}
+
 export type CameraCreateUpdateType = {
     name: string,
     profile_color?: string
@@ -124,6 +130,7 @@ export type RecordType = {
     path: string
     format: string
     duration_seconds: number
+    camera: CameraMinimalType
     created_at: string
     updated_at: string
 }
