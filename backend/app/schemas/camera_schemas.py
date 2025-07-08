@@ -13,6 +13,7 @@ class CameraSchema(Schema):
     pid = fields.Int(allow_none=True)
     requires_restart = fields.Bool()
     is_recording = fields.Bool()
+    codec = fields.Str()
 
 
 class CameraCreateUpdateSchema(Schema):
@@ -61,4 +62,10 @@ class CameraCreateUpdateSchema(Schema):
                 error="Path must be a relative path starting with /.",
             )
         ],
+    )
+    codec = fields.Str(
+        required=True,
+        validate=validate.OneOf(
+            ["h264", "h265"], error="Codec must be 'h264' or 'h265'."
+        ),
     )

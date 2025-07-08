@@ -17,6 +17,7 @@ class Camera(db.Model):
     username: Mapped[str] = mapped_column(default="", nullable=False)
     password: Mapped[str] = mapped_column(default="", nullable=False)
     path: Mapped[str] = mapped_column(default="/", nullable=False)
+    codec: Mapped[str] = mapped_column(default="h264", nullable=False)
     records: Mapped[List["Record"]] = relationship(back_populates="camera")
     pid: Mapped[int] = mapped_column(nullable=True)
     started_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())

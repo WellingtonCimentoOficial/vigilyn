@@ -42,6 +42,8 @@ class Ffmpeg:
         url = generate_rtsp_url(camera)
         log.write(category=log.RTSP, message=f"Trying to connect to {url}...")
 
+        tag_param = "hvc1" if camera.codec == "h265" else "avc1"
+
         command = [
             "ffmpeg",
             "-rtsp_transport",
@@ -57,7 +59,7 @@ class Ffmpeg:
             "-b:a",
             self.audio_bitrate,
             "-tag:v",
-            "hvc1",
+            tag_param,
             "-movflags",
             "+faststart",
             "-f",
