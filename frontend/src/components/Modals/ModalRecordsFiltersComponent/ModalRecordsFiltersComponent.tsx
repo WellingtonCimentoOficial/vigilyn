@@ -1,22 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
-import styles from "./DropdownFilterRecordsComponent.module.css"
-import FilterRecordsComponent from '../../Filters/FilterRecordsComponent/FilterRecordsComponent'
-import { RecordsFilterCallbackType, RecordsFilterHandleType, RecordsFilterType } from '../../../types/FrontendTypes'
-import ButtonFilterComponent from '../../Buttons/ButtonFilterComponent/ButtonFilterComponent'
+import styles from "./ModalRecordsFiltersComponent.module.css"
+import ModalBaseComponent from '../ModalBaseComponent/ModalBaseComponent'
 import ButtonComponent from '../../Buttons/ButtonComponent/ButtonComponent'
+import { RecordsFilterCallbackType, RecordsFilterHandleType, RecordsFilterType } from '../../../types/FrontendTypes'
+import FilterRecordsComponent from '../../Filters/FilterRecordsComponent/FilterRecordsComponent'
 
 type Props = RecordsFilterType & {
-    show: boolean
-    callbackShow: (value?: boolean) => void
+    showModal: boolean
+    setShowModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const DropdownFilterRecordsComponent = ({isLoading, show, callback, callbackShow, ...rest}: Props) => {
-    const containerRef = useRef<HTMLDivElement>(null)
+const ModalRecordsFiltersComponent = ({isLoading, showModal, callback, setShowModal, ...rest}: Props) => {
     const filtersRef = useRef<RecordsFilterHandleType>(null)
     const [applyIsLoading, setApplyIsLoading] = useState<boolean>(false)
     const [resetIsLoading, setResetIsLoading] = useState<boolean>(false)
     const [filtersActiveCount, setFiltersActiveCount] = useState<number>(2)
-
 
     const handleCallback = ({filtersActiveCount, ...rest}: RecordsFilterCallbackType) => {
         setFiltersActiveCount(filtersActiveCount)
@@ -37,36 +35,18 @@ const DropdownFilterRecordsComponent = ({isLoading, show, callback, callbackShow
         if(!isLoading && (applyIsLoading || resetIsLoading)){
             setApplyIsLoading(false)
             setResetIsLoading(false)
-            callbackShow(false)
+            setShowModal(false)
         }
-    }, [isLoading, applyIsLoading, resetIsLoading, callbackShow])
-
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if(containerRef.current && !containerRef.current.contains(e.target as Node)){
-                callbackShow(false)
-            }
-        }
-
-        document.addEventListener("mousedown", handleClickOutside)
-        return () => document.removeEventListener("mousedown", handleClickOutside)
-    }, [callbackShow])
+    }, [isLoading, applyIsLoading, resetIsLoading, setShowModal])
 
     return (
-        <div className={styles.wrapper} ref={containerRef}>
-            <ButtonFilterComponent
-                text='Filters' 
-                count={filtersActiveCount}
-                onClick={() => callbackShow()}
-            />
-            <div className={`${styles.container} ${show ? styles.containerShow : ""}`}>
-                <FilterRecordsComponent 
-                    ref={filtersRef} 
-                    isLoading={isLoading} 
-                    {...rest} 
-                    callback={handleCallback} 
-                />
-                <div className={styles.bottom}>
+        <ModalBaseComponent
+            title="Filter recordings "
+            description="Choose the filters below to find specific recordings faster."
+            showModal={showModal}
+            setShowModal={setShowModal}
+            footer={
+                <div className={styles.footer}>
                     <ButtonComponent
                         className={styles.button}
                         text="Reset all"
@@ -82,10 +62,17 @@ const DropdownFilterRecordsComponent = ({isLoading, show, callback, callbackShow
                         filled
                         onClick={handleApplyFilters}
                     />
-                    </div>
-            </div>
-        </div>
+                </div>
+            }
+        >
+            <FilterRecordsComponent 
+                ref={filtersRef} 
+                isLoading={isLoading} 
+                {...rest} 
+                callback={handleCallback} 
+            />
+        </ModalBaseComponent>
     )
 }
 
-export default DropdownFilterRecordsComponent
+export default ModalRecordsFiltersComponent

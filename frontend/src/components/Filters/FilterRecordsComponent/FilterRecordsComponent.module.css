@@ -1,0 +1,64 @@
+.option {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 20px;
+    transition: 0.2s;
+    background-color: white;
+    user-select: none;
+}
+.option:first-child {
+    border-radius: var(--principal-border-radius) var(--principal-border-radius) 0px 0px;
+}
+.option:last-child {
+    border-radius: 0px 0px var(--principal-border-radius) var(--principal-border-radius);
+}
+.optionIcon {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: var(--black-color-light);
+}
+.optionText {
+    color: var(--black-color-light);
+    text-align: center;
+}
+.calendarRange {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.calendarContainer {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.calendarText {
+    font-size: 0.8rem;
+    color: var(--black-color-light);
+}
+.button {
+    font-size: 0.8rem;
+}
+.containerCheck {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
+.checkText {
+    font-size: 0.9rem;
+    color: var(--black-color-light);
+}
+.containerCameras {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100px;
+}
+@media (max-width: 465px){
+    .option {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

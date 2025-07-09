@@ -1,9 +1,9 @@
 .wrapper {
     position: relative;
-    width: max-content;
 }
 .header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 20px;
     font-size: 1rem;
@@ -22,6 +22,7 @@
 }
 .title {
     color: var(--black-color-light);
+    white-space: nowrap;
 }
 .icon {
     width: 1.5rem;
@@ -50,8 +51,10 @@
         position: static;
     }
     .body {
-        right: auto;
+        left: 0;
         top: 0;
         right: 0;
+        max-width: 350px;
+        margin: 0 auto;
     }
 }

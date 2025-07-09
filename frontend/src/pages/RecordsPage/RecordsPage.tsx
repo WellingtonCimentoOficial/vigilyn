@@ -9,11 +9,13 @@ import SearchBarComponent from '../../components/Searches/SearchBarComponent/Sea
 import CheckBoxComponent from '../../components/Checkboxes/CheckBoxComponent/CheckBoxComponent'
 import DropdownBasicComponent from '../../components/Dropdowns/DropdownBasicComponent/DropdownBasicComponent'
 import { PiTrash, PiArrowDown } from "react-icons/pi";
-import DropdownFilterRecordsComponent from '../../components/Dropdowns/DropdownFilterRecordsComponent/DropdownFilterRecordsComponent'
 import ModalConfirmationComponent from '../../components/Modals/ModalConfirmationComponent/ModalConfirmationComponent'
 import ModalVideoComponent from '../../components/Modals/ModalVideoComponent/ModalVideoComponent'
 import LoaderThreePointsComponent from '../../components/Loaders/LoaderThreePointsComponent/LoaderThreePointsComponent'
 import { UserContext } from '../../contexts/UserContext'
+import DropdownFilterRecordsComponent from '../../components/Dropdowns/DropdownFilterRecordsComponent/DropdownFilterRecordsComponent'
+import ModalRecordsFiltersComponent from '../../components/Modals/ModalRecordsFiltersComponent/ModalRecordsFiltersComponent'
+import ButtonFilterComponent from '../../components/Buttons/ButtonFilterComponent/ButtonFilterComponent'
 
 
 type Props = {}
@@ -38,6 +40,8 @@ const RecordsPage = (props: Props) => {
     const [camerasFilter, setCamerasFilter] = useState<number[]>([])
     const [record, setRecord] = useState<RecordType|null>(null)
     const [showVideoModal, setShowVideoModal] = useState<boolean>(false)
+    const [isMobile, setIsMobile] = useState<boolean>(false)
+    const [filtersActiveCount, setFiltersActiveCount] = useState<number>(2)
 
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const hasLoadedOnce = useRef(false)
@@ -45,6 +49,14 @@ const RecordsPage = (props: Props) => {
     const { getRecords, deleteRecords, downloadMultipleRecords } = useBackendRequests()
     const { setToastMessage } = useContext(ToastContext)
     const { userPermissions } = useContext(UserContext)
+
+    const handleResize = () => {
+        if(window.innerWidth <= 465){
+            setIsMobile(true)
+        }else{
+            setIsMobile(false)
+        }
+    }
 
     const handleDownloadRecords = async () => {
         setIsLoading(true)
@@ -288,6 +300,12 @@ const RecordsPage = (props: Props) => {
 
     useEffect(() => setRecord(current => showVideoModal ? current : null), [showVideoModal])
 
+    useEffect(() => {
+        handleResize()
+        window.addEventListener("resize", handleResize)
+        return () => window.removeEventListener("resize", handleResize)
+    }, [])
+
     return (
         <PageLayout
             title='Records'
@@ -326,27 +344,35 @@ const RecordsPage = (props: Props) => {
                                 />
                             )
                         })()}
-                        <DropdownFilterRecordsComponent 
-                            show={showFilters}
-                            isLoading={isLoading}
-                            initialDate={initialDateFilter}
-                            finalDate={finalDateFilter}
-                            initialHour={initialHourFilter}
-                            finalHour={finalHourFilter}
-                            showFavorites={showFavoritesFilter}
-                            camerasSelected={camerasFilter}
-                            callback={(props) => {
-                                setShowFavoritesFilter(props.showFavorites)
-                                setInitialDateFilter(props.initialDate)
-                                setFinalDateFilter(props.finalDate)
-                                setInitialHourFilter(props.initialHour)
-                                setFinalHourFilter(props.finalHour)
-                                setCamerasFilter(props.camerasSelected)
-                                setPage(1)
-                                setIsLoading(true)
-                            }}
-                            callbackShow={(value) => setShowFilters(current => value ?? !current)}
-                        />
+                        {isMobile ? (
+                            <ButtonFilterComponent
+                                text='Filters' 
+                                count={filtersActiveCount}
+                                onClick={() => setShowFilters(current => !current)}
+                            />
+                        ):(
+                            <DropdownFilterRecordsComponent
+                                show={showFilters}
+                                isLoading={isLoading}
+                                initialDate={initialDateFilter}
+                                finalDate={finalDateFilter}
+                                initialHour={initialHourFilter}
+                                finalHour={finalHourFilter}
+                                showFavorites={showFavoritesFilter}
+                                camerasSelected={camerasFilter}
+                                callback={(props) => {
+                                    setShowFavoritesFilter(props.showFavorites)
+                                    setInitialDateFilter(props.initialDate)
+                                    setFinalDateFilter(props.finalDate)
+                                    setInitialHourFilter(props.initialHour)
+                                    setFinalHourFilter(props.finalHour)
+                                    setCamerasFilter(props.camerasSelected)
+                                    setPage(1)
+                                    setIsLoading(true)
+                                }}
+                                callbackShow={(value) => setShowFilters(current => value ?? !current)}
+                            />
+                        )}
                     </div>
                 </div>
                 <div className={styles.section1}>
@@ -386,6 +412,30 @@ const RecordsPage = (props: Props) => {
                         data={record}
                         showModal={showVideoModal}
                         setShowModal={setShowVideoModal}
+                    />
+                }
+                {isMobile &&
+                    <ModalRecordsFiltersComponent 
+                        showModal={showFilters}
+                        isLoading={isLoading}
+                        initialDate={initialDateFilter}
+                        finalDate={finalDateFilter}
+                        initialHour={initialHourFilter}
+                        finalHour={finalHourFilter}
+                        showFavorites={showFavoritesFilter}
+                        camerasSelected={camerasFilter}
+                        callback={(props) => {
+                            setShowFavoritesFilter(props.showFavorites)
+                            setInitialDateFilter(props.initialDate)
+                            setFinalDateFilter(props.finalDate)
+                            setInitialHourFilter(props.initialHour)
+                            setFinalHourFilter(props.finalHour)
+                            setCamerasFilter(props.camerasSelected)
+                            setFiltersActiveCount(props.filtersActiveCount)
+                            setPage(1)
+                            setIsLoading(true)
+                        }}
+                        setShowModal={setShowFilters}
                     />
                 }
                 <div ref={bottomRef} style={{height: 1}}></div>

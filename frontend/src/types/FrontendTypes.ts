@@ -34,3 +34,27 @@ export type ModalConfirmationData = {
     description: string
     callback: () => void
 }
+
+export type RecordsFilterCallbackType = {
+    showFavorites: boolean
+    initialDate: Date
+    finalDate: Date
+    initialHour: string
+    finalHour: string
+    camerasSelected: number[]
+    filtersActiveCount: number
+}
+export type RecordsFilterType = {
+    initialDate: Date
+    finalDate: Date
+    initialHour: string
+    finalHour: string
+    camerasSelected: number[]
+    showFavorites: boolean
+    isLoading?: boolean
+    callback: (props: RecordsFilterCallbackType) => void
+}
+export type RecordsFilterHandleType = {
+    resetFilters: () => void
+    applyFilters: () => void
+}

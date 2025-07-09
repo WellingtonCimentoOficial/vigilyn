@@ -5,6 +5,7 @@ import { ToastContext } from "./ToastContext";
 import { UserProfileType } from "../types/BackendTypes";
 
 type UserContextType = {
+    isLoading: boolean
     currentUser: UserProfileType | null
     userPermissions: Set<string>
     setCurrentUser: React.Dispatch<React.SetStateAction<UserProfileType | null>>
@@ -15,6 +16,7 @@ type Props = {
 }
 
 const initialData: UserContextType = {
+    isLoading: true,
     userPermissions: new Set(),
     currentUser: null,
     setCurrentUser: () => {}
@@ -24,8 +26,9 @@ const initialData: UserContextType = {
 export const UserContext = createContext<UserContextType>(initialData)
 
 export const UserContextProvider = ({children}: Props) => {
-    const [currentUser, setCurrentUser] = useState<UserProfileType|null>(null)
-    const [userPermissions, setUserPermissions] = useState<Set<string>>(new Set())
+    const [currentUser, setCurrentUser] = useState<UserProfileType|null>(initialData.currentUser)
+    const [userPermissions, setUserPermissions] = useState<Set<string>>(initialData.userPermissions)
+    const [isLoading, setIsLoading] = useState<boolean>(initialData.isLoading)
 
     const { isAuthenticated } = useContext(AuthContext)
     const { setToastMessage } = useContext(ToastContext)
@@ -33,6 +36,7 @@ export const UserContextProvider = ({children}: Props) => {
 
     useEffect(() => {
         (async () => {
+            setIsLoading(true)
             if(isAuthenticated){
                 try {
                     const data = await getMe()
@@ -53,11 +57,12 @@ export const UserContextProvider = ({children}: Props) => {
                 setCurrentUser(null)
                 setUserPermissions(new Set())
             }
+            setIsLoading(false)
         })()
     }, [isAuthenticated, getMe, setToastMessage])
 
     return (
-        <UserContext.Provider value={{currentUser, userPermissions, setCurrentUser}}>
+        <UserContext.Provider value={{isLoading, currentUser, userPermissions, setCurrentUser}}>
             {children}
         </UserContext.Provider>
     )

@@ -6,8 +6,8 @@ import { UserContext } from '../../../contexts/UserContext'
 
 
 const PrivateRoute = () => {
-    const {isAuthenticated, isLoading} = useContext(AuthContext)
-    const {userPermissions} = useContext(UserContext)
+    const {isAuthenticated, isLoading: authIsLoading} = useContext(AuthContext)
+    const {userPermissions, isLoading: userIsLoading} = useContext(UserContext)
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -22,17 +22,19 @@ const PrivateRoute = () => {
     const requiredPermission = pathPermissions[location.pathname]
 
     useEffect(() => {
-        if(!isLoading && !isAuthenticated){
+        if(!authIsLoading && !isAuthenticated){
             navigate("/auth/sign-in/")
         }
-    }, [isAuthenticated, isLoading, navigate])
-    
-    if(!isLoading && !isAuthenticated){
-        return <LoaderLogoComponent />
-    }
+    }, [isAuthenticated, authIsLoading, navigate])
 
-    if(!isLoading && requiredPermission && !userPermissions.has(requiredPermission)){
-        navigate(-1)
+    useEffect(() => {
+        if(!userIsLoading && requiredPermission && !userPermissions.has(requiredPermission)){
+            navigate(-1)
+        }
+    }, [userIsLoading, requiredPermission, userPermissions, navigate])
+    
+    if(authIsLoading || userIsLoading){
+        return <LoaderLogoComponent />
     }
     
     return <Outlet />

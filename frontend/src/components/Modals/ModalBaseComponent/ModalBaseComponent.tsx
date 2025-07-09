@@ -15,7 +15,7 @@ type Props = {
 const ModalBaseComponent = ({title, description, children, footer, showModal, setShowModal}: Props) => {
     const [isMobile, setIsMobile] = useState<boolean>(false)
 
-        const handleResize = () => {
+    const handleResize = () => {
         if(window.innerWidth <= 465){
             setIsMobile(true)
         }else{
