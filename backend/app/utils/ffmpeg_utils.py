@@ -232,11 +232,12 @@ class Ffmpeg:
             ).stdout.lower()
 
             priority = [
-                ("cuda", "h264_nvenc"),
-                ("qsv", "h264_qsv"),
-                ("videotoolbox", "h264_videotoolbox"),
-                ("vaapi", "h264_vaapi"),
+                ("rkmpp", "h264_rkmpp"),
                 ("v4l2m2m", "h264_v4l2m2m"),
+                ("videotoolbox", "h264_videotoolbox"),
+                ("qsv", "h264_qsv"),
+                ("vaapi", "h264_vaapi"),
+                ("cuda", "h264_nvenc"),
                 ("d3d11va", "h264_amf"),
                 ("dxva2", "h264_amf"),
                 ("vdpau", "h264"),
