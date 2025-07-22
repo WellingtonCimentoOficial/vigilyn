@@ -11,9 +11,7 @@ import time
 def start_record(camera):
     settings = get_settings()
 
-    ffmpeg = Ffmpeg(
-        video_format=settings.video_format, segment_time=settings.segment_time
-    )
+    ffmpeg = Ffmpeg(segment_time=settings.segment_time)
     email = Email(notifications_enabled=settings.allow_notifications)
 
     last_email_sent = datetime.now() - timedelta(hours=1)
