@@ -60,7 +60,7 @@
 .header, .body, .footer {
     padding: 20px;
 }
-@media (max-width: 465px){
+@media (max-width: 645px){
     .wrapper {
         align-items: flex-end;
         height: 100%;

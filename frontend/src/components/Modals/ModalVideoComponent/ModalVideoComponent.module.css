@@ -1,66 +1,12 @@
 .video {
-    width: 1000px;
+    /* max-width: 1000px; */
+    max-height: 77vh;
 }
 .containerLoader {
     height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-@media (max-height: 670px){
-    .video {
-        width: 950px;
-    }
-}
-@media (max-height: 650px){
-    .video {
-        width: 900px;
-    }
-}
-@media (max-height: 630px){
-    .video {
-        width: 850px;
-    }
-}
-@media (max-height: 610px){
-    .video {
-        width: 800px;
-    }
-}
-@media (max-height: 590px){
-    .video {
-        width: 750px;
-    }
-}
-@media (max-height: 570px){
-    .video {
-        width: 700px;
-    }
-}
-@media (max-height: 550px){
-    .video {
-        width: 650px;
-    }
-}
-@media (max-height: 530px){
-    .video {
-        width: 600px;
-    }
-}
-@media (max-height: 510px){
-    .video {
-        width: 550px;
-    }
-}
-@media (max-height: 490px){
-    .video {
-        width: 500px;
-    }
-}
-@media (max-height: 470px){
-    .video {
-        width: 100%;
-    }
 }
 @media (max-width: 1050px){
     .video {

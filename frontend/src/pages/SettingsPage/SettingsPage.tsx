@@ -31,6 +31,9 @@ const SettingsPage = (props: Props) => {
     const [allowNotifications, setAllowNotifications] = useState<boolean>(false)
     const [requiresRestart, setRequiresRestart] = useState<boolean>(false)
 
+    const [autoDeleteEnabled, setAutoDeleteEnabled] = useState<boolean>(false)
+    const [updateAutoDeleteEnabled, setUpdateAutoDeleteEnabled] = useState<boolean>(false)
+
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [restartIsLoading, setRestartIsLoading] = useState<boolean>(false)
     const [stopIsLoading, setStopIsLoading] = useState<boolean>(false)
@@ -83,6 +86,7 @@ const SettingsPage = (props: Props) => {
         setSegmentTimeIsValid(true)
         
         setAllowNotifications(data.allow_notifications)
+        setAutoDeleteEnabled(data.auto_delete_enabled)
         setRequiresRestart(data.requires_restart)
         setVideoFormat(videoFormats.find(item => item.value === data.video_format) ?? videoFormats[0])
     }, [videoFormats])
@@ -261,6 +265,26 @@ const SettingsPage = (props: Props) => {
         })()
     }, [allowNotifications, updateAllowNotifications, setToastMessage, updateSettings])
 
+    useEffect(() => {
+        (async () => {
+            if(updateAutoDeleteEnabled){
+                setIsLoading(true)
+                try {
+                    const data = await updateSettings({auto_delete_enabled: autoDeleteEnabled})
+                    setAutoDeleteEnabled(data.auto_delete_enabled)
+                    setUpdateAutoDeleteEnabled(false)
+                } catch (error) {
+                    setToastMessage({
+                        "title": "Auto delete not updated", 
+                        "description": "The auto deletewas not updated.", 
+                        success: false
+                    })
+                }
+                setIsLoading(false)
+            }
+        })()
+    }, [autoDeleteEnabled, updateAutoDeleteEnabled, setToastMessage, updateSettings])
+
     return (
         <PageLayout title='Settings' description="Access and update application settings, including preferences for notifications, video format, and storage paths.">
             <div className={styles.wrapper}>
@@ -368,6 +392,27 @@ const SettingsPage = (props: Props) => {
                                         size={3} 
                                         checked={allowNotifications}
                                         callback={(checked) => {setAllowNotifications(checked);setUpdateAllowNotifications(true)}}
+                                        disabled={isLoading || restartIsLoading || stopIsLoading}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className={styles.section}>
+                            <div className={styles.sectionHeader}>
+                                <span className={styles.sectionTitle}>Storage</span>
+                            </div>
+                            <div className={styles.sectionBody}>
+                                <div className={styles.sectionBodyItem}>
+                                    <div className={styles.sectionBodyItemHeader}>
+                                        <div className={styles.sectionBodyItemHeaderContainer}>
+                                            <span className={styles.sectionBodyItemTitle}>Auto Delete</span>
+                                        </div>
+                                        <div className={styles.sectionBodyItemDescription}>Automatically delete the oldest recordings when the storage limit is reached.</div>
+                                    </div>
+                                    <CheckBoxSwitchComponent 
+                                        size={3} 
+                                        checked={autoDeleteEnabled}
+                                        callback={(checked) => {setAutoDeleteEnabled(checked);setUpdateAutoDeleteEnabled(true)}}
                                         disabled={isLoading || restartIsLoading || stopIsLoading}
                                     />
                                 </div>

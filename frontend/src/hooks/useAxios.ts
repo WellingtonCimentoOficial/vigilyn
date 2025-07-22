@@ -2,10 +2,10 @@ import { useCallback, useContext, useMemo } from "react"
 import { AuthContext } from "../contexts/AuthContext"
 import ax, { AxiosRequestConfig, AxiosResponse } from "axios";
 
+export const BASE_URL = process.env.NODE_ENV === "development" ? "http://127.0.0.1:80/api" : "/api"
+
 export const useAxios = () => {
     const { tokens, isLoading } = useContext(AuthContext)
-
-    const BASE_URL = process.env.NODE_ENV === "development" ? "http://127.0.0.1:80/api" : "/api"
 
     const axios = useMemo(() => {
         return ax.create({
@@ -14,7 +14,7 @@ export const useAxios = () => {
                 'Content-Type': 'application/json'
             },
         })
-    }, [BASE_URL])
+    }, [])
 
     const axiosInstance = useMemo(() => {
         return ax.create({
@@ -24,7 +24,7 @@ export const useAxios = () => {
                 'Authorization': `Bearer ${tokens.access_token}`
             }
         })
-    }, [BASE_URL, tokens.access_token])
+    }, [tokens.access_token])
 
     const waitForLoadingToFinish = useCallback(() => {
         return new Promise<void>((resolve) => {

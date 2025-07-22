@@ -72,7 +72,6 @@ export type CameraType = {
     pid: number | null
     requires_restart: boolean
     is_recording: boolean
-    codec: string
 }
 
 export type CameraMinimalType = {
@@ -89,7 +88,6 @@ export type CameraCreateUpdateType = {
     username?: string
     password?: string
     path?: string
-    codec: string
 }
 
 export type CpuType = {
@@ -165,6 +163,7 @@ export type SettingsUpdateType = {
     tmp_directory_path?: string
     video_format?: string
     segment_time?: number
+    auto_delete_enabled?: boolean
 }
 export type SettingsType = {
     save_directory_path: string
@@ -173,6 +172,7 @@ export type SettingsType = {
     video_format: string
     segment_time: number
     requires_restart: boolean
+    auto_delete_enabled: boolean
 }
 export type RecordUpdateType = {
     name: string
