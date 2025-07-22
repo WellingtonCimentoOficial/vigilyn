@@ -13,7 +13,11 @@ class StorageChecker(db.Model):
     started_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     def has_process_running(self):
-        if self.pid and psutil.pid_exists(self.pid):
+        if (
+            self.pid
+            and psutil.pid_exists(self.pid)
+            and psutil.Process(self.pid).create_time() == self.started_at.timestamp()
+        ):
             return True
 
         return False

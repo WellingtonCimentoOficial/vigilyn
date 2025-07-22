@@ -10,3 +10,4 @@ class Setting(db.Model):
     video_format: Mapped[str] = mapped_column(default=".mp4", nullable=False)
     segment_time: Mapped[int] = mapped_column(default=300, nullable=False)
     requires_restart: Mapped[bool] = mapped_column(default=False, nullable=False)
+    auto_delete_enabled: Mapped[bool] = mapped_column(default=True, nullable=False)

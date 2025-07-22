@@ -8,7 +8,7 @@ from app.utils.validators import (
 )
 from app.utils.logger_utils import Log
 from flask import current_app
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 from datetime import datetime
 from app.exceptions.url_exceptions import (
     UrlLimitParamException,
@@ -26,34 +26,6 @@ import psutil
 import fcntl
 
 
-def get_duration(filepath):
-    try:
-        duration_seconds = subprocess.run(
-            [
-                "ffprobe",
-                "-v",
-                "error",
-                "-show_entries",
-                "format=duration",
-                "-of",
-                "default=noprint_wrappers=1:nokey=1",
-                filepath,
-            ],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            check=True,
-        )
-        return float(duration_seconds.stdout.strip())
-    except Exception as e:
-        log = Log()
-        log.write(
-            log.GENERAL,
-            level="error",
-            message=f"func: get_duration error: {str(e.stderr)}",
-        )
-
-
 def create_record(
     camera,
     filename,
@@ -63,6 +35,8 @@ def create_record(
     created_at,
     duration_seconds,
 ):
+    log = Log()
+
     try:
         if not db.session.query(
             Record.query.filter_by(path=filepath).exists()
@@ -83,10 +57,10 @@ def create_record(
 
         return record
     except Exception as e:
-        log = Log()
         log.write(
             log.GENERAL, level="error", message=f"func: create_record error: {str(e)}"
         )
+        raise
 
 
 def update_record(record, **kwargs):
@@ -109,6 +83,8 @@ def update_record(record, **kwargs):
 
 
 def delete_records(records):
+    log = Log()
+
     try:
         for record in records:
             try:
@@ -122,7 +98,6 @@ def delete_records(records):
 
                 db.session.delete(record)
             except Exception as e:
-                log = Log()
                 log.write(
                     category=log.GENERAL,
                     level="error",
@@ -130,7 +105,6 @@ def delete_records(records):
                 )
         db.session.commit()
     except Exception as e:
-        log = Log()
         log.write(
             category=log.GENERAL,
             level="error",
@@ -138,7 +112,40 @@ def delete_records(records):
         )
 
 
+def delete_records_async(record_ids):
+    app = current_app._get_current_object()
+
+    def _delete():
+        with app.app_context():
+            records = Record.query.filter(Record.id.in_(record_ids)).all()
+            delete_records(records)
+
+    thread = threading.Thread(target=_delete, daemon=True)
+    thread.start()
+
+
+def delete_oldest_records_async():
+    app = current_app._get_current_object()
+
+    def _delete():
+        with app.app_context():
+            oldest_record = Record.query.order_by(Record.id.asc()).first()
+            oldest_day = oldest_record.created_at.date()
+
+            oldest_records = (
+                db.session.query(Record)
+                .filter(func.date(Record.created_at) == oldest_day)
+                .all()
+            )
+            delete_records(oldest_records)
+
+    thread = threading.Thread(target=_delete, daemon=True)
+    thread.start()
+
+
 def create_organize_record(pid, timestamp):
+    log = Log()
+
     try:
         OrganizeRecord.query.delete()
         db.session.commit()
@@ -151,7 +158,6 @@ def create_organize_record(pid, timestamp):
 
         return organize_record
     except Exception as e:
-        log = Log()
         log.write(
             log.GENERAL,
             level="error",
@@ -160,11 +166,12 @@ def create_organize_record(pid, timestamp):
 
 
 def get_organize_record():
+    log = Log()
+
     try:
         organize_records = OrganizeRecord.query.first()
         return organize_records
     except Exception as e:
-        log = Log()
         log.write(
             log.GENERAL,
             level="error",
@@ -259,6 +266,8 @@ def filter_record(
     favorite_record_ids,
     camera_ids_param,
 ):
+    log = Log()
+
     try:
         if not str(page).isdigit():
             raise UrlPageParamException()
@@ -320,7 +329,6 @@ def filter_record(
 
         return paginated_query.all(), total
     except Exception as e:
-        log = Log()
         log.write(
             log.GENERAL, level="error", message=f"func: filter_record error: {str(e)}"
         )

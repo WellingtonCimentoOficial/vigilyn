@@ -1,9 +1,10 @@
 import time
 from app.utils.logger_utils import Log
+from app.utils.ffmpeg_utils import Ffmpeg
 from app.utils.settings_utils import get_settings
 from app.utils.utils import is_idle
 from app.models.camera_models import Camera
-from app.services.record_services import create_record, get_duration
+from app.services.record_services import create_record
 from app.utils.ffmpeg_utils import Ffmpeg
 from datetime import datetime, timezone
 import os
@@ -11,6 +12,9 @@ import os
 
 def organize_records():
     log = Log()
+
+    hwaccel, vcodec = Ffmpeg.get_hwaccel_and_vcodec()
+    ffmpeg = Ffmpeg(hwaccel=hwaccel, vcodec=vcodec)
 
     settings = get_settings()
     base_dir = settings.save_directory_path
@@ -32,13 +36,22 @@ def organize_records():
             try:
                 camera = Camera.query.get(int(filename.split("_")[0]))
 
+                if not camera or camera.is_hidden:
+                    os.remove(filepath)
+                    continue
+
                 filename_without_ext = os.path.splitext(filename)[0]
-                duration_seconds = get_duration(filepath)
+                duration_seconds = Ffmpeg.get_duration(filepath)
 
                 os.makedirs(records_dir, exist_ok=True)
 
                 new_filepath = os.path.join(records_dir, filename)
-                os.rename(filepath, new_filepath)
+
+                if Ffmpeg.get_codec(filepath) != "h264":
+                    ffmpeg.transcode(filepath, new_filepath)
+                    os.remove(filepath)
+                else:
+                    os.rename(filepath, new_filepath)
 
                 thumbnail_filename = filename_without_ext + ".jpg"
                 thumbnail_filepath = os.path.join(thumbnails_dir, thumbnail_filename)
@@ -52,24 +65,29 @@ def organize_records():
                 date_str = datetime_obj.strftime("%Y/%m/%d")
                 time_str = datetime_obj.strftime("%H:%M:%S")
 
-                create_record(
-                    camera=camera,
-                    filename=f"Recording from {camera.name} - {date_str} {time_str}",
-                    filepath=new_filepath,
-                    thumbnail_filepath=thumbnail_filepath,
-                    size_in_mb=os.path.getsize(new_filepath) / (1024 * 1024),
-                    duration_seconds=(
-                        duration_seconds
-                        if isinstance(duration_seconds, float)
-                        else settings.segment_time
-                    ),
-                    created_at=datetime_obj,
-                )
+                try:
+                    create_record(
+                        camera=camera,
+                        filename=f"Recording from {camera.name} - {date_str} {time_str}",
+                        filepath=new_filepath,
+                        thumbnail_filepath=thumbnail_filepath,
+                        size_in_mb=os.path.getsize(new_filepath) / (1024 * 1024),
+                        duration_seconds=(
+                            duration_seconds
+                            if isinstance(duration_seconds, float)
+                            else settings.segment_time
+                        ),
+                        created_at=datetime_obj,
+                    )
 
-                log.write(
-                    category=log.ORGANIZER,
-                    message=f"{filename} moved to {records_dir}",
-                )
+                    log.write(
+                        category=log.ORGANIZER,
+                        message=f"{filename} moved to {records_dir}",
+                    )
+                except:
+                    os.remove(new_filepath)
+                    os.remove(thumbnail_filepath)
+
             except Exception as e:
                 log.write(
                     category=log.ORGANIZER,
@@ -77,4 +95,4 @@ def organize_records():
                     level="error",
                 )
 
-        time.sleep(5)
+        time.sleep(1)

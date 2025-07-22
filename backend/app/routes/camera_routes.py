@@ -3,11 +3,11 @@ from app.models.camera_models import Camera
 from app.schemas.camera_schemas import CameraSchema, CameraCreateUpdateSchema
 from app.services.camera_services import (
     create_camera,
-    delete_camera,
     update_camera,
     start_camera_async,
     stop_camera_async,
     restart_camera_async,
+    delete_camera_async,
     filter_camera,
 )
 from app.services.record_services import (
@@ -64,7 +64,7 @@ def get_all():
 @authentication_required()
 @permission_required("view_camera")
 def get(pk):
-    camera = Camera.query.get_or_404(pk)
+    camera = Camera.query.filter_by(id=pk, is_hidden=False).first_or_404()
     schema = CameraSchema()
     camera_schema = schema.dump(camera)
 
@@ -89,7 +89,7 @@ def create():
 @authentication_required()
 @permission_required("update_camera")
 def update(pk):
-    camera = Camera.query.get_or_404(pk)
+    camera = Camera.query.filter_by(id=pk, is_hidden=False).first_or_404()
     schema = CameraCreateUpdateSchema()
     data = schema.load(request.json)
 
@@ -104,8 +104,8 @@ def update(pk):
 @authentication_required()
 @permission_required("delete_camera")
 def delete(pk):
-    camera = Camera.query.get_or_404(pk)
-    delete_camera(camera)
+    camera = Camera.query.filter_by(id=pk, is_hidden=False).first_or_404()
+    delete_camera_async(camera)
 
     return jsonify({"message": "The camera was deleted successfully!"}), 200
 
@@ -114,7 +114,7 @@ def delete(pk):
 @authentication_required()
 @permission_required("start_camera")
 def start(pk):
-    camera = Camera.query.get_or_404(pk)
+    camera = Camera.query.filter_by(id=pk, is_hidden=False).first_or_404()
 
     if camera.has_process_running():
         raise CameraProcessAlreadyRunningException()
@@ -133,7 +133,7 @@ def start(pk):
 @authentication_required()
 @permission_required("stop_camera")
 def stop(pk):
-    camera = Camera.query.get_or_404(pk)
+    camera = Camera.query.filter_by(id=pk, is_hidden=False).first_or_404()
 
     if not camera.has_process_running():
         raise CameraProcessAlreadyStoppedException()
@@ -147,7 +147,7 @@ def stop(pk):
 @authentication_required()
 @permission_required("restart_camera")
 def restart(pk):
-    camera = Camera.query.get_or_404(pk)
+    camera = Camera.query.filter_by(id=pk, is_hidden=False).first_or_404()
     restart_camera_async(camera.id)
 
     return jsonify({"message": "The camera was restarted successfully!"})

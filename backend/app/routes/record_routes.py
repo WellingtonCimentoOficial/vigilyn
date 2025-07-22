@@ -1,7 +1,12 @@
 from flask import Blueprint, jsonify, request, send_file, current_app
 from app.models.record_models import Record
 from app.schemas.record_schemas import RecordSchema, RecordUpdateSchema
-from app.services.record_services import delete_records, filter_record, update_record
+from app.services.record_services import (
+    delete_records,
+    delete_records_async,
+    filter_record,
+    update_record,
+)
 from app.decorators.auth_decorators import authentication_required
 from app.decorators.permission_decorators import permission_required
 from app.utils.utils import generate_pagination_response
@@ -180,6 +185,6 @@ def delete_multiple():
     if not records:
         raise NoRecordingsFoundException()
 
-    delete_records(records)
+    delete_records_async(ids)
 
     return jsonify({"message": "The records was deleted successfully!"}), 200

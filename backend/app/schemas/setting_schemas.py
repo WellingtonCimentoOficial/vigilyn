@@ -14,6 +14,7 @@ class SettingUpdateSchema(Schema):
     tmp_directory_path = fields.Str(validate=validators)
     video_format = fields.Str()
     segment_time = fields.Int()
+    auto_delete_enabled = fields.Bool()
 
 
 class SettingSchema(SettingUpdateSchema):

@@ -14,8 +14,10 @@ from app.exceptions.camera_exceptions import (
     CameraIsRecordingParamException,
 )
 from app.exceptions.url_exceptions import UrlLimitParamException, UrlPageParamException
+from app.services.record_services import delete_records
 from sqlalchemy import or_, desc
 from datetime import datetime
+from app.utils.logger_utils import Log
 import threading
 import subprocess
 import os
@@ -138,12 +140,40 @@ def update_camera(camera, **kwargs):
         raise CameraWasNotUpdatedException()
 
 
-def delete_camera(camera):
+def delete_camera_async(camera):
+    app = current_app._get_current_object()
+    camera_id = camera.id
+
+    log = Log()
+
+    def _delete():
+        with app.app_context():
+            while True:
+                try:
+                    camera = Camera.query.get(camera_id)
+                    all_records = camera.records
+
+                    if len(all_records) == 0:
+                        db.session.delete(camera)
+                        db.session.commit()
+                        break
+
+                    delete_records(all_records)
+                except Exception as e:
+                    log.write(
+                        log.GENERAL,
+                        level="error",
+                        message=f"func: delete_camera_async error: {str(e)}",
+                    )
+
+    thread = threading.Thread(target=_delete, daemon=True)
+
     try:
         was_stopped = stop_camera(camera)
         if was_stopped:
-            db.session.delete(camera)
+            camera.is_hidden = True
             db.session.commit()
+            thread.start()
     except:
         raise CameraWasNotDeletedException()
 
@@ -207,7 +237,7 @@ def filter_camera(
 
     page = int(page)
     limit = int(limit)
-    query = db.session.query(Camera)
+    query = db.session.query(Camera).filter_by(is_hidden=False)
 
     if search_param:
         query = query.filter(

@@ -12,6 +12,7 @@ from .commands import setup_cli
 from app.handlers import register_error_handlers
 from app.services.camera_services import initialize_camera_processes
 from app.services.record_services import initialize_organize_records
+from app.services.storage_services import initialize_storage_checker
 from app.utils.utils import tables_exists
 import os
 
@@ -51,5 +52,6 @@ def create_app():
         if tables_exists(["camera_table", "organize_record_table"]):
             initialize_camera_processes()
             initialize_organize_records()
+            initialize_storage_checker()
 
     return app
