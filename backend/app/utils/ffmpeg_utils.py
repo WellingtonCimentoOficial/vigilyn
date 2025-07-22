@@ -18,7 +18,7 @@ class Ffmpeg:
         acodec="aac",
         profile="baseline",
         audio_bitrate="128k",
-        video_format=".mp4",
+        video_format=".mkv",
         segment_time=300,
     ):
         self.rtsp_transport = rtsp_transport
@@ -56,8 +56,6 @@ class Ffmpeg:
             url,
             "-vcodec",
             self.vcodec,
-            "-movflags",
-            "+faststart",
             "-f",
             "segment",
             "-segment_format",
@@ -68,8 +66,6 @@ class Ffmpeg:
             "1",
             "-strftime",
             "1",
-            "-metadata",
-            f"title={camera.name}",
             "-loglevel",
             "error",
             output_path,
@@ -93,7 +89,7 @@ class Ffmpeg:
 
         return process
 
-    def transcode(self, filepath, output_path):
+    def transcode(self, camera_name, filepath, output_path):
         log = Log()
 
         command = ["ffmpeg"]
@@ -104,6 +100,8 @@ class Ffmpeg:
         command += [
             "-i",
             filepath,
+            "-metadata",
+            f"title={camera_name}",
             "-vcodec",
             self.vcodec,
             "-profile:v",

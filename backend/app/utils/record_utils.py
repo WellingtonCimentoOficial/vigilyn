@@ -14,7 +14,7 @@ def organize_records():
     log = Log()
 
     hwaccel, vcodec = Ffmpeg.get_hwaccel_and_vcodec()
-    ffmpeg = Ffmpeg(hwaccel=hwaccel, vcodec=vcodec)
+    ffmpeg = Ffmpeg(video_format=".mp4", hwaccel=hwaccel, vcodec=vcodec)
 
     settings = get_settings()
     base_dir = settings.save_directory_path
@@ -48,7 +48,7 @@ def organize_records():
                 new_filepath = os.path.join(records_dir, filename)
 
                 if Ffmpeg.get_codec(filepath) != "h264":
-                    ffmpeg.transcode(filepath, new_filepath)
+                    ffmpeg.transcode(camera.name, filepath, new_filepath)
                     os.remove(filepath)
                 else:
                     os.rename(filepath, new_filepath)
