@@ -53,3 +53,4 @@ Thumbs.db
 # locks
 initialize_camera.lock
 initialize_organize_records.lock
+initialize_storage_checker.lock
