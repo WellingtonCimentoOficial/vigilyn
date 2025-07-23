@@ -1,10 +1,9 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import styles from "./SettingsPage.module.css"
 import PageLayout from '../../layouts/PageLayout/PageLayout'
 import CheckBoxSwitchComponent from '../../components/Checkboxes/CheckBoxSwitchComponent/CheckBoxSwitchComponent'
 import InputComponent from '../../components/Inputs/InputComponent/InputComponent'
-import SelectComponent from '../../components/Selects/SelectComponent/SelectComponent'
-import { ModalConfirmationData, SelectDataType } from '../../types/FrontendTypes'
+import { ModalConfirmationData } from '../../types/FrontendTypes'
 import TagStatusComponent from '../../components/Tags/TagStatusComponent/TagStatusComponent'
 import { useBackendRequests } from '../../hooks/useBackRequests'
 import { ToastContext } from '../../contexts/ToastContext'
@@ -45,13 +44,6 @@ const SettingsPage = (props: Props) => {
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false)
     const { setSettings, settings } = useContext(SettingsContext)
     
-    const videoFormats = useMemo(() => [
-        {id: 0, title: "mp4", value: ".mp4"},
-        {id: 1, title: "mkv", value: ".mkv"},
-        {id: 2, title: "avi", value: ".avi"},
-    ], [])
-    const [videoFormat, setVideoFormat] = useState<SelectDataType>(videoFormats[0])
-    
     const { getSettings, updateSettings, restartSystem, stopSystem } = useBackendRequests()
     const { setToastMessage } = useContext(ToastContext)
 
@@ -88,8 +80,7 @@ const SettingsPage = (props: Props) => {
         setAllowNotifications(data.allow_notifications)
         setAutoDeleteEnabled(data.auto_delete_enabled)
         setRequiresRestart(data.requires_restart)
-        setVideoFormat(videoFormats.find(item => item.value === data.video_format) ?? videoFormats[0])
-    }, [videoFormats])
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -99,7 +90,6 @@ const SettingsPage = (props: Props) => {
                 const data = await updateSettings({
                     save_directory_path: saveDirectoryPath,
                     tmp_directory_path: tmpDirectoryPath,
-                    video_format: videoFormat.value,
                     segment_time: segmentTime
                 })
                 setSettings(data)
@@ -126,12 +116,6 @@ const SettingsPage = (props: Props) => {
                             success: false
                         })
 
-                    }else if("video_format" in data.message){
-                        setToastMessage({
-                            "title": "Video format invalid", 
-                            "description": "The video format field is invalid", 
-                            success: false
-                        })
                     }else if("segment_time" in data.message){
                         setSegmentTimeIsValid(false)
                         setToastMessage({
@@ -243,7 +227,7 @@ const SettingsPage = (props: Props) => {
                 setIsLoading(false)
             }
         })()
-    }, [videoFormats, getAgain, getSettings, setToastMessage, setSettings])
+    }, [getAgain, getSettings, setToastMessage, setSettings])
 
     useEffect(() => {
         (async () => {
@@ -329,21 +313,6 @@ const SettingsPage = (props: Props) => {
                                         value={tmpDirectoryPath}
                                         error={!tmpDirectoryPathIsValid && wasSubmitted}
                                         disabled={isLoading || restartIsLoading || stopIsLoading}
-                                    />
-                                </div>
-                                <div className={styles.sectionBodyItem}>
-                                    <div className={styles.sectionBodyItemHeader}>
-                                        <div className={styles.sectionBodyItemHeaderContainer}>
-                                            <span className={styles.sectionBodyItemTitle}>Video format</span>
-                                        </div>
-                                        <div className={styles.sectionBodyItemDescription}>Choose the output format for saved video recordings based on your preferred compatibility or quality needs.</div>
-                                    </div>
-                                    <SelectComponent 
-                                        fullWidth
-                                        data={videoFormats} 
-                                        value={videoFormat.title} 
-                                        disabled={isLoading || restartIsLoading || stopIsLoading}
-                                        callback={(item) => setVideoFormat(item)}  
                                     />
                                 </div>
                                 <div className={styles.sectionBodyItem}>

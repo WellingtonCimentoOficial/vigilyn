@@ -161,7 +161,6 @@ export type SettingsUpdateType = {
     save_directory_path?: string
     allow_notifications?: boolean
     tmp_directory_path?: string
-    video_format?: string
     segment_time?: number
     auto_delete_enabled?: boolean
 }
@@ -169,7 +168,6 @@ export type SettingsType = {
     save_directory_path: string
     allow_notifications: boolean
     tmp_directory_path: string
-    video_format: string
     segment_time: number
     requires_restart: boolean
     auto_delete_enabled: boolean

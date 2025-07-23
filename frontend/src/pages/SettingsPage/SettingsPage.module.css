@@ -9,6 +9,7 @@
 .container {
     display: flex;
     gap: 40px;
+    flex-direction: row-reverse;
     justify-content: space-between;
     padding: 0px 20px;
     flex-wrap: wrap;
