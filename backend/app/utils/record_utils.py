@@ -26,7 +26,7 @@ def organize_records():
     while True:
         for filename in os.listdir(tmp_dir):
             filepath = os.path.join(tmp_dir, filename)
-            if not filename.endswith(settings.video_format):
+            if not filename.endswith(Ffmpeg.VIDEO_FORMAT):
                 continue
             if not os.path.isfile(filepath):
                 continue
@@ -45,7 +45,8 @@ def organize_records():
 
                 os.makedirs(records_dir, exist_ok=True)
 
-                new_filepath = os.path.join(records_dir, filename)
+                new_filename = filename_without_ext + ".mp4"
+                new_filepath = os.path.join(records_dir, new_filename)
 
                 if Ffmpeg.get_codec(filepath) != "h264":
                     ffmpeg.transcode(camera.name, filepath, new_filepath)
@@ -82,7 +83,7 @@ def organize_records():
 
                     log.write(
                         category=log.ORGANIZER,
-                        message=f"{filename} moved to {records_dir}",
+                        message=f"{new_filename} moved to {records_dir}",
                     )
                 except:
                     os.remove(new_filepath)
@@ -91,7 +92,7 @@ def organize_records():
             except Exception as e:
                 log.write(
                     category=log.ORGANIZER,
-                    message=f"func: organize_records error: Error moving {filename} {str(e)}",
+                    message=f"func: organize_records error: Error moving {new_filename} {str(e)}",
                     level="error",
                 )
 

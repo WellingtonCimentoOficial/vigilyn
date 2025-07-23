@@ -12,7 +12,6 @@ class SettingUpdateSchema(Schema):
     save_directory_path = fields.Str(validate=validators)
     allow_notifications = fields.Bool()
     tmp_directory_path = fields.Str(validate=validators)
-    video_format = fields.Str()
     segment_time = fields.Int()
     auto_delete_enabled = fields.Bool()
 

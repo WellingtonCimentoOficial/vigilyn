@@ -9,6 +9,7 @@ import os
 
 class Ffmpeg:
     TIMEOUT = 5
+    VIDEO_FORMAT = ".mkv"
 
     def __init__(
         self,
@@ -18,7 +19,7 @@ class Ffmpeg:
         acodec="aac",
         profile="baseline",
         audio_bitrate="128k",
-        video_format=".mkv",
+        video_format=None,
         segment_time=300,
     ):
         self.rtsp_transport = rtsp_transport
@@ -28,7 +29,7 @@ class Ffmpeg:
         self.profile = profile
         self.audio_bitrate = audio_bitrate
         self.timeout = self.TIMEOUT * 1000000
-        self.video_format = video_format
+        self.video_format = video_format or self.VIDEO_FORMAT
         self.segment_time = segment_time
 
     def start(self, camera):
