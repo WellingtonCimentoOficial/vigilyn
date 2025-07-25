@@ -48,11 +48,8 @@ def organize_records():
                 new_filename = filename_without_ext + ".mp4"
                 new_filepath = os.path.join(records_dir, new_filename)
 
-                if Ffmpeg.get_codec(filepath) != "h264":
-                    ffmpeg.transcode(camera.name, filepath, new_filepath)
-                    os.remove(filepath)
-                else:
-                    os.rename(filepath, new_filepath)
+                ffmpeg.transcode(camera.name, filepath, new_filepath)
+                os.remove(filepath)
 
                 thumbnail_filename = filename_without_ext + ".jpg"
                 thumbnail_filepath = os.path.join(thumbnails_dir, thumbnail_filename)

@@ -37,3 +37,15 @@ class RecordWasNotUpdatedException(AppException):
     default_error = "record_was_not_updated"
     default_message = "The record was not updated."
     status_code = 400
+
+
+class RecordTokenExpiredException(AppException):
+    default_error = "video_token_expired"
+    default_message = "The video access token has expired."
+    status_code = 401
+
+
+class InvalidRecordTokenException(AppException):
+    default_error = "invalid_video_token"
+    default_message = "The video access token is invalid."
+    status_code = 401

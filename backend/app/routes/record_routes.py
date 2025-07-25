@@ -7,7 +7,10 @@ from app.services.record_services import (
     filter_record,
     update_record,
 )
-from app.decorators.auth_decorators import authentication_required
+from app.decorators.auth_decorators import (
+    authentication_required,
+    required_record_token,
+)
 from app.decorators.permission_decorators import permission_required
 from app.utils.utils import generate_pagination_response
 from app.exceptions.record_exceptions import (
@@ -17,9 +20,11 @@ from app.exceptions.record_exceptions import (
 )
 from app.models.user_models import User
 from flask_jwt_extended import get_jwt_identity
+from datetime import datetime, timezone, timedelta
 import os
 import zipfile
 import tempfile
+import jwt
 
 record_bp = Blueprint("records", __name__, url_prefix="/api/records/")
 
@@ -79,9 +84,27 @@ def get(record_pk):
     return jsonify(record_data)
 
 
-@record_bp.route("<int:record_pk>/video/", methods=["GET"])
+@record_bp.route("<int:record_pk>/video/token/", methods=["GET"])
 @authentication_required()
 @permission_required("view_record")
+def get_video_token(record_pk):
+    record = Record.query.filter_by(id=record_pk).first_or_404()
+
+    if not os.path.isfile(record.path):
+        raise RecordNotFoundException()
+
+    secret_key = current_app.config["JWT_SECRET_KEY"]
+    exp = datetime.now(timezone.utc) + timedelta(seconds=record.duration_seconds + 120)
+
+    payload = {"user_id": int(get_jwt_identity()), "video_id": record_pk, "exp": exp}
+
+    token = jwt.encode(payload, secret_key, algorithm="HS256")
+
+    return jsonify({"token": token})
+
+
+@record_bp.route("<int:record_pk>/video/", methods=["GET"])
+# @required_record_token()
 def play_video(record_pk):
     record = Record.query.filter_by(id=record_pk).first_or_404()
 
@@ -89,7 +112,10 @@ def play_video(record_pk):
         raise RecordNotFoundException()
 
     return send_file(
-        record.path, mimetype=f"video/{record.format}", as_attachment=False
+        record.path,
+        mimetype=f"video/mp4",
+        as_attachment=False,
+        conditional=True,
     )
 
 
