@@ -41,7 +41,7 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
                     autoPlay 
                     muted
                     playsInline 
-                    preload='metadata'
+                    preload='auto'
                 >
                     <source src={`${BASE_URL}/records/${data.id}/video/?token=${token}`} type="video/mp4" />
                 </video>
