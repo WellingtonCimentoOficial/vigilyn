@@ -135,6 +135,9 @@ export type RecordType = {
 export type RecordPaginationType = PaginationType & {
     data: RecordType[]
 }
+export type RecordToken = {
+    token: string
+}
 export type ErrorType = {
     error: string
     message: string

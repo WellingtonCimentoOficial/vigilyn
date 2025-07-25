@@ -1,5 +1,5 @@
 import { useAxios } from "./useAxios"
-import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordPaginationType, RecordType, RecordUpdateType, RoleType, SettingsType, SettingsUpdateType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserProfileType, UserPaginationType, UserProfileUpdateType, UserUpdateType, UserType, RoleUpdateType, UserCreateType } from "../types/BackendTypes"
+import { CameraCreateUpdateType, CameraPaginationType, CameraType, RecordPaginationType, RecordType, RecordUpdateType, RoleType, SettingsType, SettingsUpdateType, StorageMonthlyType, SuccessMessageType, SystemType, TokensType, UserProfileType, UserPaginationType, UserProfileUpdateType, UserUpdateType, UserType, RoleUpdateType, UserCreateType, RecordToken } from "../types/BackendTypes"
 import { useCallback } from "react"
 
 type GetCameraProps = {
@@ -182,12 +182,9 @@ export const useBackendRequests = () => {
         return data
     }, [axiosPrivate])
 
-    const getRecordVideo = useCallback(async (recordId: number) => {
-        const response = await axiosPrivate.get(`/records/${recordId}/video/`,{
-            responseType: "blob"
-        })
-        const blob = await response.data
-        const data: string = URL.createObjectURL(blob)
+    const getRecordToken = useCallback(async (recordId: number) => {
+        const response = await axiosPrivate.get(`/records/${recordId}/video/token/`)
+        const data: RecordToken = await response.data
         return data
     }, [axiosPrivate])
 
@@ -320,7 +317,7 @@ export const useBackendRequests = () => {
         getStorage, 
         getRecords,
         getRecordThumbnail,
-        getRecordVideo,
+        getRecordToken,
         downloadRecord,
         downloadMultipleRecords,
         deleteRecord,

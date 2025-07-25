@@ -4,6 +4,7 @@ import ModalBaseComponent from '../ModalBaseComponent/ModalBaseComponent'
 import { RecordType } from '../../../types/BackendTypes'
 import { useBackendRequests } from '../../../hooks/useBackRequests'
 import LoaderThreePointsComponent from '../../Loaders/LoaderThreePointsComponent/LoaderThreePointsComponent'
+import { BASE_URL } from '../../../hooks/useAxios'
 
 type Props = {
     showModal: boolean
@@ -12,20 +13,20 @@ type Props = {
 }
 
 const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
-    const [videoUrl, setVideoUrl] = useState<string|null>(null)
-    const { getRecordVideo } = useBackendRequests()
+    const [token, setToken] = useState<string|null>(null)
+    const { getRecordToken } = useBackendRequests()
 
 
     useEffect(() => {
         (async () => {
             try {
-                const urlVideo = await getRecordVideo(data.id)
-                setVideoUrl(urlVideo)
+                const responseData = await getRecordToken(data.id)
+                setToken(responseData.token)
             } catch (error) {
                 
             }
         })()
-    }, [data, getRecordVideo])
+    }, [data, getRecordToken])
 
     return (
         <ModalBaseComponent
@@ -33,7 +34,7 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
             description="View the full recording captured by the security system below."
             showModal={showModal} 
             setShowModal={setShowModal}>
-            {videoUrl ? (
+            {token ? (
                 <video 
                     className={styles.video} 
                     controls 
@@ -42,8 +43,7 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
                     playsInline 
                     preload='auto'
                 >
-                    <source src={videoUrl} type={`video/${data.format}`} />
-                    Your browser does not support HTML5 video with H.265.
+                    <source src={`${BASE_URL}/records/${data.id}/video/?token=${token}`} type="video/mp4" />
                 </video>
             ):(
                 <div className={`${styles.containerLoader} ${styles.video}`}>
