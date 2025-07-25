@@ -1,12 +1,22 @@
+.containerVideo {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .video {
-    /* max-width: 1000px; */
-    max-height: 77vh;
+    max-height: 76vh;
 }
 .containerLoader {
     height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+@media (max-height: 740px){
+    .video {
+        max-height: 72vh;
+    }
 }
 @media (max-width: 1050px){
     .video {

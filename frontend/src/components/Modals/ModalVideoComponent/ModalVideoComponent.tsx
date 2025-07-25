@@ -35,16 +35,18 @@ const ModalVideoComponent = ({data, showModal, setShowModal}: Props) => {
             showModal={showModal} 
             setShowModal={setShowModal}>
             {token ? (
-                <video 
-                    className={styles.video} 
-                    controls 
-                    autoPlay 
-                    muted
-                    playsInline 
-                    preload='auto'
-                >
-                    <source src={`${BASE_URL}/records/${data.id}/video/?token=${token}`} type="video/mp4" />
-                </video>
+                <div className={styles.containerVideo}>
+                    <video 
+                        className={styles.video} 
+                        controls 
+                        autoPlay 
+                        muted
+                        playsInline 
+                        preload='auto'
+                    >
+                        <source src={`${BASE_URL}/records/${data.id}/video/?token=${token}`} type="video/mp4" />
+                    </video>
+                </div>
             ):(
                 <div className={`${styles.containerLoader} ${styles.video}`}>
                     <LoaderThreePointsComponent />
