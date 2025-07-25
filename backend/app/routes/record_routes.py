@@ -104,7 +104,7 @@ def get_video_token(record_pk):
 
 
 @record_bp.route("<int:record_pk>/video/", methods=["GET"])
-# @required_record_token()
+@required_record_token()
 def play_video(record_pk):
     record = Record.query.filter_by(id=record_pk).first_or_404()
 
