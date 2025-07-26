@@ -116,7 +116,7 @@ class Ffmpeg:
             "-b:a",
             self.audio_bitrate,
             "-movflags",
-            "frag_keyframe+empty_moov",
+            "+faststart",
             output_path,
         ]
 
