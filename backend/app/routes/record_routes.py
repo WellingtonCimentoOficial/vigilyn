@@ -168,10 +168,12 @@ def download_multiple():
 def get_thumbnail(record_pk):
     record = Record.query.filter_by(id=record_pk).first_or_404()
 
-    if not os.path.isfile(record.thumbnail_path):
+    thumbnail_path = record.thumbnail.path
+
+    if not os.path.isfile(thumbnail_path):
         raise RecordThumbnailNotFoundException()
 
-    return send_file(record.thumbnail_path)
+    return send_file(thumbnail_path)
 
 
 @record_bp.route("<int:record_pk>/", methods=["PATCH"])

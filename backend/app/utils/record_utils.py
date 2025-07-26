@@ -69,6 +69,8 @@ def organize_records():
                         filename=f"Recording from {camera.name} - {date_str} {time_str}",
                         filepath=new_filepath,
                         thumbnail_filepath=thumbnail_filepath,
+                        thumbnail_size_in_mb=os.path.getsize(thumbnail_filepath)
+                        / (1024 * 1024),
                         size_in_mb=os.path.getsize(new_filepath) / (1024 * 1024),
                         duration_seconds=(
                             duration_seconds

@@ -6,6 +6,19 @@ from typing import List
 import psutil
 
 
+class Thumbnail(db.Model):
+    __tablename__ = "thumbnail_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    path: Mapped[str] = mapped_column(unique=True, nullable=False)
+    size_in_mb: Mapped[float] = mapped_column(default=0, nullable=False)
+    record: Mapped["Record"] = relationship(back_populates="thumbnail")
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), onupdate=func.now()
+    )
+
+
 class Record(db.Model):
     __tablename__ = "record_table"
 
@@ -13,10 +26,15 @@ class Record(db.Model):
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
     path: Mapped[str] = mapped_column(unique=True, nullable=False)
     format: Mapped[str] = mapped_column(nullable=False)
-    thumbnail_path: Mapped[str] = mapped_column(unique=True, nullable=False)
     size_in_mb: Mapped[float] = mapped_column(default=0, nullable=False)
     duration_seconds: Mapped[float] = mapped_column(nullable=False)
     is_public: Mapped[bool] = mapped_column(default=False, nullable=False)
+    thumbnail_id: Mapped[int] = mapped_column(
+        ForeignKey("thumbnail_table.id", ondelete="CASCADE"), nullable=False
+    )
+    thumbnail: Mapped["Thumbnail"] = relationship(
+        back_populates="record", single_parent=True
+    )
     camera_id: Mapped[int] = mapped_column(ForeignKey("camera_table.id"))
     camera: Mapped["Camera"] = relationship(back_populates="records")
     favorites: Mapped[List["UserFavorite"]] = relationship(

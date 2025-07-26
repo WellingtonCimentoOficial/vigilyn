@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.models.record_models import Record, OrganizeRecord
+from app.models.record_models import Record, OrganizeRecord, Thumbnail
 from app.utils.utils import kill_process
 from app.utils.validators import (
     validate_date_range,
@@ -32,6 +32,7 @@ def create_record(
     filepath,
     size_in_mb,
     thumbnail_filepath,
+    thumbnail_size_in_mb,
     created_at,
     duration_seconds,
 ):
@@ -41,17 +42,21 @@ def create_record(
         if not db.session.query(
             Record.query.filter_by(path=filepath).exists()
         ).scalar():
+            thumbnail = Thumbnail(
+                path=thumbnail_filepath, size_in_mb=thumbnail_size_in_mb
+            )
             record = Record(
                 camera=camera,
                 name=filename,
                 path=filepath,
                 format=filepath.split(".")[-1],
                 size_in_mb=size_in_mb,
+                thumbnail=thumbnail,
                 created_at=created_at,
                 duration_seconds=duration_seconds,
-                thumbnail_path=thumbnail_filepath,
             )
 
+            db.session.add(thumbnail)
             db.session.add(record)
             db.session.commit()
 
@@ -88,7 +93,7 @@ def delete_records(records):
     try:
         for record in records:
             try:
-                for file_path in [record.path, record.thumbnail_path]:
+                for file_path in [record.path, record.thumbnail.path]:
                     try:
                         os.remove(file_path)
                     except FileNotFoundError:

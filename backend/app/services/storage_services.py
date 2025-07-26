@@ -1,5 +1,5 @@
 from app.models.storage_models import StorageChecker
-from app.models.record_models import Record
+from app.models.record_models import Record, Thumbnail
 from app.models.storage_models import StorageChecker
 from sqlalchemy import func
 from app.extensions import db
@@ -19,8 +19,11 @@ def get_monthly_storage():
     results = (
         db.session.query(
             func.strftime("%m", Record.created_at).label("month"),
-            func.sum(Record.size_in_mb).label("total"),
+            func.sum(Record.size_in_mb + func.coalesce(Thumbnail.size_in_mb, 0)).label(
+                "total"
+            ),
         )
+        .outerjoin(Thumbnail, Thumbnail.id == Record.thumbnail_id)
         .group_by("month")
         .order_by("month")
         .all()
